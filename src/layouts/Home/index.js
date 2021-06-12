@@ -4,7 +4,7 @@ import styles from "./styles.module.scss";
 const Home = () => {
   return (
     <Fragment>
-      <div className={styles.container}>測試</div>
+      <div className={styles.container}>test</div>
     </Fragment>
   );
 };
