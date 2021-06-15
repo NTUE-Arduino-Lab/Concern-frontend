@@ -1,10 +1,13 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { Fragment } from "react";
 import styles from "./styles.module.scss";
+import Header from "../../component/Header"
 
 const Home = () => {
   return (
     <Fragment>
-      <div className={styles.container}>test1234</div>
+      <Header />
+      <div className={styles.container}></div>
     </Fragment>
   );
 };
