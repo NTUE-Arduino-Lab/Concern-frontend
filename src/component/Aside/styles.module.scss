@@ -10,6 +10,7 @@
     height: calc(100vh - 56px);
     background: $aside-bg;
     padding-top: 35px;
+    margin-top: $header-height;
 
     .aside_item{
        width: 142px;

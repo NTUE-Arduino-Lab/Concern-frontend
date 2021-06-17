@@ -18,7 +18,12 @@ const FullAttendanceList = () => {
     <Fragment>
       <Header />
       <Aside />
-      <div className={styles.container}></div>
+      <div className={styles.container}>
+        <div className={styles.buttonSide}>
+          <button className={styles.buttonSide_button}>下載</button>
+        </div>
+        <div className={styles.attendanceList}></div>
+      </div>
     </Fragment>
   );
 };

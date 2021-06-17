@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from "react";
+import "../../select.scss";
 import styles from "./styles.module.scss";
 import logo from "../../assets/image/logo.png";
 

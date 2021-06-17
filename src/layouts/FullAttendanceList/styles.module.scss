@@ -1,1 +1,35 @@
 @import '../../styles/color.scss';
+@import '../../styles/spacing.scss';
+
+.container {
+  width: calc(100vw - 175px);
+  height: 100%;
+  margin-left: 175px;
+  padding: $main-spacing;
+  padding-top: calc(#{$header-height} + #{$main-spacing});
+}
+
+.buttonSide {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: $section-spacing;
+
+    .buttonSide_button {
+        font-size: 18px;
+        border: 0px;
+        border-radius: $button-border-radius;
+        background: $button-bg;
+        padding: 5px 35px;
+
+        &:hover{
+            background: $button-hover-bg;
+        }
+    }
+}
+
+.attendanceList {
+    width: 100%;
+    height: calc(100vh - 160px);
+    background: $section-bg;
+}
