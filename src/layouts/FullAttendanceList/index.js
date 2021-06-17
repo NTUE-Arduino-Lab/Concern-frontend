@@ -7,11 +7,11 @@ import path from "../../utils/path"
 import { UIStoreContext } from "../../uiStore/reducer";
 import { setAsideActiveItem } from "../../uiStore/actions";
 
-const Home = () => {
+const FullAttendanceList = () => {
   const { uiDispatch } = useContext(UIStoreContext);
 
   useEffect(() => {
-    setAsideActiveItem(uiDispatch, path.home);
+    setAsideActiveItem(uiDispatch, path.fullAttendanceList);
   },[uiDispatch]);
   
   return (
@@ -23,4 +23,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default FullAttendanceList;
