@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import "../../select.scss";
 import styles from "./styles.module.scss";
 import Header from "../../component/Header";
@@ -15,6 +15,12 @@ const Home = () => {
     setAsideActiveItem(uiDispatch, path.home);
   }, [uiDispatch]);
 
+  const [activeNavItem, setActiveNavItem] = useState("info");
+
+  useEffect(() => {
+    console.log("a = " + activeNavItem);
+  }, [activeNavItem]);
+
   return (
     <Fragment>
       <Header />
@@ -26,16 +32,172 @@ const Home = () => {
         <div className={styles.sectionTop}>
           <div className={styles.timeRecord}>
             <div className={styles.title}>本次上課時段紀錄</div>
-            <div className={styles.timeRecord_content}></div>
+            <div className={styles.timeRecord_section}>
+              <div className={styles.time}>{`開始時間：9:10`}</div>
+              <div className={styles.time}>{`休息時間：10:00 - 10:10`}</div>
+              <div className={styles.time}>{`休息時間：11:00 - 11:10`}</div>
+              <div className={styles.time}>{`結束時間：上課中...`}</div>
+            </div>
           </div>
           <div className={styles.rank}>
             <div className={styles.title}>班級專注排行榜</div>
-            <div className={styles.rank_content}></div>
+            <div className={styles.rank_section}>
+              <div className={styles.percentRank}>
+                <div>專注百分比排行</div>
+                <div className={styles.rank_content}>
+                  <div className={styles.content_person}>
+                    <div className={styles.personTop}>
+                      <div className={styles.name}>李淯萱</div>
+                      <div className={styles.number}>110934017</div>
+                    </div>
+                    <div className={styles.personBottom}>
+                      <div className={styles.value}>97%</div>
+                    </div>
+                  </div>
+                  <div className={styles.content_person}>
+                    <div
+                      className={`${styles.personTop} ${styles.personTop_second}`}
+                    >
+                      <div className={styles.name}>李淯萱</div>
+                      <div className={styles.number}>110934017</div>
+                    </div>
+                    <div className={styles.personBottom}>
+                      <div className={styles.value}>97%</div>
+                    </div>
+                  </div>
+                  <div className={styles.content_person}>
+                    <div
+                      className={`${styles.personTop} ${styles.personTop_third}`}
+                    >
+                      <div className={styles.name}>李淯萱</div>
+                      <div className={styles.number}>110934017</div>
+                    </div>
+                    <div className={styles.personBottom}>
+                      <div className={styles.value}>97%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.percentRank}>
+                <div>持續專注時間排行</div>
+                <div className={styles.rank_content}>
+                  <div className={styles.content_person}>
+                    <div className={styles.personTop}>
+                      <div className={styles.name}>李淯萱</div>
+                      <div className={styles.number}>110934017</div>
+                    </div>
+                    <div className={styles.personBottom}>
+                      <div className={styles.value}>60mins</div>
+                    </div>
+                  </div>
+                  <div className={styles.content_person}>
+                    <div
+                      className={`${styles.personTop} ${styles.personTop_second}`}
+                    >
+                      <div className={styles.name}>李淯萱</div>
+                      <div className={styles.number}>110934017</div>
+                    </div>
+                    <div className={styles.personBottom}>
+                      <div className={styles.value}>60mins</div>
+                    </div>
+                  </div>
+                  <div className={styles.content_person}>
+                    <div
+                      className={`${styles.personTop} ${styles.personTop_third}`}
+                    >
+                      <div className={styles.name}>李淯萱</div>
+                      <div className={styles.number}>110934017</div>
+                    </div>
+                    <div className={styles.personBottom}>
+                      <div className={styles.value}>60mins</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className={styles.classInfo}>
           <div className={styles.title}>全班資訊</div>
-          <div className={styles.classInfo_content}></div>
+          <div className={styles.classInfo_content}>
+            <ul className={styles.nav}>
+              <li
+                onClick={() => setActiveNavItem("info")}
+                className={`${styles.navItem} ${
+                  activeNavItem === "info" ? `${styles.navItem_active}` : ""
+                }`}
+              >
+                專注資訊
+              </li>
+              <li
+                onClick={() => setActiveNavItem("chart")}
+                className={`${styles.navItem} ${
+                  activeNavItem === "chart" ? `${styles.navItem_active}` : ""
+                }`}
+              >
+                統計圖表
+              </li>
+            </ul>
+            <div
+              className={`${styles.navContent} ${
+                activeNavItem === "info" ? "" : `${styles.navContent_none}`
+              }`}
+            >
+              <div className={styles.infoContent}>
+                <table>
+                  <thead>
+                    <tr>
+                      <td>學生姓名</td>
+                      <td>Google Meet名稱</td>
+                      <td>學生學號</td>
+                      <td>專注度程度</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>郭昀甄</td>
+                      <td>郭昀甄</td>
+                      <td>110934002</td>
+                      <td>專心</td>
+                    </tr>
+                    <tr>
+                      <td>郭昀甄</td>
+                      <td>郭昀甄</td>
+                      <td>110934002</td>
+                      <td>專心</td>
+                    </tr>
+                    <tr>
+                      <td>郭昀甄</td>
+                      <td>郭昀甄</td>
+                      <td>110934002</td>
+                      <td>專心</td>
+                    </tr>
+                    <tr>
+                      <td>郭昀甄</td>
+                      <td>郭昀甄</td>
+                      <td>110934002</td>
+                      <td>專心</td>
+                    </tr>
+                    <tr>
+                      <td>郭昀甄</td>
+                      <td>郭昀甄</td>
+                      <td>110934002</td>
+                      <td>專心</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div
+              className={`${styles.navContent} ${
+                activeNavItem === "chart" ? "" : `${styles.navContent_none}`
+              }`}
+            >
+              <div className={styles.statisticsContent}>
+                本次課程結束後<br></br>將進行數據統計
+              </div>
+            </div>
+          </div>
         </div>
         <div className={styles.personInfo}>
           <div className={styles.title}>個人資訊</div>

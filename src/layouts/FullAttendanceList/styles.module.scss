@@ -1,5 +1,5 @@
-@import '../../styles/color.scss';
-@import '../../styles/spacing.scss';
+@import "../../styles/color.scss";
+@import "../../styles/spacing.scss";
 
 .container {
   width: calc(100vw - 175px);
@@ -10,26 +10,49 @@
 }
 
 .buttonSide {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    margin-bottom: $section-spacing;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: $section-spacing;
 
-    .buttonSide_button {
-        font-size: 18px;
-        border: 0px;
-        border-radius: $button-border-radius;
-        background: $button-bg;
-        padding: 5px 35px;
+  .buttonSide_button {
+    font-size: 18px;
+    border: 0px;
+    border-radius: $button-border-radius;
+    background: $button-bg;
+    padding: 5px 35px;
 
-        &:hover{
-            background: $button-hover-bg;
-        }
+    &:hover {
+      background: $button-hover-bg;
     }
+  }
 }
 
 .attendanceList {
+  width: 100%;
+  height: calc(100vh - 160px);
+  background: $section-bg;
+  table {
     width: 100%;
-    height: calc(100vh - 160px);
-    background: $section-bg;
+    // height: calc(100vh - 160px);
+    border-collapse: collapse;
+  }
+  thead {
+    background: #dedede;
+    width: 100%;
+    display: table;
+  }
+  tbody {
+    display: block;
+    max-height: 260px;
+    overflow-y: scroll;
+    tr {
+      display: table;
+      table-layout: fixed;
+    }
+  }
+  td {
+    width: 150px;
+    padding: 10px;
+  }
 }
