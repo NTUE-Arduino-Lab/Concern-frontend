@@ -8,3 +8,44 @@
   padding: $main-spacing;
   padding-top: calc(#{$header-height} + #{$main-spacing});
 }
+
+.select {
+  font-size: 16px;
+  border-radius: $button-border-radius;
+  border: 0px;
+  padding: 6px 48px 6px 16px;
+  margin-bottom: $section-spacing;
+  cursor: pointer;
+}
+
+.sectionTop {
+  display: flex;
+  margin-bottom: $section-spacing;
+  .studentNumber {
+    width: 220px;
+    height: 105px;
+    font-size: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: $section-bg;
+    border-radius: $content-border-radius;
+    margin-right: 18px;
+  }
+  .studentCondition{
+    width: 220px;
+    height: 105px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .condition{
+      width: 220px;
+      padding: 6px;
+      font-size: 24px;
+      text-align: center;
+      background: $section-bg;
+      border-radius: $content-border-radius;
+    }
+  }
+}

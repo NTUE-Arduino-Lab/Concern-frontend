@@ -163,12 +163,12 @@
         }
       }
       .statisticsContent {
-        width: 100%;
-        height: calc(400px - 82px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 28px;
+        // width: 100%;
+        // height: calc(400px - 82px);
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+        // font-size: 28px;
       }
     }
   }
@@ -176,8 +176,67 @@
 
 .personInfo_content {
   width: 100%;
-  height: 490px;
+  height: 400px;
+  display: flex;
   border-radius: $content-border-radius;
   background: $section-bg;
+  padding: $section-padding-spacing;
   overflow-y: scroll;
+  .studentList {
+    width: 180px;
+    height: 100%;
+    background: $home-studentList-bg;
+    border-radius: $content-border-radius;
+    .title {
+      height: 42px;
+      font-size: $font-size;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: $header-bg;
+      border-radius: $content-border-radius $content-border-radius 0 0;
+      margin-bottom: 0px;
+    }
+    .students {
+      height: calc(100% - 42px);
+      border-radius: 0 0 $content-border-radius $content-border-radius;
+      overflow-y: scroll;
+      .student {
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover{
+          background: $button-bg;
+        }
+        &.student_active{
+          background: $button-bg;
+        }
+        .number {
+          font-size: 14px;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+  .concernDetail {
+    margin: 42px 16px;
+    .concernSection {
+      width: 165px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: $home-studentList-bg;
+      border-radius: $button-border-radius;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  }
+  .studentChart {
+    width: calc(100% - 407px);
+    height: calc(100% - 70px);
+    margin-top: 40px;
+  }
 }
