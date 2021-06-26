@@ -29,31 +29,54 @@
 }
 
 .attendanceList {
+  position: relative;
   width: 100%;
   height: calc(100vh - 160px);
   background: $section-bg;
-  table {
+  border-radius: $content-border-radius;
+  overflow: scroll;
+  .thead {
+    position: sticky;
+    top: 0;
     width: 100%;
-    // height: calc(100vh - 160px);
-    border-collapse: collapse;
-  }
-  thead {
+    height: 55px;
+    border-radius: 5px 5px 0 0;
     background: #dedede;
-    width: 100%;
-    display: table;
   }
-  tbody {
-    display: block;
-    max-height: 260px;
-    overflow-y: scroll;
-    tr {
-      display: table;
-      table-layout: fixed;
-      width: 100%;
+  .th_content {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: start;
+  }
+  .th {
+    grid-auto-flow: row;
+    width: 135px;
+    height: 55px;
+    background: #dedede;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  // .tbody {
+  //   height: 150px;
+  // }
+  .td_content {
+    display: grid;
+    justify-content: start;
+    grid-auto-flow: column;
+    &:nth-child(even){
+      background: #F8F8F8;
+      .td{
+        background: #F8F8F8;
+      }
     }
   }
-  td {
-    width: 150px;
-    padding: 10px;
+  .td {
+    grid-auto-flow: row;
+    width: 135px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

@@ -23,42 +23,40 @@ const FullAttendanceList = () => {
           <button className={styles.buttonSide_button}>下載</button>
         </div>
         <div className={styles.attendanceList}>
-          <table>
-            <thead>
-              <tr>
-                <td>學生姓名</td>
-                <td>學生學號</td>
-                <td>2021/5/13</td>
-                <td>2021/5/20</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>郭昀甄</td>
-                <td>110934002</td>
-                <td>v</td>
-                <td>v</td>
-              </tr>
-              <tr>
-                <td>郭昀甄</td>
-                <td>110934002</td>
-                <td>v</td>
-                <td>v</td>
-              </tr>
-              <tr>
-                <td>郭昀甄</td>
-                <td>110934002</td>
-                <td>v</td>
-                <td>v</td>
-              </tr>
-              <tr>
-                <td>郭昀甄</td>
-                <td>110934002</td>
-                <td>v</td>
-                <td>v</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className={styles.thead}>
+            <div className={styles.th_content}>
+              <div className={styles.th}>學生姓名</div>
+              <div className={styles.th}>學生學號</div>
+              <div className={styles.th}>2021/5/13</div>
+              <div className={styles.th}>2021/5/20</div>
+            </div>
+          </div>
+          <div className={styles.tbody}>
+            <div className={styles.td_content}>
+              <div className={styles.td}>陳小花</div>
+              <div className={styles.td}>110934001</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+            <div className={styles.td_content}>
+              <div className={styles.td}>陳大花</div>
+              <div className={styles.td}>110934002</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+            <div className={styles.td_content}>
+              <div className={styles.td}>郭小花</div>
+              <div className={styles.td}>110934003</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+            <div className={styles.td_content}>
+              <div className={styles.td}>郭大花</div>
+              <div className={styles.td}>110934004</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+          </div>
         </div>
       </div>
     </Fragment>

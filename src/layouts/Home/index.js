@@ -146,8 +146,54 @@ const Home = () => {
               }`}
             >
               <div className={styles.infoContent}>
-                <table>
-                  <thead>
+                <div className={styles.table}>
+                  <div className={styles.thead}>
+                    <div className={styles.th_content}>
+                      <div className={styles.th}>學生姓名</div>
+                      <div className={styles.th}>Google Meet名稱</div>
+                      <div className={styles.th}>學生學號</div>
+                      <div className={styles.th}>專注度程度</div>
+                    </div>
+                  </div>
+                  <div className={styles.tbody}>
+                    <div className={styles.td_content}>
+                      <div className={styles.td}>陳小花</div>
+                      <div className={styles.td}>陳小花</div>
+                      <div className={styles.td}>110934001</div>
+                      <div className={styles.td}>專心</div>
+                    </div>
+                    <div className={styles.td_content}>
+                      <div className={styles.td}>陳大花</div>
+                      <div className={styles.td}>陳大花</div>
+                      <div className={styles.td}>110934002</div>
+                      <div className={styles.td}>不專心</div>
+                    </div>
+                    <div className={styles.td_content}>
+                      <div className={styles.td}>郭小花</div>
+                      <div className={styles.td}>郭小花</div>
+                      <div className={styles.td}>110934003</div>
+                      <div className={styles.td}>普通</div>
+                    </div>
+                    <div className={styles.td_content}>
+                      <div className={styles.td}>郭大花</div>
+                      <div className={styles.td}>郭大花</div>
+                      <div className={styles.td}>110934004</div>
+                      <div className={styles.td}>專心</div>
+                    </div>
+                    <div className={styles.td_content}>
+                      <div className={styles.td}>郭大花</div>
+                      <div className={styles.td}>郭大花</div>
+                      <div className={styles.td}>110934004</div>
+                      <div className={styles.td}>專心</div>
+                    </div>
+                    <div className={styles.td_content}>
+                      <div className={styles.td}>郭大花</div>
+                      <div className={styles.td}>郭大花</div>
+                      <div className={styles.td}>110934004</div>
+                      <div className={styles.td}>專心</div>
+                    </div>
+                  </div>
+                  {/* <thead>
                     <tr>
                       <td>學生姓名</td>
                       <td>Google Meet名稱</td>
@@ -186,8 +232,8 @@ const Home = () => {
                       <td>110934002</td>
                       <td>專心</td>
                     </tr>
-                  </tbody>
-                </table>
+                  </tbody> */}
+                </div>
               </div>
             </div>
             <div
