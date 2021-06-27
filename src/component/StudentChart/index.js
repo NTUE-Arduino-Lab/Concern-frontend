@@ -5,7 +5,7 @@ const StudentChart = () => {
 
   const option = {
     title: {
-        text: '李淯萱的專注度統計',
+        text: '郭昀甄的專注度統計',
         x: 'center'
     },
     tooltip:{
@@ -26,7 +26,7 @@ const StudentChart = () => {
     },
     series : [
         {
-            name:'李淯萱',
+            name:'郭昀甄',
             type:'line',
             data:["專心", "不專心", "普通", "普通", "專心", "普通", "專心"]
         },

@@ -1,5 +1,5 @@
 @import '../../styles/color.scss';
-@import "../../styles/spacing.scss";
+@import '../../styles/spacing.scss';
 
 .container {
   width: calc(100vw - 175px);
@@ -33,19 +33,52 @@
     border-radius: $content-border-radius;
     margin-right: 18px;
   }
-  .studentCondition{
+  .studentCondition {
     width: 220px;
     height: 105px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .condition{
+    .condition {
       width: 220px;
       padding: 6px;
       font-size: 24px;
       text-align: center;
       background: $section-bg;
       border-radius: $content-border-radius;
+    }
+  }
+  .settingRollCallTime {
+    margin-left: 30px;
+  }
+  .setTimeSectionTop {
+    display: flex;
+    font-size: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+    .inputSection {
+      width: 52px;
+      height: 38px;
+      font-size: 24px;
+      color: #82a098;
+      text-align: center;
+      border-radius: $content-border-radius;
+      margin: 0 10px;
+    }
+    .submitBtn {
+      width: 140px;
+      height: 38px;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 0px;
+      background: $button-bg;
+      border-radius: $content-border-radius;
+      margin-left: 10px;
+      &:hover{
+        background: $button-hover-bg;
+      }
     }
   }
 }

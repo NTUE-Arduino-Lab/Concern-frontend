@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import Header from "../../component/Header";
 import Aside from "../../component/Aside";
@@ -13,6 +13,39 @@ const RollCallSystem = () => {
   useEffect(() => {
     setAsideActiveItem(uiDispatch, path.rollCallSystem);
   }, [uiDispatch]);
+
+  const [time, setTime] = useState(60);
+
+  useEffect(() => {
+    console.log("time = ", time);
+  }, [time]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    document.getElementById("submit").disabled = true;
+    document.getElementById("text").disabled = true;
+    timeCountHandler();
+    // setTimeout(timeOutHandler, time * 1000);
+  };
+  var rollcall_interval;
+
+  const timeOutHandler = () => {
+    clearInterval(rollcall_interval);
+    document.getElementById("text").value = "0";
+    document.getElementById("text").disabled = false;
+    document.getElementById("submit").disabled = false;
+  };
+
+  let timeCount = time - 1;
+  const timeCountHandler = () => {
+     rollcall_interval = setInterval(() => {
+      document.getElementById("text").value = timeCount;
+      timeCount--;
+      if (timeCount < 0) {
+        timeOutHandler();
+      }
+    }, 1000);
+  };
 
   return (
     <Fragment>
@@ -34,6 +67,25 @@ const RollCallSystem = () => {
           <div className={styles.studentCondition}>
             <div className={styles.condition}>請假學生 1 人</div>
             <div className={styles.condition}>曠課學生 0 人</div>
+          </div>
+          <div className={styles.settingRollCallTime}>
+            <form onSubmit={submitHandler}>
+              <div className={styles.setTimeSectionTop}>
+                點名限定時間
+                <input
+                  type="text"
+                  onChange={(e) => setTime(e.target.value)}
+                  className={styles.inputSection}
+                  id="text"
+                  value={time}
+                ></input>
+                秒
+                <button className={styles.submitBtn} type="submit" id="submit">
+                  開始點名
+                </button>
+              </div>
+              <div>系統提示：學生需在限定時間內按下點名按鈕</div>
+            </form>
           </div>
         </div>
       </div>
