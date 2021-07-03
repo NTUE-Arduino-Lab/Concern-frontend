@@ -23,25 +23,26 @@ const RollCallSystem = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     document.getElementById("submit").disabled = true;
-    document.getElementById("text").disabled = true;
+    document.getElementById("text_time").disabled = true;
+    document.getElementById("text_title").textContent = "學生端點名中，倒數";
     timeCountHandler();
-    // setTimeout(timeOutHandler, time * 1000);
   };
   var rollcall_interval;
 
   const timeOutHandler = () => {
     clearInterval(rollcall_interval);
-    document.getElementById("text").value = "0";
-    document.getElementById("text").disabled = false;
+    document.getElementById("text_time").value = "0";
+    document.getElementById("text_title").textContent = "點名限定時間";
+    document.getElementById("text_time").disabled = false;
     document.getElementById("submit").disabled = false;
   };
 
   let timeCount = time - 1;
   const timeCountHandler = () => {
      rollcall_interval = setInterval(() => {
-      document.getElementById("text").value = timeCount;
+      document.getElementById("text_time").value = timeCount;
       timeCount--;
-      if (timeCount < 0) {
+      if (timeCount < -1) {
         timeOutHandler();
       }
     }, 1000);
@@ -71,12 +72,12 @@ const RollCallSystem = () => {
           <div className={styles.settingRollCallTime}>
             <form onSubmit={submitHandler}>
               <div className={styles.setTimeSectionTop}>
-                點名限定時間
+                <div id="text_title">點名限定時間</div>
                 <input
                   type="text"
                   onChange={(e) => setTime(e.target.value)}
                   className={styles.inputSection}
-                  id="text"
+                  id="text_time"
                   value={time}
                 ></input>
                 秒
