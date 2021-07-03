@@ -14,7 +14,7 @@ import { setAsideActiveItem } from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
-import { getClassroomTimeStatus } from "../../store/actions";
+import { getClassroomTimeStatus, getRankData } from "../../store/actions";
 
 const Home = () => {
   const classroomDataID = "60dd2a3d9b567c224c85482c";
@@ -22,6 +22,7 @@ const Home = () => {
   const {
     state: {
       classroomTimeStatus: { isClassing, startTime, restTime, endTime },
+      rankData: { concernPercentageRank, bestLastedRank },
     },
     dispatch,
   } = useContext(StoreContext);
@@ -29,8 +30,27 @@ const Home = () => {
   //從後台撈上課時間資料
   useEffect(() => {
     getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataID });
+    getRankData(dispatch, { classroomDataID: classroomDataID, rankCount: 3 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  //設定名次不同的漸層色
+  const rankBg = (rankNumber) => {
+    if (rankNumber === 1) {
+      return "";
+    } else if (rankNumber === 2) {
+      return styles.personTop_second;
+    } else {
+      return styles.personTop_third;
+    }
+  };
+
+  //換算持續專注時間
+  const bestLastedTime = (bestLasted) => {
+    var timeArray = bestLasted.split(":");
+    var mins = timeArray[0] * 60 + timeArray[1] * 1;
+    return Math.floor(mins); 
+  }
 
   //設定左邊側邊欄目前的頁面
   const { uiDispatch } = useContext(UIStoreContext);
@@ -74,8 +94,10 @@ const Home = () => {
               <div className={styles.timeSection}>
                 <div className={styles.time}>結束時間：</div>
                 {isClassing ? (
-                  <div className={`${styles.time} ${styles.redTime}`}>上課中...</div>
-                ):(
+                  <div className={`${styles.time} ${styles.redTime}`}>
+                    上課中...
+                  </div>
+                ) : (
                   <div className={styles.time}>{endTime}</div>
                 )}
               </div>
@@ -87,73 +109,39 @@ const Home = () => {
               <div className={styles.percentRank}>
                 <div>專注百分比排行</div>
                 <div className={styles.rank_content}>
-                  <div className={styles.content_person}>
-                    <div className={styles.personTop}>
-                      <div className={styles.name}>李淯萱</div>
-                      <div className={styles.number}>110934017</div>
+                  {concernPercentageRank.map((rank) => (
+                    <div className={styles.content_person} key={rank.rank}>
+                      <div
+                        className={`${styles.personTop} ${rankBg(rank.rank)}`}
+                      >
+                        <div className={styles.name}>{rank.studentName}</div>
+                        <div className={styles.number}>{rank.studentID}</div>
+                      </div>
+                      <div className={styles.personBottom}>
+                        <div className={styles.value}>
+                          {rank.concernPercentage}
+                        </div>
+                      </div>
                     </div>
-                    <div className={styles.personBottom}>
-                      <div className={styles.value}>97%</div>
-                    </div>
-                  </div>
-                  <div className={styles.content_person}>
-                    <div
-                      className={`${styles.personTop} ${styles.personTop_second}`}
-                    >
-                      <div className={styles.name}>李淯萱</div>
-                      <div className={styles.number}>110934017</div>
-                    </div>
-                    <div className={styles.personBottom}>
-                      <div className={styles.value}>97%</div>
-                    </div>
-                  </div>
-                  <div className={styles.content_person}>
-                    <div
-                      className={`${styles.personTop} ${styles.personTop_third}`}
-                    >
-                      <div className={styles.name}>李淯萱</div>
-                      <div className={styles.number}>110934017</div>
-                    </div>
-                    <div className={styles.personBottom}>
-                      <div className={styles.value}>97%</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
               <div className={styles.percentRank}>
                 <div>持續專注時間排行</div>
                 <div className={styles.rank_content}>
-                  <div className={styles.content_person}>
-                    <div className={styles.personTop}>
-                      <div className={styles.name}>李淯萱</div>
-                      <div className={styles.number}>110934017</div>
+                  {bestLastedRank.map((rank) => (
+                    <div className={styles.content_person} key={rank.rank}>
+                      <div
+                        className={`${styles.personTop} ${rankBg(rank.rank)}`}
+                      >
+                        <div className={styles.name}>{rank.studentName}</div>
+                        <div className={styles.number}>{rank.studentID}</div>
+                      </div>
+                      <div className={styles.personBottom}>
+                        <div className={styles.value}>{`${bestLastedTime(rank.bestLasted)}mins`}</div>
+                      </div>
                     </div>
-                    <div className={styles.personBottom}>
-                      <div className={styles.value}>60mins</div>
-                    </div>
-                  </div>
-                  <div className={styles.content_person}>
-                    <div
-                      className={`${styles.personTop} ${styles.personTop_second}`}
-                    >
-                      <div className={styles.name}>李淯萱</div>
-                      <div className={styles.number}>110934017</div>
-                    </div>
-                    <div className={styles.personBottom}>
-                      <div className={styles.value}>60mins</div>
-                    </div>
-                  </div>
-                  <div className={styles.content_person}>
-                    <div
-                      className={`${styles.personTop} ${styles.personTop_third}`}
-                    >
-                      <div className={styles.name}>李淯萱</div>
-                      <div className={styles.number}>110934017</div>
-                    </div>
-                    <div className={styles.personBottom}>
-                      <div className={styles.value}>60mins</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -233,46 +221,6 @@ const Home = () => {
                       <div className={styles.td}>專心</div>
                     </div>
                   </div>
-                  {/* <thead>
-                    <tr>
-                      <td>學生姓名</td>
-                      <td>Google Meet名稱</td>
-                      <td>學生學號</td>
-                      <td>專注度程度</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>郭昀甄</td>
-                      <td>郭昀甄</td>
-                      <td>110934002</td>
-                      <td>專心</td>
-                    </tr>
-                    <tr>
-                      <td>郭昀甄</td>
-                      <td>郭昀甄</td>
-                      <td>110934002</td>
-                      <td>專心</td>
-                    </tr>
-                    <tr>
-                      <td>郭昀甄</td>
-                      <td>郭昀甄</td>
-                      <td>110934002</td>
-                      <td>專心</td>
-                    </tr>
-                    <tr>
-                      <td>郭昀甄</td>
-                      <td>郭昀甄</td>
-                      <td>110934002</td>
-                      <td>專心</td>
-                    </tr>
-                    <tr>
-                      <td>郭昀甄</td>
-                      <td>郭昀甄</td>
-                      <td>110934002</td>
-                      <td>專心</td>
-                    </tr>
-                  </tbody> */}
                 </div>
               </div>
             </div>

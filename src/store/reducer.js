@@ -2,7 +2,12 @@ import { createContext, useReducer } from "react";
 import PropTypes from "prop-types";
 
 import {
+  TIME_STATUS_REQUEST,
+  TIME_STATUS_FAIL,
   SET_CLASSROOM_TIME_STATUS,
+  RANK_DATA_REQUEST,
+  RANK_DATA_FAIL,
+  SET_RANK_DATA,
   SET_ROLLCALL_STATUS,
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
@@ -19,7 +24,20 @@ const initialState = {
     startTime: "",
     endTime: "",
     restTime: [],
+    timeStatusLoading: false,
+    error: null,
   },
+
+  //專注度統計排行榜
+  rankData: {
+    concernPercentageRank: [],
+    bestLastedRank: [],
+    rankDataLoading: false,
+    error: null,
+  },
+
+  //
+
   //點名系統
   rollCallSystemData: {
     shouldAttendCount: 0,
@@ -37,6 +55,14 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    case TIME_STATUS_REQUEST:
+      return {
+        ...state,
+        classroomTimeStatus: {
+          ...state.classroomTimeStatus,
+          timeStatusLoading: true,
+        },
+      };
     case SET_CLASSROOM_TIME_STATUS:
       return {
         ...state,
@@ -47,6 +73,43 @@ function reducer(state, action) {
           startTime: action.payload.startTime,
           endTime: action.payload.endTime,
           restTime: action.payload.restTime,
+          timeStatusLoading: false,
+        },
+      };
+    case TIME_STATUS_FAIL:
+      return {
+        ...state,
+        classroomTimeStatus: {
+          ...state.classroomTimeStatus,
+          error: action.payload,
+          timeStatusLoading: false,
+        },
+      };
+    case RANK_DATA_REQUEST:
+      return {
+        ...state,
+        rankData: {
+          ...state.rankData,
+          rankDataLoading: true,
+        },
+      };
+    case SET_RANK_DATA:
+      return {
+        ...state,
+        rankData: {
+          ...state.rankData,
+          concernPercentageRank: action.payload.concernPercentageRank,
+          bestLastedRank: action.payload.bestLastedRank,
+          rankDataLoading: false,
+        },
+      };
+    case RANK_DATA_FAIL:
+      return {
+        ...state,
+        rankData: {
+          ...state.rankData,
+          error: action.payload,
+          rankDataLoading: false,
         },
       };
     case SET_ROLLCALL_STATUS:
