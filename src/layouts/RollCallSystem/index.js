@@ -16,17 +16,6 @@ import { getRollCallStatus } from "../../store/actions";
 const RollCallSystem = () => {
   const classroomDataID = "60dd2a3d9b567c224c85482c";
   const [time, setTime] = useState(60);
-  
-  //取得後台資料
-  const {
-    state: { shouldAttendCount, attentCount, personalLeaveCount, absenceCount },
-    dispatch,
-  } = useContext(StoreContext);
-
-  useEffect(() => {
-    getRollCallStatus(dispatch, { classroomDataID: classroomDataID });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   //左邊側邊欄設定目前頁面
   const { uiDispatch } = useContext(UIStoreContext);
@@ -34,6 +23,19 @@ const RollCallSystem = () => {
   useEffect(() => {
     setAsideActiveItem(uiDispatch, path.rollCallSystem);
   }, [uiDispatch]);
+
+  //取得後台資料
+  const {
+    state: {
+      rollCallSystemData: { shouldAttendCount, attentCount, personalLeaveCount, absenceCount },
+    },
+    dispatch,
+  } = useContext(StoreContext);
+
+  useEffect(() => {
+    getRollCallStatus(dispatch, { classroomDataID: classroomDataID });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //按下開始點名的按鈕
   const submitHandler = (e) => {
@@ -43,7 +45,7 @@ const RollCallSystem = () => {
     document.getElementById("text_title").textContent = "學生端點名中，倒數";
     timeCountHandler();
   };
-  
+
   //倒數計時時間到
   var rollcall_interval;
   const timeOutHandler = () => {
@@ -84,8 +86,12 @@ const RollCallSystem = () => {
             <div className={styles.number}>{`${attentCount}人`}</div>
           </div>
           <div className={styles.studentCondition}>
-            <div className={styles.condition}>{`請假學生 ${personalLeaveCount} 人`}</div>
-            <div className={styles.condition}>{`缺席學生 ${absenceCount} 人`}</div>
+            <div
+              className={styles.condition}
+            >{`請假學生 ${personalLeaveCount} 人`}</div>
+            <div
+              className={styles.condition}
+            >{`缺席學生 ${absenceCount} 人`}</div>
           </div>
           <div className={styles.settingRollCallTime}>
             <form onSubmit={submitHandler}>

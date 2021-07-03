@@ -4,24 +4,45 @@ import "../../select.scss";
 import styles from "./styles.module.scss";
 import Header from "../../component/Header";
 import Aside from "../../component/Aside";
-import path from "../../utils/path";
-import { UIStoreContext } from "../../uiStore/reducer";
-import { setAsideActiveItem } from "../../uiStore/actions";
 import ClassChart from "../../component/ClassChart";
 import StudentChart from "../../component/StudentChart";
+import path from "../../utils/path";
+
+//uiStore
+import { UIStoreContext } from "../../uiStore/reducer";
+import { setAsideActiveItem } from "../../uiStore/actions";
+
+//Store
+import { StoreContext } from "../../store/reducer";
+import { getClassroomTimeStatus } from "../../store/actions";
 
 const Home = () => {
+  const classroomDataID = "60dd2a3d9b567c224c85482c";
+
+  const {
+    state: {
+      classroomTimeStatus: { isClassing, startTime, restTime, endTime },
+    },
+    dispatch,
+  } = useContext(StoreContext);
+
+  //從後台撈上課時間資料
+  useEffect(() => {
+    getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataID });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //設定左邊側邊欄目前的頁面
   const { uiDispatch } = useContext(UIStoreContext);
 
   useEffect(() => {
     setAsideActiveItem(uiDispatch, path.home);
   }, [uiDispatch]);
 
+  //設定全班資訊目前選擇的項目
   const [activeNavItem, setActiveNavItem] = useState("info");
 
-  useEffect(() => {
-    console.log("a = " + activeNavItem);
-  }, [activeNavItem]);
+  useEffect(() => {}, [activeNavItem]);
 
   return (
     <Fragment>
@@ -35,10 +56,29 @@ const Home = () => {
           <div className={styles.timeRecord}>
             <div className={styles.title}>本次上課時段紀錄</div>
             <div className={styles.timeRecord_section}>
-              <div className={styles.time}>{`開始時間：9:10`}</div>
-              <div className={styles.time}>{`休息時間：10:00 - 10:10`}</div>
-              <div className={styles.time}>{`休息時間：11:00 - 11:10`}</div>
-              <div className={styles.time}>{`結束時間：上課中...`}</div>
+              <div className={styles.timeSection}>
+                <div className={styles.time}>開始時間：</div>
+                <div className={styles.time}>{startTime}</div>
+              </div>
+              {restTime.map((restTimeRecord) => (
+                <div
+                  className={styles.timeSection}
+                  key={restTime.restStartTime}
+                >
+                  <div className={styles.time}>休息時間：</div>
+                  <div
+                    className={styles.time}
+                  >{`${restTimeRecord.restStartTime} - ${restTimeRecord.restEndTime}`}</div>
+                </div>
+              ))}
+              <div className={styles.timeSection}>
+                <div className={styles.time}>結束時間：</div>
+                {isClassing ? (
+                  <div className={`${styles.time} ${styles.redTime}`}>上課中...</div>
+                ):(
+                  <div className={styles.time}>{endTime}</div>
+                )}
+              </div>
             </div>
           </div>
           <div className={styles.rank}>

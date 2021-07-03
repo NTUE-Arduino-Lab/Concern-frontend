@@ -36,8 +36,14 @@
       background: $section-bg;
       padding: 15px 20px;
       overflow-y: scroll;
+      .timeSection {
+        display: flex;
+      }
       .time {
         line-height: 1.5em;
+        &.redTime{
+          color: red;
+        }
       }
     }
   }
@@ -160,10 +166,10 @@
             display: grid;
             justify-content: space-around;
             grid-auto-flow: column;
-            &:nth-child(even){
-              background: #F8F8F8;
-              .td{
-                background: #F8F8F8;
+            &:nth-child(even) {
+              background: #f8f8f8;
+              .td {
+                background: #f8f8f8;
               }
             }
           }
@@ -222,10 +228,10 @@
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        &:hover{
+        &:hover {
           background: $button-bg;
         }
-        &.student_active{
+        &.student_active {
           background: $button-bg;
         }
         .number {

@@ -2,7 +2,8 @@ import { createContext, useReducer } from "react";
 import PropTypes from "prop-types";
 
 import {
-  SET_ROLLCALLSTATUS,
+  SET_CLASSROOM_TIME_STATUS,
+  SET_ROLLCALL_STATUS,
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
   FAIL_DATA_REQUEST,
@@ -11,11 +12,22 @@ import {
 export const StoreContext = createContext();
 
 const initialState = {
+  //專注度統計上課時段
+  classroomTimeStatus: {
+    isClassing: true,
+    isResting: false,
+    startTime: "",
+    endTime: "",
+    restTime: [],
+  },
   //點名系統
-  shouldAttendCount: 0,
-  attentCount: 0,
-  personalLeaveCount: 0,
-  absenceCount: 0,
+  rollCallSystemData: {
+    shouldAttendCount: 0,
+    attentCount: 0,
+    personalLeaveCount: 0,
+    absenceCount: 0,
+  },
+
   //要資料狀態
   requestdata: {
     loading: false,
@@ -25,13 +37,28 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case SET_ROLLCALLSTATUS:
+    case SET_CLASSROOM_TIME_STATUS:
       return {
         ...state,
-        shouldAttendCount: action.payload.shouldAttendCount,
-        attentCount: action.payload.attentCount,
-        personalLeaveCount: action.payload.personalLeaveCount,
-        absenceCount: action.payload.absenceCount,
+        classroomTimeStatus: {
+          ...state.classroomTimeStatus,
+          isClassing: action.payload.isClassing,
+          isResting: action.payload.isResting,
+          startTime: action.payload.startTime,
+          endTime: action.payload.endTime,
+          restTime: action.payload.restTime,
+        },
+      };
+    case SET_ROLLCALL_STATUS:
+      return {
+        ...state,
+        rollCallSystemData: {
+          ...state.rollCallSystemData,
+          shouldAttendCount: action.payload.shouldAttendCount,
+          attentCount: action.payload.attentCount,
+          personalLeaveCount: action.payload.personalLeaveCount,
+          absenceCount: action.payload.absenceCount,
+        },
       };
     case BEGIN_DATA_REQUEST:
       return {
