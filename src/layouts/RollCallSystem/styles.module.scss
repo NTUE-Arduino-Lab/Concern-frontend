@@ -1,5 +1,5 @@
-@import '../../styles/color.scss';
-@import '../../styles/spacing.scss';
+@import "../../styles/color.scss";
+@import "../../styles/spacing.scss";
 
 .container {
   width: calc(100vw - 175px);
@@ -20,7 +20,7 @@
 
 .sectionTop {
   display: flex;
-  margin-bottom: $section-spacing;
+  margin-bottom: 10px;
   .studentNumber {
     width: 220px;
     height: 105px;
@@ -76,9 +76,35 @@
       background: $button-bg;
       border-radius: $content-border-radius;
       margin-left: 10px;
-      &:hover{
+      &:hover {
         background: $button-hover-bg;
       }
+    }
+  }
+}
+
+.tipTitle {
+  font-size: 16px;
+}
+
+.editBtnSection{
+  width: 100%;
+  height: 45px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  .editBtnSection_btn {
+    width: 166px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    border: 0px;
+    border-radius: $button-border-radius;
+    background: $button-bg;
+    &:hover {
+      background: $button-hover-bg;
     }
   }
 }

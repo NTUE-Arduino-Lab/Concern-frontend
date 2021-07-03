@@ -8,6 +8,8 @@ import { UIStoreContext } from "../../uiStore/reducer";
 import { setAsideActiveItem } from "../../uiStore/actions";
 
 const RollCallSystem = () => {
+  // const classroomDataID = "60dd2a3d9b567c224c85482c";
+
   const { uiDispatch } = useContext(UIStoreContext);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const RollCallSystem = () => {
           </div>
           <div className={styles.studentCondition}>
             <div className={styles.condition}>請假學生 1 人</div>
-            <div className={styles.condition}>曠課學生 0 人</div>
+            <div className={styles.condition}>缺席學生 0 人</div>
           </div>
           <div className={styles.settingRollCallTime}>
             <form onSubmit={submitHandler}>
@@ -89,6 +91,11 @@ const RollCallSystem = () => {
             </form>
           </div>
         </div>
+        <div className={styles.tipTitle}>系統提示：僅計算已登入於學生系統的名單</div>
+        <div className={styles.editBtnSection}>
+          <button className={styles.editBtnSection_btn}>編輯點名狀態</button>
+        </div>
+
       </div>
     </Fragment>
   );
