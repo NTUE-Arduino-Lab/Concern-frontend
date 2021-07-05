@@ -186,6 +186,22 @@
           }
         }
       }
+      .classSliderSection{
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 100px;
+        margin-top: -30px;
+        margin-bottom: 20px;
+        .classSlider{
+          width: 280px;
+          height: 50px;
+          .classSliderTitle{
+            text-align: center;
+          }
+        }
+      }
       // .statisticsContent {
       //   // width: 100%;
       //   // height: calc(400px - 82px);

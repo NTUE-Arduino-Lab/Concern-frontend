@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { Fragment, useContext, useEffect, useState } from "react";
+import Typography from "@material-ui/core/Typography";
 import "../../select.scss";
 import styles from "./styles.module.scss";
 import Header from "../../component/Header";
 import Aside from "../../component/Aside";
 import ClassChart from "../../component/ClassChart";
 import StudentChart from "../../component/StudentChart";
+import { PrettoSlider, sliderMarks } from "../../component/SliderStyle";
 import path from "../../utils/path";
 
 //uiStore
@@ -45,6 +47,8 @@ const Home = () => {
   }, [uiDispatch]);
 
   //從後台撈上課時間資料
+  const [classTimeSpacing, setClassTimeSpacing] = useState(1);
+
   useEffect(() => {
     getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataID });
     getRankData(dispatch, { classroomDataID: classroomDataID, rankCount: 3 });
@@ -58,6 +62,13 @@ const Home = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const callClassroomConcernInfoApi = () => {
+    getClassroomConcernInfo(dispatch, {
+      classroomDataID: classroomDataID,
+      timeSpacing: classTimeSpacing * 60,
+    });
+  };
 
   //設定名次不同的漸層色
   const rankBg = (rankNumber) => {
@@ -91,6 +102,12 @@ const Home = () => {
       return "不專心";
     }
   };
+
+  //全班統計圖表SliderChange
+  const classSliderChange = (event, newValue) => {
+    setClassTimeSpacing(newValue);
+  };
+
   //學生資訊-平均專注數值判斷
   const studentConcernRange = (aveConcern) => {
     if (aveConcern === null) {
@@ -277,6 +294,28 @@ const Home = () => {
                 activeNavItem === "chart" ? "" : `${styles.navContent_none}`
               }`}
             >
+              <div className={styles.classSliderSection}>
+                <div className={styles.classSlider}>
+                  <Typography
+                    id="discrete-slider-custom"
+                    gutterBottom
+                    className={styles.classSliderTitle}
+                  >
+                    計算時間區隔調整 （單位：分）
+                  </Typography>
+                  <PrettoSlider
+                    defaultValue={1}
+                    value={classTimeSpacing}
+                    aria-labelledby="discrete-slider-custom"
+                    step={1}
+                    marks={sliderMarks}
+                    min={1}
+                    max={10}
+                    onChange={classSliderChange}
+                    onChangeCommitted={callClassroomConcernInfoApi}
+                  />
+                </div>
+              </div>
               {classroomConcernInfoLoading ? (
                 <></>
               ) : (
