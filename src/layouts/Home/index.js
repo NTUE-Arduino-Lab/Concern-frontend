@@ -17,6 +17,7 @@ import { StoreContext } from "../../store/reducer";
 import {
   getClassroomTimeStatus,
   getRankData,
+  getClassroomConcernInfo,
   getStudentConcernInfo,
 } from "../../store/actions";
 
@@ -28,6 +29,10 @@ const Home = () => {
       classroomTimeStatus: { isClassing, startTime, restTime, endTime },
       rankData: { concernPercentageRank, bestLastedRank },
       studentConcernInfo: { studentConcernData },
+      classroomConcernInfo: {
+        classroomConcernData,
+        classroomConcernInfoLoading,
+      },
     },
     dispatch,
   } = useContext(StoreContext);
@@ -44,6 +49,10 @@ const Home = () => {
     getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataID });
     getRankData(dispatch, { classroomDataID: classroomDataID, rankCount: 3 });
     getStudentConcernInfo(dispatch, {
+      classroomDataID: classroomDataID,
+      timeSpacing: 60,
+    });
+    getClassroomConcernInfo(dispatch, {
       classroomDataID: classroomDataID,
       timeSpacing: 60,
     });
@@ -84,10 +93,9 @@ const Home = () => {
   };
   //學生資訊-平均專注數值判斷
   const studentConcernRange = (aveConcern) => {
-    if(aveConcern === null){
+    if (aveConcern === null) {
       return styles.concernLevel_red;
-    }
-    else if (aveConcern >= concernRangeMax) {
+    } else if (aveConcern >= concernRangeMax) {
       return styles.concernLevel_green;
     } else if (aveConcern < concernRangeMax && aveConcern > concernRangeMin) {
       return styles.concernLevel_yellow;
@@ -269,10 +277,17 @@ const Home = () => {
                 activeNavItem === "chart" ? "" : `${styles.navContent_none}`
               }`}
             >
-              <div className={styles.statisticsContent}>
-                {/* 本次課程結束後<br></br>將進行數據統計 */}
-                <ClassChart />
-              </div>
+              {classroomConcernInfoLoading ? (
+                <></>
+              ) : (
+                <div>
+                  <ClassChart
+                    classroomConcernData={classroomConcernData}
+                    concernRangeMax={concernRangeMax}
+                    concernRangeMin={concernRangeMin}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,11 +1,36 @@
 import React from "react";
 import ReactEcharts from "echarts-for-react";
 
-const ClassChart = () => {
+const ClassChart = (prop) => {
+    const { classroomConcernData, concernRangeMax, concernRangeMin } = prop;
+    
+    const timeArray = classroomConcernData.map(x => x.time);
+    const concernDegreeArray = classroomConcernData.map(x => x.aveConcernDegree);
+    
+    const concernRange = (concernDegree) => {
+        if (concernDegree === null) {
+          return "";
+        } else if (concernDegree >= concernRangeMax) {
+          return "專心";
+        } else if (
+          concernDegree < concernRangeMax &&
+          concernDegree > concernRangeMin
+        ) {
+          return "普通";
+        } else if (concernDegree <= concernRangeMin) {
+          return "不專心";
+        }
+      };
+    
+      var newConcernDegreeArray = concernDegreeArray.map(function (
+        value
+      ) {
+        return concernRange(value);
+      });
 
   const option = {
     title: {
-        text: '全班的專注度統計',
+        text: '全班的平均專注度統計',
         x: 'center'
     },
     tooltip:{
@@ -18,27 +43,16 @@ const ClassChart = () => {
     //     data:['A','B','C']
     // },
     xAxis: {
-        data: ['11:30:33','11:30:43','11:30:53','11:31:03','11:31:13','11:31:23','11:31:33']
+        data: timeArray,
     },
     yAxis: {
         data: ["不專心","普通","專心"]
-        // type: 'value'
     },
     series : [
         {
-            name:'李淯萱',
+            name:'全班平均專注度',
             type:'line',
-            data:["不專心", "普通", "專心", "普通", "專心", "普通", "專心"]
-        },
-        {
-            name:'郭昀甄',
-            type:'line',
-            data:["專心", "不專心", "普通", "專心", "不專心", "專心", "不專心"]
-        },
-        {
-            name:'沈桓民',
-            type:'line',
-            data:["普通", "專心", "不專心", "不專心", "普通", "不專心", "普通"]
+            data: newConcernDegreeArray,
         }
     ]
     };

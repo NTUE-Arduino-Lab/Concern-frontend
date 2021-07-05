@@ -2,18 +2,27 @@ import { createContext, useReducer } from "react";
 import PropTypes from "prop-types";
 
 import {
+  //專注統計頁-上課時段紀錄
   TIME_STATUS_REQUEST,
   SET_CLASSROOM_TIME_STATUS,
   TIME_STATUS_FAIL,
-  
+
+  //專注統計頁-排行榜
   RANK_DATA_REQUEST,
   SET_RANK_DATA,
   RANK_DATA_FAIL,
-  
+
+  //專注統計頁-全班專注平均資料
+  CLASSROOM_CONCERN_INFO_REQUEST,
+  SET_CLASSROOM_CONCERN_INFO,
+  CLASSROOM_CONCERN_INFO_FAIL,
+
+  //專注統計頁-學生資料
   STUDENT_CONCERN_INFO_REQUEST,
   SET_STUDENT_CONCERN_INFO,
   STUDENT_CONCERN_INFO_FAIL,
 
+ //點名系統頁-課堂人數統計
   SET_ROLLCALL_STATUS,
 
   BEGIN_DATA_REQUEST,
@@ -43,6 +52,13 @@ const initialState = {
     error: null,
   },
 
+  //專注統計-全班專注平均資訊
+  classroomConcernInfo:{
+    classroomConcernData: [],
+    classroomConcernInfoLoading: false,
+    error: null,
+  },
+
   //專注度統計學生專注資訊
   studentConcernInfo: {
     studentConcernData: [],
@@ -67,6 +83,7 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    //專注統計頁-上課時段紀錄
     case TIME_STATUS_REQUEST:
       return {
         ...state,
@@ -97,6 +114,7 @@ function reducer(state, action) {
           timeStatusLoading: false,
         },
       };
+    //專注統計頁-排行榜
     case RANK_DATA_REQUEST:
       return {
         ...state,
@@ -124,6 +142,34 @@ function reducer(state, action) {
           rankDataLoading: false,
         },
       };
+    //專注統計頁-全班專注平均資料
+    case CLASSROOM_CONCERN_INFO_REQUEST:
+      return {
+        ...state,
+        classroomConcernInfo:{
+          ...state.classroomConcernInfo,
+          classroomConcernInfoLoading: true,
+        },
+      };
+    case SET_CLASSROOM_CONCERN_INFO:
+      return {
+        ...state,
+        classroomConcernInfo:{
+          ...state.classroomConcernInfo,
+          classroomConcernData: action.payload,
+          classroomConcernInfoLoading: false,
+        },
+      };
+    case CLASSROOM_CONCERN_INFO_FAIL:
+      return {
+        ...state,
+        classroomConcernInfo:{
+          ...state.classroomConcernInfo,
+          classroomConcernInfoLoading: false,
+          error: action.payload,
+        },
+      };
+    //專注統計頁-學生資料
     case STUDENT_CONCERN_INFO_REQUEST:
       return {
         ...state,
@@ -150,6 +196,7 @@ function reducer(state, action) {
           error: action.payload,
         },
       };
+    //點名系統
     case SET_ROLLCALL_STATUS:
       return {
         ...state,

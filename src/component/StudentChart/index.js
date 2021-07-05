@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import ReactEcharts from "echarts-for-react";
 //Store
 import { StoreContext } from "../../store/reducer";
@@ -26,9 +26,6 @@ const StudentChart = (prop) => {
       return "不專心";
     }
   };
-
-  console.log(studentInfo.concernDegreeArray);
-  // const newConcernDegreeArray =  studentInfo.concernDegreeArray;
 
   var newConcernDegreeArray = studentInfo.concernDegreeArray.map(function (
     value
