@@ -14,7 +14,11 @@ import { setAsideActiveItem } from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
-import { getClassroomTimeStatus, getRankData } from "../../store/actions";
+import {
+  getClassroomTimeStatus,
+  getRankData,
+  getStudentConcernInfo,
+} from "../../store/actions";
 
 const Home = () => {
   const classroomDataID = "60dd2a3d9b567c224c85482c";
@@ -23,14 +27,26 @@ const Home = () => {
     state: {
       classroomTimeStatus: { isClassing, startTime, restTime, endTime },
       rankData: { concernPercentageRank, bestLastedRank },
+      studentConcernInfo: { studentConcernData },
     },
     dispatch,
   } = useContext(StoreContext);
+
+  //設定左邊側邊欄目前的頁面
+  const { uiDispatch } = useContext(UIStoreContext);
+
+  useEffect(() => {
+    setAsideActiveItem(uiDispatch, path.home);
+  }, [uiDispatch]);
 
   //從後台撈上課時間資料
   useEffect(() => {
     getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataID });
     getRankData(dispatch, { classroomDataID: classroomDataID, rankCount: 3 });
+    getStudentConcernInfo(dispatch, {
+      classroomDataID: classroomDataID,
+      timeSpacing: 60,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,19 +61,54 @@ const Home = () => {
     }
   };
 
-  //換算持續專注時間
-  const bestLastedTime = (bestLasted) => {
-    var timeArray = bestLasted.split(":");
+  //時間換算成分鐘
+  const timeChangeToMins = (time) => {
+    var timeArray = time.split(":");
     var mins = timeArray[0] * 60 + timeArray[1] * 1;
-    return Math.floor(mins); 
-  }
+    return Math.floor(mins);
+  };
 
-  //設定左邊側邊欄目前的頁面
-  const { uiDispatch } = useContext(UIStoreContext);
+  //平均專注數值判斷是否專心
+  const concernRangeMax = 0.8;
+  const concernRangeMin = 0.5;
+  const concernRange = (aveConcern) => {
+    if (aveConcern >= concernRangeMax) {
+      return "專心";
+    } else if (aveConcern < concernRangeMax && aveConcern > concernRangeMin) {
+      return "普通";
+    } else if (aveConcern <= concernRangeMin) {
+      return "不專心";
+    }
+  };
+  //學生資訊-平均專注數值判斷
+  const studentConcernRange = (aveConcern) => {
+    if (aveConcern >= concernRangeMax) {
+      return styles.concernLevel_green;
+    } else if (aveConcern < concernRangeMax && aveConcern > concernRangeMin) {
+      return styles.concernLevel_yellow;
+    } else if (aveConcern <= concernRangeMin) {
+      return styles.concernLevel_red;
+    }
+  };
+
+  //找尋特定的學生資訊
+  const [studentID, setStudentID] = useState("");
+  const [studentPersonalInfo, setStudentPersonInfo] = useState({});
 
   useEffect(() => {
-    setAsideActiveItem(uiDispatch, path.home);
-  }, [uiDispatch]);
+    if (studentConcernData[0] !== undefined) {
+      setStudentPersonInfo(studentConcernData[0]);
+      setStudentID(studentConcernData[0].studentID);
+    }
+  }, [studentConcernData]);
+
+  const findStudentInfo = (studentID) => {
+    setStudentID(studentID);
+    const studentInfo = studentConcernData.find(
+      (x) => x.studentID === studentID
+    );
+    setStudentPersonInfo(studentInfo);
+  };
 
   //設定全班資訊目前選擇的項目
   const [activeNavItem, setActiveNavItem] = useState("info");
@@ -138,7 +189,9 @@ const Home = () => {
                         <div className={styles.number}>{rank.studentID}</div>
                       </div>
                       <div className={styles.personBottom}>
-                        <div className={styles.value}>{`${bestLastedTime(rank.bestLasted)}mins`}</div>
+                        <div className={styles.value}>{`${timeChangeToMins(
+                          rank.bestLasted
+                        )}mins`}</div>
                       </div>
                     </div>
                   ))}
@@ -184,42 +237,24 @@ const Home = () => {
                     </div>
                   </div>
                   <div className={styles.tbody}>
-                    <div className={styles.td_content}>
-                      <div className={styles.td}>陳小花</div>
-                      <div className={styles.td}>陳小花</div>
-                      <div className={styles.td}>110934001</div>
-                      <div className={styles.td}>專心</div>
-                    </div>
-                    <div className={styles.td_content}>
-                      <div className={styles.td}>陳大花</div>
-                      <div className={styles.td}>陳大花</div>
-                      <div className={styles.td}>110934002</div>
-                      <div className={styles.td}>不專心</div>
-                    </div>
-                    <div className={styles.td_content}>
-                      <div className={styles.td}>郭小花</div>
-                      <div className={styles.td}>郭小花</div>
-                      <div className={styles.td}>110934003</div>
-                      <div className={styles.td}>普通</div>
-                    </div>
-                    <div className={styles.td_content}>
-                      <div className={styles.td}>郭大花</div>
-                      <div className={styles.td}>郭大花</div>
-                      <div className={styles.td}>110934004</div>
-                      <div className={styles.td}>專心</div>
-                    </div>
-                    <div className={styles.td_content}>
-                      <div className={styles.td}>郭大花</div>
-                      <div className={styles.td}>郭大花</div>
-                      <div className={styles.td}>110934004</div>
-                      <div className={styles.td}>專心</div>
-                    </div>
-                    <div className={styles.td_content}>
-                      <div className={styles.td}>郭大花</div>
-                      <div className={styles.td}>郭大花</div>
-                      <div className={styles.td}>110934004</div>
-                      <div className={styles.td}>專心</div>
-                    </div>
+                    {studentConcernData.map((student) => (
+                      <div className={styles.td_content} key={student}>
+                        <div className={styles.td}>{student.studentName}</div>
+                        <div className={styles.td}>
+                          {student.studentGoogleName}
+                        </div>
+                        <div className={styles.td}>{student.studentID}</div>
+                        <div
+                          className={`${styles.td} ${
+                            student.aveConcern <= concernRangeMin
+                              ? `${styles.td_red}`
+                              : ""
+                          }`}
+                        >
+                          {concernRange(student.aveConcern)}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -242,36 +277,71 @@ const Home = () => {
             <div className={styles.studentList}>
               <div className={styles.title}>學生選單</div>
               <div className={styles.students}>
-                <div className={`${styles.student} ${styles.student_active}`}>
-                  <div className={styles.name}>郭昀甄</div>
-                  <div className={styles.number}>110934002</div>
-                </div>
-                <div className={styles.student}>
-                  <div className={styles.name}>李淯萱</div>
-                  <div className={styles.number}>110934002</div>
-                </div>
-                <div className={styles.student}>
-                  <div className={styles.name}>沈桓民</div>
-                  <div className={styles.number}>110934002</div>
-                </div>
+                {studentConcernData.map((student) => (
+                  <div
+                    className={`${styles.student} ${
+                      studentID === `${student.studentID}`
+                        ? `${styles.student_active}`
+                        : ""
+                    }`}
+                    key={student}
+                    onClick={() => findStudentInfo(`${student.studentID}`)}
+                  >
+                    <div className={styles.name}>{student.studentName}</div>
+                    <div className={styles.number}>{student.studentID}</div>
+                  </div>
+                ))}
               </div>
             </div>
             <div className={styles.concernDetail}>
-              <div className={styles.concernSection}>
-                <div className={styles.detailTitle}>專注度百分比</div>
-                <div className={styles.number}>97%</div>
-              </div>
-              <div className={styles.concernSection}>
-                <div className={styles.detailTitle}>平均專注數值</div>
-                <div className={styles.number}>0.94</div>
-              </div>
-              <div className={styles.concernSection}>
-                <div className={styles.detailTitle}>最高持續專注時間</div>
-                <div className={styles.number}>35分鐘</div>
-              </div>
+              {studentPersonalInfo.studentID !== undefined ? (
+                <>
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>課程參與比例</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.attendTimePercentage}
+                    </div>
+                  </div>
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>專注百分比</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.concernPercentage}
+                    </div>
+                  </div>
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>平均專注數值</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.aveConcern}
+                    </div>
+                    <div
+                      className={`${styles.concernLevel} ${studentConcernRange(
+                        studentPersonalInfo.aveConcern
+                      )}`}
+                    >
+                      {concernRange(studentPersonalInfo.aveConcern)}
+                    </div>
+                  </div>
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>最長專注時間</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.bestLasted}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </div>
             <div className={styles.studentChart}>
-              <StudentChart />
+              {studentPersonalInfo.studentID !== undefined ? (
+                <StudentChart
+                  studentID={studentID}
+                  concernRangeMax={concernRangeMax}
+                  concernRangeMin={concernRangeMin}
+                />
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>

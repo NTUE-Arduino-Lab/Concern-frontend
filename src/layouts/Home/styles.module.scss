@@ -42,7 +42,7 @@
       .time {
         line-height: 1.5em;
         &.redTime{
-          color: red;
+          color: $range-red;
         }
       }
     }
@@ -180,6 +180,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            &.td_red{
+              color: $range-red;
+            }
           }
         }
       }
@@ -197,7 +200,7 @@
 
 .personInfo_content {
   width: 100%;
-  height: 400px;
+  height: 450px;
   display: flex;
   border-radius: $content-border-radius;
   background: $section-bg;
@@ -253,6 +256,25 @@
       border-radius: $button-border-radius;
       padding: 10px;
       margin-bottom: 10px;
+      .concernLevel {
+        width: 100%;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &.concernLevel_green {
+          background: #00CC66;
+          color: #FEFFFE;
+        }
+        &.concernLevel_yellow {
+          background: #ffff00;
+          color: #666;
+        }
+        &.concernLevel_red{
+          background: #FE5F55;
+          color: #FEFFFE;
+        }
+      }
     }
   }
   .studentChart {

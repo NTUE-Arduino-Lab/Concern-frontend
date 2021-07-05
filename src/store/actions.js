@@ -2,11 +2,17 @@ import axios from "axios";
 
 import {
   TIME_STATUS_REQUEST,
-  TIME_STATUS_FAIL,
   SET_CLASSROOM_TIME_STATUS,
+  TIME_STATUS_FAIL,
+  
   RANK_DATA_REQUEST,
-  RANK_DATA_FAIL,
   SET_RANK_DATA,
+  RANK_DATA_FAIL,
+
+  STUDENT_CONCERN_INFO_REQUEST,
+  SET_STUDENT_CONCERN_INFO,
+  STUDENT_CONCERN_INFO_FAIL,
+  
   SET_ROLLCALL_STATUS,
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
@@ -50,6 +56,23 @@ export const getRankData = async (dispatch, options) => {
     dispatch({ type: RANK_DATA_FAIL, payload: error });
   }
 };
+
+export const getStudentConcernInfo = async (dispatch, options) => {
+    dispatch({ type: STUDENT_CONCERN_INFO_REQUEST });
+    const { classroomDataID, timeSpacing } = options;
+    try {
+      const { data } = await axios.post(SERVER_URL + "/classroom/getPersonDiagramList", {
+        classroomDataID,
+        timeSpacing,
+      });
+      dispatch({
+        type: SET_STUDENT_CONCERN_INFO,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({ type: STUDENT_CONCERN_INFO_FAIL, payload: error });
+    }
+  };
 
 export const getRollCallStatus = async (dispatch, options) => {
   dispatch({ type: BEGIN_DATA_REQUEST });

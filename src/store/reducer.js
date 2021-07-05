@@ -3,12 +3,19 @@ import PropTypes from "prop-types";
 
 import {
   TIME_STATUS_REQUEST,
-  TIME_STATUS_FAIL,
   SET_CLASSROOM_TIME_STATUS,
+  TIME_STATUS_FAIL,
+  
   RANK_DATA_REQUEST,
-  RANK_DATA_FAIL,
   SET_RANK_DATA,
+  RANK_DATA_FAIL,
+  
+  STUDENT_CONCERN_INFO_REQUEST,
+  SET_STUDENT_CONCERN_INFO,
+  STUDENT_CONCERN_INFO_FAIL,
+
   SET_ROLLCALL_STATUS,
+
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
   FAIL_DATA_REQUEST,
@@ -36,7 +43,12 @@ const initialState = {
     error: null,
   },
 
-  //
+  //專注度統計學生專注資訊
+  studentConcernInfo: {
+    studentConcernData: [],
+    studentConcernInfoLoading: false,
+    error: null,
+  },
 
   //點名系統
   rollCallSystemData: {
@@ -110,6 +122,32 @@ function reducer(state, action) {
           ...state.rankData,
           error: action.payload,
           rankDataLoading: false,
+        },
+      };
+    case STUDENT_CONCERN_INFO_REQUEST:
+      return {
+        ...state,
+        studentConcernInfo: {
+          ...state.studentConcernInfo,
+          studentConcernInfoLoading: true,
+        },
+      };
+    case SET_STUDENT_CONCERN_INFO:
+      return {
+        ...state,
+        studentConcernInfo: {
+          ...state.studentConcernInfo,
+          studentConcernData: action.payload,
+          studentConcernInfoLoading: false,
+        },
+      };
+    case STUDENT_CONCERN_INFO_FAIL: 
+      return {
+        ...state,
+        studentConcernInfo:{
+          ...state.studentConcernInfo,
+          studentConcernInfoLoading: false,
+          error: action.payload,
         },
       };
     case SET_ROLLCALL_STATUS:
