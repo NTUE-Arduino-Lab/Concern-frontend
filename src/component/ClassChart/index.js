@@ -46,7 +46,13 @@ const ClassChart = (prop) => {
         data: timeArray,
     },
     yAxis: {
-        data: ["不專心","普通","專心"]
+        data: ["不專心","普通","專心"],
+        splitLine: {
+            show: true, //为false 时隐藏
+            lineStyle: {
+              color: "rgba(0,0,0,0.1)", //设置分割线颜色
+            },
+          },
     },
     series : [
         {
