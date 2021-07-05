@@ -13,7 +13,9 @@ const StudentChart = (prop) => {
 
   const studentInfo = studentConcernData.find((x) => x.studentID === studentID);
   const concernRange = (concernDegree) => {
-    if (concernDegree >= concernRangeMax) {
+    if (concernDegree === null) {
+      return "";
+    } else if (concernDegree >= concernRangeMax) {
       return "專心";
     } else if (
       concernDegree < concernRangeMax &&
@@ -36,7 +38,6 @@ const StudentChart = (prop) => {
 
   // // console.log(studentInfo.timeLineArray);
 
-
   const option = {
     title: {
       text: `${studentInfo.studentName}的專注度統計`,
@@ -53,10 +54,22 @@ const StudentChart = (prop) => {
     // },
     xAxis: {
       data: studentInfo.timeLineArray,
+      // splitLine: {
+      //   show: true, //为false 时隐藏
+      //   lineStyle: {
+      //     color: "rgba(0,0,0,0.2)" //设置分割线颜色
+      //   }
+      // }
     },
     yAxis: {
       data: ["不專心", "普通", "專心"],
-      // type: 'value'
+      type: "category",
+      splitLine: {
+        show: true, //为false 时隐藏
+        lineStyle: {
+          color: "rgba(0,0,0,0.1)", //设置分割线颜色
+        },
+      },
     },
     series: [
       {

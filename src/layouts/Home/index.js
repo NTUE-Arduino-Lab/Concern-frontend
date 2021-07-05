@@ -72,7 +72,9 @@ const Home = () => {
   const concernRangeMax = 0.8;
   const concernRangeMin = 0.5;
   const concernRange = (aveConcern) => {
-    if (aveConcern >= concernRangeMax) {
+    if (aveConcern === null) {
+      return "無";
+    } else if (aveConcern >= concernRangeMax) {
       return "專心";
     } else if (aveConcern < concernRangeMax && aveConcern > concernRangeMin) {
       return "普通";
@@ -82,7 +84,10 @@ const Home = () => {
   };
   //學生資訊-平均專注數值判斷
   const studentConcernRange = (aveConcern) => {
-    if (aveConcern >= concernRangeMax) {
+    if(aveConcern === null){
+      return styles.concernLevel_red;
+    }
+    else if (aveConcern >= concernRangeMax) {
       return styles.concernLevel_green;
     } else if (aveConcern < concernRangeMax && aveConcern > concernRangeMin) {
       return styles.concernLevel_yellow;
