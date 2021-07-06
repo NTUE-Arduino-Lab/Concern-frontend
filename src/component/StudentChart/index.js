@@ -38,7 +38,7 @@ const StudentChart = (prop) => {
   const option = {
     title: {
       text: `${studentInfo.studentName}的專注度統計`,
-      x: "center",
+      x: "70",
     },
     tooltip: {
       trigger: "axis",

@@ -48,6 +48,7 @@ const Home = () => {
 
   //從後台撈上課時間資料
   const [classTimeSpacing, setClassTimeSpacing] = useState(1);
+  const [studentTimeSpacing, setStudentTimeSpacing] = useState(1);
 
   useEffect(() => {
     getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataID });
@@ -70,6 +71,13 @@ const Home = () => {
     });
   };
 
+  const callStudentConcernInfoApi = () => {
+    getStudentConcernInfo(dispatch, {
+      classroomDataID: classroomDataID,
+      timeSpacing: studentTimeSpacing * 60,
+    });
+  };
+
   //設定名次不同的漸層色
   const rankBg = (rankNumber) => {
     if (rankNumber === 1) {
@@ -87,6 +95,10 @@ const Home = () => {
     var mins = timeArray[0] * 60 + timeArray[1] * 1;
     return Math.floor(mins);
   };
+
+  //設定全班資訊目前選擇的項目
+  const [activeNavItem, setActiveNavItem] = useState("info");
+  useEffect(() => {}, [activeNavItem]);
 
   //平均專注數值判斷是否專心
   const concernRangeMax = 0.8;
@@ -140,10 +152,10 @@ const Home = () => {
     setStudentPersonInfo(studentInfo);
   };
 
-  //設定全班資訊目前選擇的項目
-  const [activeNavItem, setActiveNavItem] = useState("info");
-
-  useEffect(() => {}, [activeNavItem]);
+  //學生圖表SliderChange
+  const studentSliderChange = (event, newValue) => {
+    setStudentTimeSpacing(newValue);
+  };
 
   return (
     <Fragment>
@@ -392,6 +404,28 @@ const Home = () => {
               )}
             </div>
             <div className={styles.studentChart}>
+              <div className={styles.classSliderSection}>
+                <div className={styles.classSlider}>
+                  <Typography
+                    id="discrete-slider-custom"
+                    gutterBottom
+                    className={styles.classSliderTitle}
+                  >
+                    計算時間區隔調整 （單位：分）
+                  </Typography>
+                  <PrettoSlider
+                    defaultValue={1}
+                    value={studentTimeSpacing}
+                    aria-labelledby="discrete-slider-custom"
+                    step={1}
+                    marks={sliderMarks}
+                    min={1}
+                    max={10}
+                    onChange={studentSliderChange}
+                    onChangeCommitted={callStudentConcernInfoApi}
+                  />
+                </div>
+              </div>
               {studentPersonalInfo.studentID !== undefined ? (
                 <StudentChart
                   studentID={studentID}
