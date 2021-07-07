@@ -7,6 +7,7 @@ import Header from "../../component/Header";
 import Aside from "../../component/Aside";
 import ClassChart from "../../component/ClassChart";
 import StudentChart from "../../component/StudentChart";
+import Loading from "../../component/Loading";
 import { PrettoSlider, sliderMarks } from "../../component/SliderStyle";
 import path from "../../utils/path";
 
@@ -28,9 +29,15 @@ const Home = () => {
 
   const {
     state: {
-      classroomTimeStatus: { isClassing, startTime, restTime, endTime },
-      rankData: { concernPercentageRank, bestLastedRank },
-      studentConcernInfo: { studentConcernData },
+      classroomTimeStatus: {
+        isClassing,
+        startTime,
+        restTime,
+        endTime,
+        timeStatusLoading,
+      },
+      rankData: { concernPercentageRank, bestLastedRank, rankDataLoading },
+      studentConcernInfo: { studentConcernData, studentConcernInfoLoading },
       classroomConcernInfo: {
         classroomConcernData,
         classroomConcernInfoLoading,
@@ -136,11 +143,16 @@ const Home = () => {
   //找尋特定的學生資訊
   const [studentID, setStudentID] = useState("");
   const [studentPersonalInfo, setStudentPersonInfo] = useState({});
+  //儲存studentConcernData的所有資料
+  const [studentAllData, setStudentAllData] = useState();
 
   useEffect(() => {
     if (studentConcernData[0] !== undefined) {
       setStudentPersonInfo(studentConcernData[0]);
       setStudentID(studentConcernData[0].studentID);
+    }
+    if(studentConcernData.length > 0){
+      setStudentAllData(studentConcernData);
     }
   }, [studentConcernData]);
 
@@ -169,76 +181,104 @@ const Home = () => {
           <div className={styles.timeRecord}>
             <div className={styles.title}>本次上課時段紀錄</div>
             <div className={styles.timeRecord_section}>
-              <div className={styles.timeSection}>
-                <div className={styles.time}>開始時間：</div>
-                <div className={styles.time}>{startTime}</div>
-              </div>
-              {restTime.map((restTimeRecord) => (
-                <div
-                  className={styles.timeSection}
-                  key={restTime.restStartTime}
-                >
-                  <div className={styles.time}>休息時間：</div>
-                  <div
-                    className={styles.time}
-                  >{`${restTimeRecord.restStartTime} - ${restTimeRecord.restEndTime}`}</div>
+              {timeStatusLoading ? (
+                <div className={styles.loading}>
+                  <Loading />
                 </div>
-              ))}
-              <div className={styles.timeSection}>
-                <div className={styles.time}>結束時間：</div>
-                {isClassing ? (
-                  <div className={`${styles.time} ${styles.redTime}`}>
-                    上課中...
+              ) : (
+                <>
+                  <div className={styles.timeSection}>
+                    <div className={styles.time}>開始時間：</div>
+                    <div className={styles.time}>{startTime}</div>
                   </div>
-                ) : (
-                  <div className={styles.time}>{endTime}</div>
-                )}
-              </div>
+                  {restTime.map((restTimeRecord) => (
+                    <div
+                      className={styles.timeSection}
+                      key={restTime.restStartTime}
+                    >
+                      <div className={styles.time}>休息時間：</div>
+                      <div
+                        className={styles.time}
+                      >{`${restTimeRecord.restStartTime} - ${restTimeRecord.restEndTime}`}</div>
+                    </div>
+                  ))}
+                  <div className={styles.timeSection}>
+                    <div className={styles.time}>結束時間：</div>
+                    {isClassing ? (
+                      <div className={`${styles.time} ${styles.redTime}`}>
+                        上課中...
+                      </div>
+                    ) : (
+                      <div className={styles.time}>{endTime}</div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className={styles.rank}>
             <div className={styles.title}>班級專注排行榜</div>
             <div className={styles.rank_section}>
-              <div className={styles.percentRank}>
-                <div>專注百分比排行</div>
-                <div className={styles.rank_content}>
-                  {concernPercentageRank.map((rank) => (
-                    <div className={styles.content_person} key={rank.rank}>
-                      <div
-                        className={`${styles.personTop} ${rankBg(rank.rank)}`}
-                      >
-                        <div className={styles.name}>{rank.studentName}</div>
-                        <div className={styles.number}>{rank.studentID}</div>
-                      </div>
-                      <div className={styles.personBottom}>
-                        <div className={styles.value}>
-                          {rank.concernPercentage}
+              {rankDataLoading ? (
+                <div className={styles.loading}>
+                  <Loading />
+                </div>
+              ) : (
+                <>
+                  <div className={styles.percentRank}>
+                    <div>專注百分比排行</div>
+                    <div className={styles.rank_content}>
+                      {concernPercentageRank.map((rank) => (
+                        <div className={styles.content_person} key={rank.rank}>
+                          <div
+                            className={`${styles.personTop} ${rankBg(
+                              rank.rank
+                            )}`}
+                          >
+                            <div className={styles.name}>
+                              {rank.studentName}
+                            </div>
+                            <div className={styles.number}>
+                              {rank.studentID}
+                            </div>
+                          </div>
+                          <div className={styles.personBottom}>
+                            <div className={styles.value}>
+                              {rank.concernPercentage}
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div className={styles.percentRank}>
-                <div>持續專注時間排行</div>
-                <div className={styles.rank_content}>
-                  {bestLastedRank.map((rank) => (
-                    <div className={styles.content_person} key={rank.rank}>
-                      <div
-                        className={`${styles.personTop} ${rankBg(rank.rank)}`}
-                      >
-                        <div className={styles.name}>{rank.studentName}</div>
-                        <div className={styles.number}>{rank.studentID}</div>
-                      </div>
-                      <div className={styles.personBottom}>
-                        <div className={styles.value}>{`${timeChangeToMins(
-                          rank.bestLasted
-                        )}mins`}</div>
-                      </div>
+                  </div>
+                  <div className={styles.percentRank}>
+                    <div>持續專注時間排行</div>
+                    <div className={styles.rank_content}>
+                      {bestLastedRank.map((rank) => (
+                        <div className={styles.content_person} key={rank.rank}>
+                          <div
+                            className={`${styles.personTop} ${rankBg(
+                              rank.rank
+                            )}`}
+                          >
+                            <div className={styles.name}>
+                              {rank.studentName}
+                            </div>
+                            <div className={styles.number}>
+                              {rank.studentID}
+                            </div>
+                          </div>
+                          <div className={styles.personBottom}>
+                            <div className={styles.value}>{`${timeChangeToMins(
+                              rank.bestLasted
+                            )}mins`}</div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -268,38 +308,44 @@ const Home = () => {
                 activeNavItem === "info" ? "" : `${styles.navContent_none}`
               }`}
             >
-              <div className={styles.infoContent}>
-                <div className={styles.table}>
-                  <div className={styles.thead}>
-                    <div className={styles.th_content}>
-                      <div className={styles.th}>學生姓名</div>
-                      <div className={styles.th}>Google Meet名稱</div>
-                      <div className={styles.th}>學生學號</div>
-                      <div className={styles.th}>專注度程度</div>
+              {studentConcernInfoLoading && studentAllData !== studentConcernData? (
+                <div className={styles.loading}>
+                  <Loading />
+                </div>
+              ) : (
+                <div className={styles.infoContent}>
+                  <div className={styles.table}>
+                    <div className={styles.thead}>
+                      <div className={styles.th_content}>
+                        <div className={styles.th}>學生姓名</div>
+                        <div className={styles.th}>Google Meet名稱</div>
+                        <div className={styles.th}>學生學號</div>
+                        <div className={styles.th}>專注度程度</div>
+                      </div>
+                    </div>
+                    <div className={styles.tbody}>
+                      {studentConcernData.map((student) => (
+                        <div className={styles.td_content} key={student}>
+                          <div className={styles.td}>{student.studentName}</div>
+                          <div className={styles.td}>
+                            {student.studentGoogleName}
+                          </div>
+                          <div className={styles.td}>{student.studentID}</div>
+                          <div
+                            className={`${styles.td} ${
+                              student.aveConcern <= concernRangeMin
+                                ? `${styles.td_red}`
+                                : ""
+                            }`}
+                          >
+                            {concernRange(student.aveConcern)}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div className={styles.tbody}>
-                    {studentConcernData.map((student) => (
-                      <div className={styles.td_content} key={student}>
-                        <div className={styles.td}>{student.studentName}</div>
-                        <div className={styles.td}>
-                          {student.studentGoogleName}
-                        </div>
-                        <div className={styles.td}>{student.studentID}</div>
-                        <div
-                          className={`${styles.td} ${
-                            student.aveConcern <= concernRangeMin
-                              ? `${styles.td_red}`
-                              : ""
-                          }`}
-                        >
-                          {concernRange(student.aveConcern)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
-              </div>
+              )}
             </div>
             <div
               className={`${styles.navContent} ${
@@ -329,7 +375,9 @@ const Home = () => {
                 </div>
               </div>
               {classroomConcernInfoLoading ? (
-                <></>
+                <div className={styles.loading}>
+                  <Loading />
+                </div>
               ) : (
                 <div>
                   <ClassChart
@@ -345,97 +393,113 @@ const Home = () => {
         <div className={styles.personInfo}>
           <div className={styles.title}>個人資訊</div>
           <div className={styles.personInfo_content}>
-            <div className={styles.studentList}>
-              <div className={styles.title}>學生選單</div>
-              <div className={styles.students}>
-                {studentConcernData.map((student) => (
-                  <div
-                    className={`${styles.student} ${
-                      studentID === `${student.studentID}`
-                        ? `${styles.student_active}`
-                        : ""
-                    }`}
-                    key={student}
-                    onClick={() => findStudentInfo(`${student.studentID}`)}
-                  >
-                    <div className={styles.name}>{student.studentName}</div>
-                    <div className={styles.number}>{student.studentID}</div>
-                  </div>
-                ))}
+            {studentConcernInfoLoading && studentAllData !== studentConcernData? (
+              <div className={styles.loading}>
+                <Loading />
               </div>
-            </div>
-            <div className={styles.concernDetail}>
-              {studentPersonalInfo.studentID !== undefined ? (
-                <>
-                  <div className={styles.concernSection}>
-                    <div className={styles.detailTitle}>課程參與比例</div>
-                    <div className={styles.number}>
-                      {studentPersonalInfo.attendTimePercentage}
-                    </div>
+            ) : (
+              <>
+                <div className={styles.studentList}>
+                  <div className={styles.title}>學生選單</div>
+                  <div className={styles.students}>
+                    {studentConcernData.map((student) => (
+                      <div
+                        className={`${styles.student} ${
+                          studentID === `${student.studentID}`
+                            ? `${styles.student_active}`
+                            : ""
+                        }`}
+                        key={student}
+                        onClick={() => findStudentInfo(`${student.studentID}`)}
+                      >
+                        <div className={styles.name}>{student.studentName}</div>
+                        <div className={styles.number}>{student.studentID}</div>
+                      </div>
+                    ))}
                   </div>
-                  <div className={styles.concernSection}>
-                    <div className={styles.detailTitle}>專注百分比</div>
-                    <div className={styles.number}>
-                      {studentPersonalInfo.concernPercentage}
-                    </div>
-                  </div>
-                  <div className={styles.concernSection}>
-                    <div className={styles.detailTitle}>平均專注數值</div>
-                    <div className={styles.number}>
-                      {studentPersonalInfo.aveConcern}
-                    </div>
-                    <div
-                      className={`${styles.concernLevel} ${studentConcernRange(
-                        studentPersonalInfo.aveConcern
-                      )}`}
-                    >
-                      {concernRange(studentPersonalInfo.aveConcern)}
-                    </div>
-                  </div>
-                  <div className={styles.concernSection}>
-                    <div className={styles.detailTitle}>最長專注時間</div>
-                    <div className={styles.number}>
-                      {studentPersonalInfo.bestLasted}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
-            </div>
-            <div className={styles.studentChart}>
-              <div className={styles.classSliderSection}>
-                <div className={styles.classSlider}>
-                  <Typography
-                    id="discrete-slider-custom"
-                    gutterBottom
-                    className={styles.classSliderTitle}
-                  >
-                    計算時間區隔調整 （單位：分）
-                  </Typography>
-                  <PrettoSlider
-                    defaultValue={1}
-                    value={studentTimeSpacing}
-                    aria-labelledby="discrete-slider-custom"
-                    step={1}
-                    marks={sliderMarks}
-                    min={1}
-                    max={10}
-                    onChange={studentSliderChange}
-                    onChangeCommitted={callStudentConcernInfoApi}
-                  />
                 </div>
-              </div>
-              {studentPersonalInfo.studentID !== undefined ? (
-                <StudentChart
-                  studentID={studentID}
-                  concernRangeMax={concernRangeMax}
-                  concernRangeMin={concernRangeMin}
-                />
-              ) : (
-                <></>
-              )}
-            </div>
+                <div className={styles.concernDetail}>
+                  {studentPersonalInfo.studentID !== undefined ? (
+                    <>
+                      <div className={styles.concernSection}>
+                        <div className={styles.detailTitle}>課程參與比例</div>
+                        <div className={styles.number}>
+                          {studentPersonalInfo.attendTimePercentage}
+                        </div>
+                      </div>
+                      <div className={styles.concernSection}>
+                        <div className={styles.detailTitle}>專注百分比</div>
+                        <div className={styles.number}>
+                          {studentPersonalInfo.concernPercentage}
+                        </div>
+                      </div>
+                      <div className={styles.concernSection}>
+                        <div className={styles.detailTitle}>平均專注數值</div>
+                        <div className={styles.number}>
+                          {studentPersonalInfo.aveConcern}
+                        </div>
+                        <div
+                          className={`${
+                            styles.concernLevel
+                          } ${studentConcernRange(
+                            studentPersonalInfo.aveConcern
+                          )}`}
+                        >
+                          {concernRange(studentPersonalInfo.aveConcern)}
+                        </div>
+                      </div>
+                      <div className={styles.concernSection}>
+                        <div className={styles.detailTitle}>最長專注時間</div>
+                        <div className={styles.number}>
+                          {studentPersonalInfo.bestLasted}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+                <div className={styles.studentChart}>
+                  <div className={styles.classSliderSection}>
+                    <div className={styles.classSlider}>
+                      <Typography
+                        id="discrete-slider-custom"
+                        gutterBottom
+                        className={styles.classSliderTitle}
+                      >
+                        計算時間區隔調整 （單位：分）
+                      </Typography>
+                      <PrettoSlider
+                        defaultValue={1}
+                        value={studentTimeSpacing}
+                        aria-labelledby="discrete-slider-custom"
+                        step={1}
+                        marks={sliderMarks}
+                        min={1}
+                        max={10}
+                        onChange={studentSliderChange}
+                        onChangeCommitted={callStudentConcernInfoApi}
+                      />
+                    </div>
+                  </div>
+                  {studentConcernInfoLoading ? (
+                    <div className={styles.loading}>
+                      <Loading />
+                    </div>
+                  ) : studentPersonalInfo.studentID !== undefined ? (
+                    <StudentChart
+                      studentID={studentID}
+                      concernRangeMax={concernRangeMax}
+                      concernRangeMin={concernRangeMin}
+                    />
+                  ) : (
+                    <div className={styles.loading}>
+                      <Loading />
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

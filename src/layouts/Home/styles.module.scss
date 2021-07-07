@@ -23,6 +23,13 @@
   margin-bottom: 10px;
 }
 
+.loading{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .sectionTop {
   display: flex;
   margin-bottom: $section-spacing;
@@ -36,6 +43,10 @@
       background: $section-bg;
       padding: 15px 20px;
       overflow-y: scroll;
+      .loading{
+        height: 220px;
+        margin-left: 50px;
+      }
       .timeSection {
         display: flex;
       }
@@ -57,6 +68,10 @@
       background: $section-bg;
       padding: 15px 20px;
       overflow-y: scroll;
+      .loading{
+        height: 220px;
+        margin-left: 50px;
+      }
       .percentRank {
         margin-right: 40px;
       }
@@ -129,7 +144,9 @@
       &.navContent_none {
         display: none;
       }
-
+      .loading{
+        margin-top: 60px;
+      }
       .infoContent {
         width: 100%;
         .table {
@@ -201,6 +218,9 @@
             text-align: center;
           }
         }
+      }
+      .loading{
+        height: 300px;
       }
       // .statisticsContent {
       //   // width: 100%;
@@ -310,6 +330,9 @@
           text-align: center;
         }
       }
+    }
+    .loading{
+      height: 400px;
     }
   }
 }
