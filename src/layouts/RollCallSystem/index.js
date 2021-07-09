@@ -11,7 +11,7 @@ import { setAsideActiveItem } from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
-import { getRollCallStatus } from "../../store/actions";
+import { getRollCallStatus, startRollCall } from "../../store/actions";
 
 const RollCallSystem = () => {
   const classroomDataID = "60dd2a3d9b567c224c85482c";
@@ -37,12 +37,17 @@ const RollCallSystem = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const callStartRollCallApi = (duration) => {
+    startRollCall({ classroomDataID: classroomDataID, duration: duration });
+  }
+
   //按下開始點名的按鈕
   const submitHandler = (e) => {
     e.preventDefault();
     document.getElementById("submit").disabled = true;
     document.getElementById("text_time").disabled = true;
     document.getElementById("text_title").textContent = "學生端點名中，倒數";
+    callStartRollCallApi(time);
     timeCountHandler();
   };
 

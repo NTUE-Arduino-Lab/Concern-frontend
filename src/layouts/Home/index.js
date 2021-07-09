@@ -25,7 +25,9 @@ import {
 } from "../../store/actions";
 
 const Home = () => {
-  const classroomDataID = "60dd2a3d9b567c224c85482c";
+  const [classroomDataID, setClassroomDataID] = useState(
+    "60dd2a3d9b567c224c85482c"
+  );
 
   const {
     state: {
@@ -151,7 +153,7 @@ const Home = () => {
       setStudentPersonInfo(studentConcernData[0]);
       setStudentID(studentConcernData[0].studentID);
     }
-    if(studentConcernData.length > 0){
+    if (studentConcernData.length > 0) {
       setStudentAllData(studentConcernData);
     }
   }, [studentConcernData]);
@@ -308,7 +310,8 @@ const Home = () => {
                 activeNavItem === "info" ? "" : `${styles.navContent_none}`
               }`}
             >
-              {studentConcernInfoLoading && studentAllData !== studentConcernData? (
+              {studentConcernInfoLoading &&
+              studentAllData !== studentConcernData ? (
                 <div className={styles.loading}>
                   <Loading />
                 </div>
@@ -393,7 +396,8 @@ const Home = () => {
         <div className={styles.personInfo}>
           <div className={styles.title}>個人資訊</div>
           <div className={styles.personInfo_content}>
-            {studentConcernInfoLoading && studentAllData !== studentConcernData? (
+            {studentConcernInfoLoading &&
+            studentAllData !== studentConcernData ? (
               <div className={styles.loading}>
                 <Loading />
               </div>

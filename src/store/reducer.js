@@ -2,6 +2,11 @@ import { createContext, useReducer } from "react";
 import PropTypes from "prop-types";
 
 import {
+  //header-老師名稱、所有課程
+  TEACHER_DATA_REQUEST,
+  SET_TEACHER_DATA,
+  TEACHER_DATA_FAIL,
+
   //專注統計頁-上課時段紀錄
   TIME_STATUS_REQUEST,
   SET_CLASSROOM_TIME_STATUS,
@@ -22,9 +27,8 @@ import {
   SET_STUDENT_CONCERN_INFO,
   STUDENT_CONCERN_INFO_FAIL,
 
- //點名系統頁-課堂人數統計
+  //點名系統頁-課堂人數統計
   SET_ROLLCALL_STATUS,
-
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
   FAIL_DATA_REQUEST,
@@ -33,6 +37,14 @@ import {
 export const StoreContext = createContext();
 
 const initialState = {
+  //header老師名稱、所有課程
+  teacherData: {
+    teacherName: "",
+    courses: [],
+    teacherDataLoading: false,
+    error: null,
+  },
+
   //專注度統計上課時段
   classroomTimeStatus: {
     isClassing: true,
@@ -53,7 +65,7 @@ const initialState = {
   },
 
   //專注統計-全班專注平均資訊
-  classroomConcernInfo:{
+  classroomConcernInfo: {
     classroomConcernData: [],
     classroomConcernInfoLoading: false,
     error: null,
@@ -83,6 +95,34 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    //header-老師名稱、所有課程
+    case TEACHER_DATA_REQUEST:
+      return {
+        ...state,
+        teacherData: {
+          ...state.teacherData,
+          teacherDataLoading: true,
+        },
+      };
+    case SET_TEACHER_DATA:
+      return {
+        ...state,
+        teacherData: {
+          ...state.teacherData,
+          teacherName: action.payload.teacher.teacherName,
+          courses: action.payload.teacher.courses,
+          teacherDataLoading: false,
+        },
+      };
+    case TEACHER_DATA_FAIL:
+      return {
+        ...state,
+        teacherData: {
+          ...state.teacherData,
+          error: action.payload,
+          teacherDataLoading: false,
+        },
+      };
     //專注統計頁-上課時段紀錄
     case TIME_STATUS_REQUEST:
       return {
@@ -146,7 +186,7 @@ function reducer(state, action) {
     case CLASSROOM_CONCERN_INFO_REQUEST:
       return {
         ...state,
-        classroomConcernInfo:{
+        classroomConcernInfo: {
           ...state.classroomConcernInfo,
           classroomConcernInfoLoading: true,
         },
@@ -154,7 +194,7 @@ function reducer(state, action) {
     case SET_CLASSROOM_CONCERN_INFO:
       return {
         ...state,
-        classroomConcernInfo:{
+        classroomConcernInfo: {
           ...state.classroomConcernInfo,
           classroomConcernData: action.payload,
           classroomConcernInfoLoading: false,
@@ -163,7 +203,7 @@ function reducer(state, action) {
     case CLASSROOM_CONCERN_INFO_FAIL:
       return {
         ...state,
-        classroomConcernInfo:{
+        classroomConcernInfo: {
           ...state.classroomConcernInfo,
           classroomConcernInfoLoading: false,
           error: action.payload,
@@ -187,10 +227,10 @@ function reducer(state, action) {
           studentConcernInfoLoading: false,
         },
       };
-    case STUDENT_CONCERN_INFO_FAIL: 
+    case STUDENT_CONCERN_INFO_FAIL:
       return {
         ...state,
-        studentConcernInfo:{
+        studentConcernInfo: {
           ...state.studentConcernInfo,
           studentConcernInfoLoading: false,
           error: action.payload,
