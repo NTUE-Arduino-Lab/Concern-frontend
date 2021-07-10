@@ -13,7 +13,7 @@ import path from "../../utils/path";
 
 //uiStore
 import { UIStoreContext } from "../../uiStore/reducer";
-import { setAsideActiveItem } from "../../uiStore/actions";
+import { setClassroomDataID, setAsideActiveItem } from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
@@ -25,9 +25,11 @@ import {
 } from "../../store/actions";
 
 const Home = () => {
-  const [classroomDataID, setClassroomDataID] = useState(
-    "60dd2a3d9b567c224c85482c"
-  );
+
+  const {
+    uiState: { courseDataID, classroomDataID },
+    uiDispatch,
+  } = useContext(UIStoreContext);
 
   const {
     state: {
@@ -49,8 +51,6 @@ const Home = () => {
   } = useContext(StoreContext);
 
   //設定左邊側邊欄目前的頁面
-  const { uiDispatch } = useContext(UIStoreContext);
-
   useEffect(() => {
     setAsideActiveItem(uiDispatch, path.home);
   }, [uiDispatch]);

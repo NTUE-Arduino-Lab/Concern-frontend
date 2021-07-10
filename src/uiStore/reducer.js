@@ -7,7 +7,7 @@ export const UIStoreContext = createContext();
 const initialState = {
   //取得課程資料
   courseDataID: "",
-  classroomDataID: "",
+  classroomDataID: "60dd2a3d9b567c224c85482c",
 
   //側邊欄目前的頁面
   asideBar: {
