@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { Fragment, useContext, useEffect } from "react";
 import styles from "./styles.module.scss";
-import Aside from "../../component/Aside";
 import path from "../../utils/path";
 import { UIStoreContext } from "../../uiStore/reducer";
 import { setAsideActiveItem } from "../../uiStore/actions";
@@ -15,7 +14,6 @@ const FullAttendanceList = () => {
 
   return (
     <Fragment>
-      <Aside />
       <div className={styles.container}>
         <div className={styles.buttonSide}>
           <button className={styles.buttonSide_button}>下載</button>

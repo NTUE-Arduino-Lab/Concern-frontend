@@ -8,6 +8,7 @@ import StudentsListPage from "../layouts/StudentsList";
 import RollCallSystemPage from "../layouts/RollCallSystem";
 import FullAttendanceListPage from "../layouts/FullAttendanceList";
 import Header from '../component/Header';
+import Aside from "../component/Aside";
 
 const Routes = () => {
   return (
@@ -15,6 +16,7 @@ const Routes = () => {
       <StoreProvider>
         <Router>
           <Header />
+          <Aside />
           <Switch>
             {/* 專注度統計 */}
             <Route exact path={path.home} component={HomePage} />

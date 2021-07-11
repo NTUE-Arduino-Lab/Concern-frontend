@@ -26,7 +26,7 @@ const Header = () => {
   } = useContext(StoreContext);
 
   const {
-    uiState: { courseDataIDState, classroomDataIDState },
+    uiState: { courseDataIDState },
     uiDispatch,
   } = useContext(UIStoreContext);
 
@@ -51,10 +51,6 @@ const Header = () => {
     setCourseDataID(uiDispatch, course);
     getCourseWeeksData(dispatch, { courseDataID: course });
   };
-
-  // useEffect(() => {
-  //   console.log("classroomDataIDState: " + classroomDataIDState);
-  // }, [classroomDataIDState]);
 
   return (
     <header className={styles.header}>

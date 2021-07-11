@@ -3,7 +3,6 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import "../../select.scss";
 import styles from "./styles.module.scss";
-import Aside from "../../component/Aside";
 import ClassChart from "../../component/ClassChart";
 import StudentChart from "../../component/StudentChart";
 import Loading from "../../component/Loading";
@@ -177,7 +176,6 @@ const Home = () => {
 
   return (
     <Fragment>
-      <Aside />
       <div className={styles.container}>
         <select
           className={styles.select}

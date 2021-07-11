@@ -1,23 +1,24 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import Aside from "../../component/Aside";
 import path from "../../utils/path";
 
 //uiStore
 import { UIStoreContext } from "../../uiStore/reducer";
-import { setAsideActiveItem } from "../../uiStore/actions";
+import { setClassroomDataID, setAsideActiveItem } from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
 import { getRollCallStatus, startRollCall } from "../../store/actions";
 
 const RollCallSystem = () => {
-  const classroomDataID = "60dd2a3d9b567c224c85482c";
   const [time, setTime] = useState(60);
 
   //左邊側邊欄設定目前頁面
-  const { uiDispatch } = useContext(UIStoreContext);
+  const {
+    uiState: { classroomDataIDState },
+    uiDispatch,
+  } = useContext(UIStoreContext);
 
   useEffect(() => {
     setAsideActiveItem(uiDispatch, path.rollCallSystem);
@@ -26,19 +27,25 @@ const RollCallSystem = () => {
   //取得後台資料
   const {
     state: {
-      rollCallSystemData: { shouldAttendCount, attentCount, personalLeaveCount, absenceCount },
+      courseWeeksData: { courseWeeks },
+      rollCallSystemData: {
+        shouldAttendCount,
+        attentCount,
+        personalLeaveCount,
+        absenceCount,
+      },
     },
     dispatch,
   } = useContext(StoreContext);
 
   useEffect(() => {
-    getRollCallStatus(dispatch, { classroomDataID: classroomDataID });
+    getRollCallStatus(dispatch, { classroomDataID: classroomDataIDState });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [classroomDataIDState]);
 
   const callStartRollCallApi = (duration) => {
-    startRollCall({ classroomDataID: classroomDataID, duration: duration });
-  }
+    startRollCall({ classroomDataID: classroomDataIDState, duration: duration });
+  };
 
   //按下開始點名的按鈕
   const submitHandler = (e) => {
@@ -74,10 +81,19 @@ const RollCallSystem = () => {
 
   return (
     <Fragment>
-      <Aside />
       <div className={styles.container}>
-        <select className={styles.select}>
-          <option>2021/05/20（四）</option>
+        <select
+          className={styles.select}
+          onChange={(e) => setClassroomDataID(uiDispatch, e.target.value)}
+        >
+          {courseWeeks.map((courseWeeks) => (
+            <option
+              value={courseWeeks.classroomDataID}
+              key={courseWeeks.classroomDataID}
+            >
+              {courseWeeks.weekName}
+            </option>
+          ))}
         </select>
         <div className={styles.sectionTop}>
           <div className={styles.studentNumber}>
