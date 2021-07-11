@@ -6,8 +6,8 @@ export const UIStoreContext = createContext();
 
 const initialState = {
   //取得課程資料
-  courseDataID: "",
-  classroomDataID: "60dd2a3d9b567c224c85482c",
+  courseDataIDState: "",
+  classroomDataIDState: "",
 
   //側邊欄目前的頁面
   asideBar: {
@@ -17,16 +17,16 @@ const initialState = {
 
 const reducer = (uiState, action) => {
   switch (action.type) {
-    case constants.SET_COURSEDATAID:
-      return {
-        ...uiState,
-        courseDataID: action.payload,
-      };
+    case constants.SET_COURSEDATAID: 
+    return{
+      ...uiState,
+      courseDataIDState: action.payload,
+    };
     case constants.SET_CLASSROOMDATAID:
       return {
         ...uiState,
-        classroomDataID: action.payload,
-      }
+        classroomDataIDState: action.payload,
+      };
     case constants.SET_ASIDEBAR_ACTIVEITEM:
       return {
         ...uiState,

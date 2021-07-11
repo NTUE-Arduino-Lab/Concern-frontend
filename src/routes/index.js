@@ -7,12 +7,14 @@ import HomePage from "../layouts/Home";
 import StudentsListPage from "../layouts/StudentsList";
 import RollCallSystemPage from "../layouts/RollCallSystem";
 import FullAttendanceListPage from "../layouts/FullAttendanceList";
+import Header from '../component/Header';
 
 const Routes = () => {
   return (
     <UIStoreProvider>
       <StoreProvider>
         <Router>
+          <Header />
           <Switch>
             {/* 專注度統計 */}
             <Route exact path={path.home} component={HomePage} />

@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import Header from "../../component/Header";
 import Aside from "../../component/Aside";
 import path from "../../utils/path";
 
@@ -75,7 +74,6 @@ const RollCallSystem = () => {
 
   return (
     <Fragment>
-      <Header />
       <Aside />
       <div className={styles.container}>
         <select className={styles.select}>

@@ -6,6 +6,11 @@ import {
   SET_TEACHER_DATA,
   TEACHER_DATA_FAIL,
 
+  //課程週次資料
+  COURSEWEEKS_DATA_REQUEST,
+  SET_COURSEWEEKS_DATA,
+  COURSEWEEKS_DATA_FAIL,
+
   //專注統計頁-上課時段紀錄
   TIME_STATUS_REQUEST,
   SET_CLASSROOM_TIME_STATUS,
@@ -48,6 +53,22 @@ export const getTeacherData = async (dispatch, options) => {
     });
   } catch (error) {
     dispatch({ type: TEACHER_DATA_FAIL, payload: error });
+  }
+};
+
+export const getCourseWeeksData = async (dispatch, options) => {
+  dispatch({ type: COURSEWEEKS_DATA_REQUEST });
+  const { courseDataID } = options;
+  try {
+    const { data } = await axios.post(SERVER_URL + "/course/getCourseData", {
+      courseDataID,
+    });
+    dispatch({
+      type: SET_COURSEWEEKS_DATA,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({ type: COURSEWEEKS_DATA_FAIL, payload: error });
   }
 };
 

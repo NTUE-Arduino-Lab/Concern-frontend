@@ -7,6 +7,11 @@ import {
   SET_TEACHER_DATA,
   TEACHER_DATA_FAIL,
 
+  //課程週次資料
+  COURSEWEEKS_DATA_REQUEST,
+  SET_COURSEWEEKS_DATA,
+  COURSEWEEKS_DATA_FAIL,
+
   //專注統計頁-上課時段紀錄
   TIME_STATUS_REQUEST,
   SET_CLASSROOM_TIME_STATUS,
@@ -42,6 +47,12 @@ const initialState = {
     teacherName: "",
     courses: [],
     teacherDataLoading: false,
+    error: null,
+  },
+
+  courseWeeksData: {
+    courseWeeks: [],
+    courseWeeksDataLoading: false,
     error: null,
   },
 
@@ -123,6 +134,33 @@ function reducer(state, action) {
           teacherDataLoading: false,
         },
       };
+    //課程週次資料
+    case COURSEWEEKS_DATA_REQUEST:
+      return {
+        ...state,
+        courseWeeksData: {
+          ...state.courseWeeksData,
+          courseWeeksDataLoading: true,
+        }
+      };
+    case SET_COURSEWEEKS_DATA:
+      return {
+        ...state,
+        courseWeeksData: {
+          ...state.courseWeeksData,
+          courseWeeks: action.payload.course.courseWeeks,
+          courseWeeksDataLoading: false,
+        },
+      };
+    case COURSEWEEKS_DATA_FAIL: 
+    return {
+      ...state,
+      courseWeeksData: {
+        ...state.courseWeeksData,
+        error: action.payload,
+        courseWeeksDataLoading: false,
+      }
+    }
     //專注統計頁-上課時段紀錄
     case TIME_STATUS_REQUEST:
       return {

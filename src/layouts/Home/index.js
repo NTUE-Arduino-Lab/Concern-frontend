@@ -3,7 +3,6 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import "../../select.scss";
 import styles from "./styles.module.scss";
-import Header from "../../component/Header";
 import Aside from "../../component/Aside";
 import ClassChart from "../../component/ClassChart";
 import StudentChart from "../../component/StudentChart";
@@ -25,14 +24,14 @@ import {
 } from "../../store/actions";
 
 const Home = () => {
-
   const {
-    uiState: { courseDataID, classroomDataID },
+    uiState: { classroomDataIDState },
     uiDispatch,
   } = useContext(UIStoreContext);
 
   const {
     state: {
+      courseWeeksData: { courseWeeks },
       classroomTimeStatus: {
         isClassing,
         startTime,
@@ -60,29 +59,38 @@ const Home = () => {
   const [studentTimeSpacing, setStudentTimeSpacing] = useState(1);
 
   useEffect(() => {
-    getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataID });
-    getRankData(dispatch, { classroomDataID: classroomDataID, rankCount: 3 });
+    getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataIDState });
+    getRankData(dispatch, {
+      classroomDataID: classroomDataIDState,
+      rankCount: 3,
+    });
     getStudentConcernInfo(dispatch, {
-      classroomDataID: classroomDataID,
-      timeSpacing: 60,
+      classroomDataID: classroomDataIDState,
+      timeSpacing: studentTimeSpacing * 60,
     });
     getClassroomConcernInfo(dispatch, {
-      classroomDataID: classroomDataID,
-      timeSpacing: 60,
+      classroomDataID: classroomDataIDState,
+      timeSpacing: classTimeSpacing * 60,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [classroomDataIDState]);
 
+  //全班統計圖表改變呼叫api
   const callClassroomConcernInfoApi = () => {
     getClassroomConcernInfo(dispatch, {
-      classroomDataID: classroomDataID,
+      classroomDataID: classroomDataIDState,
       timeSpacing: classTimeSpacing * 60,
     });
   };
 
+  const [studentTimeSpacingChange, isStudentTimeSpacingChange] =
+  useState(false);
+
+  //學生圖表改變呼叫api
   const callStudentConcernInfoApi = () => {
+    isStudentTimeSpacingChange(true);
     getStudentConcernInfo(dispatch, {
-      classroomDataID: classroomDataID,
+      classroomDataID: classroomDataIDState,
       timeSpacing: studentTimeSpacing * 60,
     });
   };
@@ -145,16 +153,12 @@ const Home = () => {
   //找尋特定的學生資訊
   const [studentID, setStudentID] = useState("");
   const [studentPersonalInfo, setStudentPersonInfo] = useState({});
-  //儲存studentConcernData的所有資料
-  const [studentAllData, setStudentAllData] = useState();
 
   useEffect(() => {
+    isStudentTimeSpacingChange(false);
     if (studentConcernData[0] !== undefined) {
       setStudentPersonInfo(studentConcernData[0]);
       setStudentID(studentConcernData[0].studentID);
-    }
-    if (studentConcernData.length > 0) {
-      setStudentAllData(studentConcernData);
     }
   }, [studentConcernData]);
 
@@ -173,11 +177,20 @@ const Home = () => {
 
   return (
     <Fragment>
-      <Header />
       <Aside />
       <div className={styles.container}>
-        <select className={styles.select}>
-          <option>2021/05/20（四）</option>
+        <select
+          className={styles.select}
+          onChange={(e) => setClassroomDataID(uiDispatch, e.target.value)}
+        >
+          {courseWeeks.map((courseWeeks) => (
+            <option
+              value={courseWeeks.classroomDataID}
+              key={courseWeeks.classroomDataID}
+            >
+              {courseWeeks.weekName}
+            </option>
+          ))}
         </select>
         <div className={styles.sectionTop}>
           <div className={styles.timeRecord}>
@@ -311,7 +324,7 @@ const Home = () => {
               }`}
             >
               {studentConcernInfoLoading &&
-              studentAllData !== studentConcernData ? (
+              studentTimeSpacingChange === false ? (
                 <div className={styles.loading}>
                   <Loading />
                 </div>
@@ -328,7 +341,10 @@ const Home = () => {
                     </div>
                     <div className={styles.tbody}>
                       {studentConcernData.map((student) => (
-                        <div className={styles.td_content} key={student}>
+                        <div
+                          className={styles.td_content}
+                          key={student.studentID}
+                        >
                           <div className={styles.td}>{student.studentName}</div>
                           <div className={styles.td}>
                             {student.studentGoogleName}
@@ -396,8 +412,7 @@ const Home = () => {
         <div className={styles.personInfo}>
           <div className={styles.title}>個人資訊</div>
           <div className={styles.personInfo_content}>
-            {studentConcernInfoLoading &&
-            studentAllData !== studentConcernData ? (
+            {studentConcernInfoLoading && studentTimeSpacingChange === false ? (
               <div className={styles.loading}>
                 <Loading />
               </div>
@@ -413,7 +428,7 @@ const Home = () => {
                             ? `${styles.student_active}`
                             : ""
                         }`}
-                        key={student}
+                        key={student.studentID}
                         onClick={() => findStudentInfo(`${student.studentID}`)}
                       >
                         <div className={styles.name}>{student.studentName}</div>
@@ -423,45 +438,37 @@ const Home = () => {
                   </div>
                 </div>
                 <div className={styles.concernDetail}>
-                  {studentPersonalInfo.studentID !== undefined ? (
-                    <>
-                      <div className={styles.concernSection}>
-                        <div className={styles.detailTitle}>課程參與比例</div>
-                        <div className={styles.number}>
-                          {studentPersonalInfo.attendTimePercentage}
-                        </div>
-                      </div>
-                      <div className={styles.concernSection}>
-                        <div className={styles.detailTitle}>專注百分比</div>
-                        <div className={styles.number}>
-                          {studentPersonalInfo.concernPercentage}
-                        </div>
-                      </div>
-                      <div className={styles.concernSection}>
-                        <div className={styles.detailTitle}>平均專注數值</div>
-                        <div className={styles.number}>
-                          {studentPersonalInfo.aveConcern}
-                        </div>
-                        <div
-                          className={`${
-                            styles.concernLevel
-                          } ${studentConcernRange(
-                            studentPersonalInfo.aveConcern
-                          )}`}
-                        >
-                          {concernRange(studentPersonalInfo.aveConcern)}
-                        </div>
-                      </div>
-                      <div className={styles.concernSection}>
-                        <div className={styles.detailTitle}>最長專注時間</div>
-                        <div className={styles.number}>
-                          {studentPersonalInfo.bestLasted}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>課程參與比例</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.attendTimePercentage}
+                    </div>
+                  </div>
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>專注百分比</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.concernPercentage}
+                    </div>
+                  </div>
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>平均專注數值</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.aveConcern}
+                    </div>
+                    <div
+                      className={`${styles.concernLevel} ${studentConcernRange(
+                        studentPersonalInfo.aveConcern
+                      )}`}
+                    >
+                      {concernRange(studentPersonalInfo.aveConcern)}
+                    </div>
+                  </div>
+                  <div className={styles.concernSection}>
+                    <div className={styles.detailTitle}>最長專注時間</div>
+                    <div className={styles.number}>
+                      {studentPersonalInfo.bestLasted}
+                    </div>
+                  </div>
                 </div>
                 <div className={styles.studentChart}>
                   <div className={styles.classSliderSection}>
@@ -497,6 +504,7 @@ const Home = () => {
                       concernRangeMin={concernRangeMin}
                     />
                   ) : (
+                    // <></>
                     <div className={styles.loading}>
                       <Loading />
                     </div>

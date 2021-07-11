@@ -1,6 +1,6 @@
 import constants from './actionTypes';
 
-export const setCourseDataID = (uiDispatch, courseDataID) =>{
+export const setCourseDataID = (uiDispatch, courseDataID) => {
   uiDispatch({
     type: constants.SET_COURSEDATAID,
     payload: courseDataID,
