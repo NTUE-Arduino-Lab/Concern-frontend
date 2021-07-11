@@ -1,0 +1,10 @@
+@import '../../styles/color.scss';
+@import "../../styles/spacing.scss";
+
+.container {
+  width: calc(100vw - 175px);
+  height: 100%;
+  margin-left: 175px;
+  padding: $main-spacing;
+  padding-top: calc(#{$header-height} + #{$main-spacing});
+}

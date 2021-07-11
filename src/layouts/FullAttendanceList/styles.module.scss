@@ -1,0 +1,82 @@
+@import "../../styles/color.scss";
+@import "../../styles/spacing.scss";
+
+.container {
+  width: calc(100vw - 175px);
+  height: 100%;
+  margin-left: 175px;
+  padding: $main-spacing;
+  padding-top: calc(#{$header-height} + #{$main-spacing});
+}
+
+.buttonSide {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: $section-spacing;
+
+  .buttonSide_button {
+    font-size: 18px;
+    border: 0px;
+    border-radius: $button-border-radius;
+    background: $button-bg;
+    padding: 5px 35px;
+
+    &:hover {
+      background: $button-hover-bg;
+    }
+  }
+}
+
+.attendanceList {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 160px);
+  background: $section-bg;
+  border-radius: $content-border-radius;
+  overflow: scroll;
+  .thead {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 55px;
+    border-radius: 5px 5px 0 0;
+    background: #dedede;
+  }
+  .th_content {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: start;
+  }
+  .th {
+    grid-auto-flow: row;
+    width: 135px;
+    height: 55px;
+    background: #dedede;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  // .tbody {
+  //   height: 150px;
+  // }
+  .td_content {
+    display: grid;
+    justify-content: start;
+    grid-auto-flow: column;
+    &:nth-child(even){
+      background: #F8F8F8;
+      .td{
+        background: #F8F8F8;
+      }
+    }
+  }
+  .td {
+    grid-auto-flow: row;
+    width: 135px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
