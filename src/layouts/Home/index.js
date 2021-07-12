@@ -83,7 +83,7 @@ const Home = () => {
   };
 
   const [studentTimeSpacingChange, isStudentTimeSpacingChange] =
-  useState(false);
+    useState(false);
 
   //學生圖表改變呼叫api
   const callStudentConcernInfoApi = () => {
@@ -156,9 +156,12 @@ const Home = () => {
   useEffect(() => {
     isStudentTimeSpacingChange(false);
     if (studentConcernData[0] !== undefined) {
-      setStudentPersonInfo(studentConcernData[0]);
-      setStudentID(studentConcernData[0].studentID);
+      if (studentTimeSpacingChange === false) {
+        setStudentPersonInfo(studentConcernData[0]);
+        setStudentID(studentConcernData[0].studentID);
+      }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studentConcernData]);
 
   const findStudentInfo = (studentID) => {
@@ -173,6 +176,10 @@ const Home = () => {
   const studentSliderChange = (event, newValue) => {
     setStudentTimeSpacing(newValue);
   };
+
+  useEffect(() => {
+    console.log("studentID: " + studentID);
+  }, [studentID]);
 
   return (
     <Fragment>
