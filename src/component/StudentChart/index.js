@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactEcharts from "echarts-for-react";
 //Store
 import { StoreContext } from "../../store/reducer";
@@ -27,17 +27,26 @@ const StudentChart = (prop) => {
     }
   };
 
-  var newConcernDegreeArray = studentInfo.concernDegreeArray.map(function (
-    value
-  ) {
-    return concernRange(value);
-  });
-
-  // // console.log(studentInfo.timeLineArray);
+  const [studentName, setStudentName] = useState("");
+  const [timeLineArray, setTimeLineArray] = useState([]);
+  const [concernDegreeArray, setConcernDegreeArray]= useState([]);
+  useEffect(()=>{
+    if(studentInfo !== undefined){
+      var newConcernDegreeArray = studentInfo.concernDegreeArray.map(function (
+        value
+      ) {
+        return concernRange(value);
+      });
+      setConcernDegreeArray(newConcernDegreeArray);
+      setStudentName(studentInfo.studentName);
+      setTimeLineArray(studentInfo.timeLineArray);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[studentInfo])
 
   const option = {
     title: {
-      text: `${studentInfo.studentName}的專注度統計`,
+      text: `${studentName}的專注度統計`,
       x: "70",
     },
     tooltip: {
@@ -50,7 +59,7 @@ const StudentChart = (prop) => {
     //     data:['A','B','C']
     // },
     xAxis: {
-      data: studentInfo.timeLineArray,
+      data: timeLineArray,
       // splitLine: {
       //   show: true, //为false 时隐藏
       //   lineStyle: {
@@ -70,9 +79,9 @@ const StudentChart = (prop) => {
     },
     series: [
       {
-        name: studentInfo.studentName,
+        name: studentName,
         type: "line",
-        data: newConcernDegreeArray,
+        data: concernDegreeArray,
       },
       // {
       //     name:'郭昀甄',
