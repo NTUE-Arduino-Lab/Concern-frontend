@@ -62,6 +62,19 @@ export const getTeacherData = async (dispatch, options) => {
   }
 };
 
+export const addCourse = async (options) => {
+  const { teacherDataID, courseName } = options;
+  try {
+    await axios.post(SERVER_URL + "/course/addCourse", {
+      teacherDataID,
+      courseName,
+    });
+    alert("新增課程成功");
+  } catch (error) {
+    console.log("新增課程失敗：" + error);
+  }
+};
+
 export const getCourseWeeksData = async (dispatch, options) => {
   dispatch({ type: COURSEWEEKS_DATA_REQUEST });
   const { courseDataID } = options;

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../../select.scss";
 import styles from "./styles.module.scss";
 import logo from "../../assets/image/logo.png";
@@ -10,12 +10,19 @@ import { setCourseDataID, setClassroomDataID } from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
-import { getTeacherData, getCourseWeeksData } from "../../store/actions";
+import {
+  getTeacherData,
+  addCourse,
+  getCourseWeeksData,
+} from "../../store/actions";
 
 const Header = () => {
   const teacherDataID = "60e2740e29b4000015939450";
   const courseDataID = "60e45e364f20c20015730a53";
   const classroomDataID = "60e45b1b4f20c20015730a52";
+
+  const [addingCourse, isAddingCourse] = useState(false);
+  const [newCourseName, setNewCourseName] = useState("");
 
   const {
     state: {
@@ -52,6 +59,32 @@ const Header = () => {
     getCourseWeeksData(dispatch, { courseDataID: course });
   };
 
+  const addCourseHandler = () => {
+    isAddingCourse(true);
+  };
+
+  const addCourseSubmitHandler = () => {
+    if (newCourseName !== "") {
+      addCourse({
+        teacherDataID: teacherDataID,
+        courseName: newCourseName,
+      });
+      document.getElementById("addCourseInput").value = "";
+      isAddingCourse(false);
+      setNewCourseName("");
+    } else {
+      alert("請輸入課程名稱！");
+    }
+  };
+
+  const addCourseCancelHandler = () => {
+    isAddingCourse(false);
+  };
+
+  useEffect(() => {
+    console.log(newCourseName);
+  }, [newCourseName]);
+
   return (
     <header className={styles.header}>
       <div className={styles.leftSide}>
@@ -75,7 +108,43 @@ const Header = () => {
             </option>
           ))}
         </select>
-        <button className={styles.leftSide_button}>新增課程</button>
+        <button
+          className={
+            addingCourse
+              ? `${styles.leftSide_button} ${styles.leftSide_button__none}`
+              : `${styles.leftSide_button}`
+          }
+          onClick={addCourseHandler}
+        >
+          新增課程
+        </button>
+        <form
+          className={
+            addingCourse
+              ? `${styles.leftSide_form}`
+              : `${styles.leftSide_form} ${styles.leftSide_form__none}`
+          }
+        >
+          <input
+            id="addCourseInput"
+            type="text"
+            placeholder="請輸入課程名稱"
+            onChange={(e) => setNewCourseName(e.target.value)}
+            className={styles.leftSide_textInput}
+          ></input>
+          <div
+            onClick={addCourseSubmitHandler}
+            className={`${styles.leftSide_formBtn} ${styles.leftSide_submitBtn}`}
+          >
+            確定
+          </div>
+          <div
+            onClick={addCourseCancelHandler}
+            className={`${styles.leftSide_formBtn} ${styles.leftSide_cancelBtn}`}
+          >
+            取消
+          </div>
+        </form>
       </div>
       <div className={styles.rightSide}>
         <div

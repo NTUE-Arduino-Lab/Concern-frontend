@@ -509,7 +509,6 @@ const Home = () => {
                       concernRangeMin={concernRangeMin}
                     />
                   ) : (
-                    // <></>
                     <div className={styles.loading}>
                       <Loading />
                     </div>
