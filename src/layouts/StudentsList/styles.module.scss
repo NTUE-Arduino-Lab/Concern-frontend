@@ -7,4 +7,334 @@
   margin-left: 175px;
   padding: $main-spacing;
   padding-top: calc(#{$header-height} + #{$main-spacing});
+  display: flex;
+  justify-content: space-between;
+  // background-color: #E5E5E5;
+}
+.loading{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+//左邊學生清單區
+.studentsList{
+  width: 60%;
+  .editBtnSection{
+    width: 100%;
+    height: 45px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+    .editBtnSection_btn {
+      width: 166px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: $font-size;
+      border: 0px;
+      border-radius: $button-border-radius;
+      background: $button-bg;
+      cursor: pointer;
+      &:hover {
+        background: $button-hover-bg;
+      }
+    }
+  }
+  .loading{
+    height: calc(100vh - 180px);
+  }
+  .table {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 180px);
+    background: white;
+    border-radius: 6px;
+    overflow-y: scroll;
+    box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
+    .thead {
+      z-index: 1;
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 55px;
+      border-radius: 5px 5px 0 0;
+      background: #dedede;
+    }
+    .th_content {
+      display: grid;
+      grid-auto-flow: column;
+      justify-content: space-around;
+    }
+    .th {
+      grid-auto-flow: row;
+      width: 150px;
+      height: 55px;
+      background: #dedede;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .tbody{
+      margin: 0 auto;
+      padding-top: 6px;
+      width: calc(100% - 10px);
+      border-bottom: calc(2px / 10px) solid #000;
+    }
+    .td_content {
+      display: grid;
+      justify-content: space-around;
+      grid-auto-flow: column;
+      border-radius: $content-border-radius;
+    }
+    .td {
+      grid-auto-flow: row;
+      width: 150px;
+      height: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .empty_title{
+        opacity: 0;
+      }
+      .editmode_input{
+        margin-top: 6px;
+        width: 142px;
+        height: 25px;
+        border-radius: $input-border-radius;
+        grid-auto-flow: row;
+        background-color: #fff;
+        text-align: center;
+      }
+      button{
+        font-size: 16px;
+        border-radius: 6px;
+        border: 0px;
+        margin-left: 6px;
+        padding: 2px 0px;
+        width: 64px;
+        cursor: pointer;
+      }
+    }
+    .editmode{
+      //寫在啟動編輯模式裡
+      // cursor: pointer;
+      &:hover{
+        background-color: rgba($color: #cdcdcd, $alpha: 1);
+      }
+      &:hover .td{
+        background-color: rgba($color: #cdcdcd, $alpha: 1);
+      }
+      &:hover .editoption{
+        display: block;
+      }
+    }
+    .editOpen{
+      padding-top: 12px;
+      padding-bottom: 12px;
+      background: #DEE3C7;
+    }
+    .editoption{
+      display: none;
+      .editoption_edit_btn{
+        background-color: $button-bg;
+        &:hover {
+          background: $button-hover-bg;
+        }
+      }
+      .editoption_delete_btn{
+        background-color: $cancel-button-bg;
+        &:hover {
+          background: $cancel-button-hover-bg;
+        }
+      }
+    }
+    .editoption_back_btn{
+      background-color: $cancel-button-bg;
+      width: 30px !important;
+      margin-bottom: 6px;
+      &:hover {
+        background: $cancel-button-hover-bg;
+      }
+    }
+    .editoption_finish_btn{
+      background-color: #fff;
+      &:hover{
+        background: $button-hover-bg;
+    }
+    }
+  }
+}
+hr{
+  margin: 6px 0px !important;
+}
+//右邊說明書
+.description{
+  margin-top: 65px;
+  margin-left: 20px;
+  border-radius: $content-border-radius;
+  padding: $section-padding-spacing;
+  width: 40%;
+  height: 100%;
+  min-height: 180px;
+  background-color: #fff;
+  .description_box{
+    margin-top: 16px;
+    margin-left: 16px;
+    display: flex;
+    .description_number{
+      margin-right: 40px;
+    }
+  }
+}
+//右邊新增
+.addStudent{
+  // margin-top: 65px;
+  margin-left: 20px;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  .addStudentbox{
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+    background-color: #fff;
+    border-radius:$content-border-radius;
+    border: 9px solid #82A098;
+    width: calc(100% - 9px);
+    // min-width: 300px;
+    max-width: 512px;
+    // height: 100%; 
+    // min-height: 260px;
+    &:last-child {
+      max-height: 100%;
+    }
+    max-height: 260px;
+    .addStudentbox_title{
+      height: 35px;
+      background-color: #82A098;
+      font-size: $font-size;
+      color: #fff;
+      padding-left: 28px;
+    }
+    button{
+      align-self: flex-end;
+      margin-right: 20px;
+      border: 0px;
+      background-color: $button-bg;
+      border-radius:  6px;
+      &:hover {
+        background: $button-hover-bg;
+      }
+    }
+    form{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-left: 28px;
+      padding-top: 12px;
+      .inputbox{
+        display: flex;
+        // flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        &:nth-child(odd) .input_title::after{
+          content: "*";
+          color: red;
+        }
+        .input_title{
+          width: 140px;
+        }
+        input{
+          justify-self: flex-end;
+          margin-left: 20px;
+          margin-bottom: 4px;
+          background-color: #FAF9F9;
+          color: #82A098;
+          width: 55%;
+          height: 36px;
+          border-radius: $input-border-radius;
+          //placeholder
+          text-indent: 10px;
+        }
+      }
+      button{
+        margin-top: 4px;
+        padding: 4px 16px;   
+      }
+    }
+    .studentexcel_box{
+      width: calc(100% - 4px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: 2px;
+      padding: 12px 0px;
+      padding-left: 26px;
+      border-bottom: 1px solid #D9E1B3;
+      font-size: 16px;
+      &:last-child {
+        border-bottom: 0px;
+      }      
+      a{ 
+        padding: 4px 6px;   
+        margin-right: 20px;
+        border: 0px;
+        background-color: $button-bg;
+        border-radius:  6px;
+        text-decoration: none;
+        color: #000;
+        font-size: 16px;
+        &:hover {
+          background: $button-hover-bg;
+        }
+      }
+      .upload_label{
+        padding: 4px 6px;   
+        margin-right: 20px;
+        border: 0px;
+        background-color: $button-bg;
+        border-radius:  6px;
+        text-decoration: none;
+        color: #000;
+        font-size: 16px;
+        cursor: pointer;
+        &:hover {
+          background: $button-hover-bg;
+        }
+        .upload_input{
+          width: 0;
+          height: 0;
+        }
+      }
+    }
+    .studentexcel_word{
+      display: flex;
+      .studentexcel_number{
+        margin-right: 4px;
+      }
+    }
+    .faillist_box{
+      width: calc(100% - 4px);
+      margin-left: 2px;
+      padding: 12px 0px;
+      padding-left: 26px;
+      font-size: 16px;
+      .studentexcel_word{
+        color: #82A098;
+        margin-top: 4px;
+        
+        &:first-child{
+          color: #000;
+        }
+        div{
+          margin-right: 4px;
+        }
+      }
+    }
+  }
 }
