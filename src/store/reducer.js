@@ -37,6 +37,12 @@ import {
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
   FAIL_DATA_REQUEST,
+
+  //學生名單頁-取得已登錄的學生名單
+  CLASSMATES_DATA_REQUEST,
+  SET_CLASSMATES_DATA,
+  SET_CLASSMATES_FAILLIST, 
+  CLASSMATES_DATA_FAIL
 } from "./actionTypes";
 
 export const StoreContext = createContext();
@@ -102,6 +108,14 @@ const initialState = {
     loading: false,
     error: null,
   },
+
+  //學生名單
+  classmatesListData:{
+    classmatesList: [],
+    addFailList:[],
+    classmatesListDataLoading: false,
+    error: "",
+  }
 };
 
 function reducer(state, action) {
@@ -303,6 +317,43 @@ function reducer(state, action) {
           ...state.requestdata,
           loading: false,
           error: action.payload,
+        },
+      };
+    //學生名單
+    case CLASSMATES_DATA_REQUEST:
+      return {
+        ...state,
+        classmatesListData: {
+          ...state.classmatesListData,
+          addFailList:[],
+          error: "",
+          classmatesListDataLoading: true,
+        },
+      };
+    case SET_CLASSMATES_DATA:
+      return {
+        ...state,
+        classmatesListData: {
+          ...state.classmatesListData,
+          classmatesList: action.payload,
+          classmatesListDataLoading: false,
+        },
+      };
+    case SET_CLASSMATES_FAILLIST:
+      return {
+        ...state,
+        classmatesListData: {
+          ...state.classmatesListData,
+          addFailList:action.payload
+        },
+      };
+    case CLASSMATES_DATA_FAIL:
+      return {
+        ...state,
+        classmatesListData: {
+          ...state.classmatesListData,
+          error: action.payload,
+          classmatesListDataLoading: false,
         },
       };
     default:
