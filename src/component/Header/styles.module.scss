@@ -83,9 +83,15 @@
       &.leftSide_submitBtn{
         background: $button-bg;
         margin-right: 6px;
+        &:hover{
+          background: $button-hover-bg;
+        }
       }
       &.leftSide_cancelBtn{
-        background: $button-cancel-bg;
+        background: $cancel-button-bg;
+        &:hover{
+          background: $cancel-button-hover-bg;
+        }
       }
     }
   }
