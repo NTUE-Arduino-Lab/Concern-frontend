@@ -44,7 +44,10 @@ const RollCallSystem = () => {
   }, [classroomDataIDState]);
 
   const callStartRollCallApi = (duration) => {
-    startRollCall({ classroomDataID: classroomDataIDState, duration: duration });
+    startRollCall({
+      classroomDataID: classroomDataIDState,
+      duration: duration,
+    });
   };
 
   //按下開始點名的按鈕
@@ -137,6 +140,52 @@ const RollCallSystem = () => {
         </div>
         <div className={styles.editBtnSection}>
           <button className={styles.editBtnSection_btn}>編輯點名狀態</button>
+        </div>
+        <div className={styles.studentList}>
+          <div className={styles.thead}>
+            <div className={styles.th_content}>
+              <div className={styles.th}>請假</div>
+              <div className={styles.th}>出席狀況</div>
+              <div className={styles.th}>學生姓名</div>
+              <div className={styles.th}>學生學號</div>
+              <div className={styles.th}>9:10</div>
+              <div className={styles.th}>10:10</div>
+            </div>
+          </div>
+          <div className={styles.tbody}>
+            <div className={styles.td_content}>
+              <div className={styles.td}></div>
+              <div className={styles.td}>出席</div>
+              <div className={styles.td}>陳小花</div>
+              <div className={styles.td}>110934001</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+            <div className={styles.td_content}>
+              <div className={styles.td}></div>
+              <div className={styles.td}>出席</div>
+              <div className={styles.td}>陳大花</div>
+              <div className={styles.td}>110934002</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+            <div className={styles.td_content}>
+              <div className={styles.td}></div>
+              <div className={styles.td}>出席</div>
+              <div className={styles.td}>郭小花</div>
+              <div className={styles.td}>110934003</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+            <div className={styles.td_content}>
+              <div className={styles.td}></div>
+              <div className={styles.td}>出席</div>
+              <div className={styles.td}>郭大花</div>
+              <div className={styles.td}>110934004</div>
+              <div className={styles.td}>v</div>
+              <div className={styles.td}>v</div>
+            </div>
+          </div>
         </div>
       </div>
     </Fragment>
