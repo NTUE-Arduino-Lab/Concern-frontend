@@ -2,6 +2,8 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import path from "../../utils/path";
+import Checkbox from "@material-ui/core/Checkbox";
+import Loading from "../../component/Loading";
 
 //uiStore
 import { UIStoreContext } from "../../uiStore/reducer";
@@ -9,7 +11,11 @@ import { setClassroomDataID, setAsideActiveItem } from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
-import { getRollCallStatus, startRollCall } from "../../store/actions";
+import {
+  getRollCallStatus,
+  startRollCall,
+  setPersonalLeave,
+} from "../../store/actions";
 
 const RollCallSystem = () => {
   const [time, setTime] = useState(60);
@@ -33,6 +39,10 @@ const RollCallSystem = () => {
         attentCount,
         personalLeaveCount,
         absenceCount,
+        rollcallTime,
+        classmatesInList,
+        classmatesUnlisted,
+        rollCallSystemDataLoading,
       },
     },
     dispatch,
@@ -82,112 +92,245 @@ const RollCallSystem = () => {
     }, 1000);
   };
 
+  //判斷是否為編輯狀態
+  const [editMode, seteditMode] = useState(false);
+
+  const editModeChange = () => {
+    if (editMode) {
+      document.getElementById("editMode").textContent = "編輯學生名單";
+    } else {
+      document.getElementById("editMode").textContent = "完成編輯";
+    }
+    seteditMode(!editMode);
+  };
+
+  //學生請假設定
+  const [editPersonalLeave, isEditPersonalLeave] = useState(false);
+  const personalLeaveHandler = (event) => {
+    setPersonalLeave({
+      classroomDataID: classroomDataIDState,
+      studentID: event.target.value,
+      truefalse: event.target.checked,
+    });
+    isEditPersonalLeave(true);
+  };
+
+  useEffect(() => {
+    if (editPersonalLeave && editMode === false) {
+      console.log("xxx");
+      getRollCallStatus(dispatch, { classroomDataID: classroomDataIDState });
+      isEditPersonalLeave(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editMode]);
+
+  //課堂出席判斷
+  const attendanceHandler = (attendanceArray) => {
+    if (attendanceArray.some((x) => x === 1)) {
+      return {
+        attendanceStyles: `${styles.td} ${styles.td_green}`,
+        attendanceText: "出席",
+      };
+    } else if (attendanceArray.some((x) => x === -1)) {
+      return { attendanceStyles: styles.td, attendanceText: "請假" };
+    } else {
+      return {
+        attendanceStyles: `${styles.td} ${styles.td_red}`,
+        attendanceText: "缺席",
+      };
+    }
+  };
+
+  //點名出席判斷
+  const attendanceStateHandler = (attendanceState) => {
+    if (attendanceState === 0) {
+      return "X";
+    } else if (attendanceState === 1) {
+      return "V";
+    } else {
+      return "△";
+    }
+  };
+
   return (
     <Fragment>
-      <div className={styles.container}>
-        <select
-          className={styles.select}
-          onChange={(e) => setClassroomDataID(uiDispatch, e.target.value)}
-        >
-          {courseWeeks.map((courseWeeks) => (
-            <option
-              value={courseWeeks.classroomDataID}
-              key={courseWeeks.classroomDataID}
+      {rollCallSystemDataLoading ? (
+        <div className={styles.loading}>
+          <Loading />
+        </div>
+      ) : (
+        <div className={styles.container}>
+          <select
+            className={styles.select}
+            onChange={(e) => setClassroomDataID(uiDispatch, e.target.value)}
+          >
+            {courseWeeks.map((courseWeeks) => (
+              <option
+                value={courseWeeks.classroomDataID}
+                key={courseWeeks.classroomDataID}
+                selected={
+                  courseWeeks.classroomDataID === classroomDataIDState
+                    ? "select"
+                    : ""
+                }
+              >
+                {courseWeeks.weekName}
+              </option>
+            ))}
+          </select>
+          <div className={styles.sectionTop}>
+            <div className={styles.studentNumber}>
+              <div className={styles.title}>應到人數</div>
+              <div className={styles.number}>{`${shouldAttendCount}人`}</div>
+            </div>
+            <div className={styles.studentNumber}>
+              <div className={styles.title}>實到人數</div>
+              <div className={styles.number}>{`${attentCount}人`}</div>
+            </div>
+            <div className={styles.studentCondition}>
+              <div
+                className={styles.condition}
+              >{`請假學生 ${personalLeaveCount} 人`}</div>
+              <div
+                className={styles.condition}
+              >{`缺席學生 ${absenceCount} 人`}</div>
+            </div>
+            <div className={styles.settingRollCallTime}>
+              <form onSubmit={submitHandler}>
+                <div className={styles.setTimeSectionTop}>
+                  <div id="text_title">點名限定時間</div>
+                  <input
+                    type="text"
+                    onChange={(e) => setTime(e.target.value)}
+                    className={styles.inputSection}
+                    id="text_time"
+                    value={time}
+                  ></input>
+                  秒
+                  <button
+                    className={styles.submitBtn}
+                    type="submit"
+                    id="submit"
+                  >
+                    開始點名
+                  </button>
+                </div>
+                <div>系統提示：學生需在限定時間內按下點名按鈕</div>
+              </form>
+            </div>
+          </div>
+          <div className={styles.tipTitle}>
+            系統提示：僅計算已登入於學生系統的名單
+          </div>
+          <div className={styles.editBtnSection}>
+            <button
+              className={styles.editBtnSection_btn}
+              id="editMode"
+              onClick={editModeChange}
             >
-              {courseWeeks.weekName}
-            </option>
-          ))}
-        </select>
-        <div className={styles.sectionTop}>
-          <div className={styles.studentNumber}>
-            <div className={styles.title}>應到人數</div>
-            <div className={styles.number}>{`${shouldAttendCount}人`}</div>
+              編輯點名狀態
+            </button>
           </div>
-          <div className={styles.studentNumber}>
-            <div className={styles.title}>實到人數</div>
-            <div className={styles.number}>{`${attentCount}人`}</div>
-          </div>
-          <div className={styles.studentCondition}>
-            <div
-              className={styles.condition}
-            >{`請假學生 ${personalLeaveCount} 人`}</div>
-            <div
-              className={styles.condition}
-            >{`缺席學生 ${absenceCount} 人`}</div>
-          </div>
-          <div className={styles.settingRollCallTime}>
-            <form onSubmit={submitHandler}>
-              <div className={styles.setTimeSectionTop}>
-                <div id="text_title">點名限定時間</div>
-                <input
-                  type="text"
-                  onChange={(e) => setTime(e.target.value)}
-                  className={styles.inputSection}
-                  id="text_time"
-                  value={time}
-                ></input>
-                秒
-                <button className={styles.submitBtn} type="submit" id="submit">
-                  開始點名
-                </button>
+          <div className={styles.studentList}>
+            <div className={styles.thead}>
+              <div className={styles.th_content}>
+                <div className={`${styles.td} ${styles.td_checkbox}`}>請假</div>
+                <div className={styles.th}>出席狀況</div>
+                <div className={styles.th}>學生姓名</div>
+                <div className={styles.th}>學生學號</div>
+                {rollcallTime.map((time) => (
+                  <div className={styles.th}>{time}</div>
+                ))}
               </div>
-              <div>系統提示：學生需在限定時間內按下點名按鈕</div>
-            </form>
-          </div>
-        </div>
-        <div className={styles.tipTitle}>
-          系統提示：僅計算已登入於學生系統的名單
-        </div>
-        <div className={styles.editBtnSection}>
-          <button className={styles.editBtnSection_btn}>編輯點名狀態</button>
-        </div>
-        <div className={styles.studentList}>
-          <div className={styles.thead}>
-            <div className={styles.th_content}>
-              <div className={styles.th}>請假</div>
-              <div className={styles.th}>出席狀況</div>
-              <div className={styles.th}>學生姓名</div>
-              <div className={styles.th}>學生學號</div>
-              <div className={styles.th}>9:10</div>
-              <div className={styles.th}>10:10</div>
+            </div>
+            <div className={styles.tbody}>
+              {classmatesInList.length === 0 ? (
+                <></>
+              ) : (
+                <>
+                  {classmatesInList.map((studentInList) => (
+                    <div
+                      className={styles.td_content}
+                      key={studentInList.studentID}
+                    >
+                      <div className={`${styles.td} ${styles.td_checkbox}`}>
+                        <Checkbox
+                          value={studentInList.studentID}
+                          onChange={personalLeaveHandler}
+                          disabled={editMode === false}
+                          defaultChecked={studentInList.personalLeave}
+                          color="#000"
+                          inputProps={{ "aria-label": "primary checkbox" }}
+                        />
+                      </div>
+                      <div
+                        className={
+                          attendanceHandler(studentInList.attendance)
+                            .attendanceStyles
+                        }
+                      >
+                        {
+                          attendanceHandler(studentInList.attendance)
+                            .attendanceText
+                        }
+                      </div>
+                      <div className={styles.td}>
+                        {studentInList.studentName}
+                      </div>
+                      <div className={styles.td}>{studentInList.studentID}</div>
+                      {studentInList.attendance.map((attendanceState) => (
+                        <div
+                          className={
+                            attendanceState === 0
+                              ? `${styles.td} ${styles.td_red}`
+                              : `${styles.td}`
+                          }
+                        >
+                          {attendanceStateHandler(attendanceState)}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </>
+              )}
+              {classmatesUnlisted.length === 0 ? (
+                <></>
+              ) : (
+                <>
+                  {classmatesUnlisted.map((studentUnList) => (
+                    <div
+                      className={styles.td_content}
+                      key={studentUnList.studentID}
+                    >
+                      <div
+                        className={`${styles.td} ${styles.td_checkbox}`}
+                      ></div>
+                      <div className={`${styles.td} ${styles.td_unListState}`}>
+                        無登錄
+                      </div>
+                      <div className={styles.td}>
+                        {studentUnList.studentName}
+                      </div>
+                      <div className={styles.td}>{studentUnList.studentID}</div>
+                      {studentUnList.attendance.map((attendanceState) => (
+                        <div
+                          className={
+                            attendanceState === 0
+                              ? `${styles.td} ${styles.td_red}`
+                              : `${styles.td}`
+                          }
+                        >
+                          {attendanceStateHandler(attendanceState)}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
-          <div className={styles.tbody}>
-            <div className={styles.td_content}>
-              <div className={styles.td}></div>
-              <div className={styles.td}>出席</div>
-              <div className={styles.td}>陳小花</div>
-              <div className={styles.td}>110934001</div>
-              <div className={styles.td}>v</div>
-              <div className={styles.td}>v</div>
-            </div>
-            <div className={styles.td_content}>
-              <div className={styles.td}></div>
-              <div className={styles.td}>出席</div>
-              <div className={styles.td}>陳大花</div>
-              <div className={styles.td}>110934002</div>
-              <div className={styles.td}>v</div>
-              <div className={styles.td}>v</div>
-            </div>
-            <div className={styles.td_content}>
-              <div className={styles.td}></div>
-              <div className={styles.td}>出席</div>
-              <div className={styles.td}>郭小花</div>
-              <div className={styles.td}>110934003</div>
-              <div className={styles.td}>v</div>
-              <div className={styles.td}>v</div>
-            </div>
-            <div className={styles.td_content}>
-              <div className={styles.td}></div>
-              <div className={styles.td}>出席</div>
-              <div className={styles.td}>郭大花</div>
-              <div className={styles.td}>110934004</div>
-              <div className={styles.td}>v</div>
-              <div className={styles.td}>v</div>
-            </div>
-          </div>
         </div>
-      </div>
+      )}
     </Fragment>
   );
 };

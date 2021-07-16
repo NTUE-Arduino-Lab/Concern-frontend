@@ -20,6 +20,10 @@ const Header = () => {
   const teacherDataID = "60e2740e29b4000015939450";
   const courseDataID = "60e45e364f20c20015730a53";
   const classroomDataID = "60e45b1b4f20c20015730a52";
+  // 測試用的
+  // const teacherDataID = "60d4914b4a910b00158018ca";
+  // const courseDataID = "60de73cfe4480444509e1b2e";
+  // const classroomDataID="60dd2a3d9b567c224c85482c";
 
   const [addingCourse, isAddingCourse] = useState(false);
   const [newCourseName, setNewCourseName] = useState("");

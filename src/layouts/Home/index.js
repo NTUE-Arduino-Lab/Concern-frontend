@@ -192,6 +192,11 @@ const Home = () => {
             <option
               value={courseWeeks.classroomDataID}
               key={courseWeeks.classroomDataID}
+              selected={
+                courseWeeks.classroomDataID === classroomDataIDState
+                  ? "select"
+                  : ""
+              }
             >
               {courseWeeks.weekName}
             </option>

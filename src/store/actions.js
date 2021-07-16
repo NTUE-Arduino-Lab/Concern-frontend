@@ -32,16 +32,19 @@ import {
   STUDENT_CONCERN_INFO_FAIL,
 
   //點名系統頁-課堂人數統計
+  ROLLCALL_STATUS_REQUEST,
   SET_ROLLCALL_STATUS,
-  BEGIN_DATA_REQUEST,
-  SUCCESS_DATA_REQUEST,
-  FAIL_DATA_REQUEST,
+  ROLLCALL_STATUS_FAIL,
 
   //學生名單頁-取得已登錄的學生名單
   CLASSMATES_DATA_REQUEST,
   SET_CLASSMATES_DATA,
   SET_CLASSMATES_FAILLIST,
   CLASSMATES_DATA_FAIL,
+
+  // BEGIN_DATA_REQUEST,
+  // SUCCESS_DATA_REQUEST,
+  // FAIL_DATA_REQUEST,
 } from "./actionTypes";
 
 const SERVER_URL = "https://concern-backend-202106.herokuapp.com/api";
@@ -168,7 +171,7 @@ export const getStudentConcernInfo = async (dispatch, options) => {
 };
 
 export const getRollCallStatus = async (dispatch, options) => {
-  dispatch({ type: BEGIN_DATA_REQUEST });
+  dispatch({ type: ROLLCALL_STATUS_REQUEST });
   const { classroomDataID } = options;
   try {
     const { data } = await axios.post(
@@ -181,9 +184,8 @@ export const getRollCallStatus = async (dispatch, options) => {
       type: SET_ROLLCALL_STATUS,
       payload: data,
     });
-    dispatch({ type: SUCCESS_DATA_REQUEST });
   } catch (error) {
-    dispatch({ type: FAIL_DATA_REQUEST, payload: error });
+    dispatch({ type: ROLLCALL_STATUS_FAIL, payload: error });
   }
 };
 
@@ -204,9 +206,12 @@ export const getClassmatesList = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
   const { courseDataID } = options;
   try {
-    const { data } = await axios.post(SERVER_URL + "/course/getClassmatesList", {
-      courseDataID,
-    });
+    const { data } = await axios.post(
+      SERVER_URL + "/course/getClassmatesList",
+      {
+        courseDataID,
+      }
+    );
     dispatch({
       type: SET_CLASSMATES_DATA,
       payload: data,
@@ -218,7 +223,13 @@ export const getClassmatesList = async (dispatch, options) => {
 
 export const editOneStudent = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
-  const { courseDataID,studentIndex,studentName,studentGoogleName,studentID } = options;
+  const {
+    courseDataID,
+    studentIndex,
+    studentName,
+    studentGoogleName,
+    studentID,
+  } = options;
   try {
     console.log(options);
     const { data } = await axios.put(SERVER_URL + "/course/editOneStudent", {
@@ -233,7 +244,7 @@ export const editOneStudent = async (dispatch, options) => {
       payload: data,
     });
   } catch (error) {
-    if (error.response.status===403) {
+    if (error.response.status === 403) {
       dispatch({ type: CLASSMATES_DATA_FAIL, payload: "此學號已存在" });
       console.log("此學號已存在");
     }
@@ -242,15 +253,18 @@ export const editOneStudent = async (dispatch, options) => {
 
 export const deleteOneStudent = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
-  const { courseDataID,studentID } = options;
+  const { courseDataID, studentID } = options;
   try {
     console.log(options);
-    const { data } = await axios.delete(SERVER_URL + "/course/deleteOneStudent", {
-      data :{
-        courseDataID:courseDataID,
-        studentID:studentID
+    const { data } = await axios.delete(
+      SERVER_URL + "/course/deleteOneStudent",
+      {
+        data: {
+          courseDataID: courseDataID,
+          studentID: studentID,
+        },
       }
-    });
+    );
     dispatch({
       type: SET_CLASSMATES_DATA,
       payload: data,
@@ -263,7 +277,7 @@ export const deleteOneStudent = async (dispatch, options) => {
 
 export const addStudent = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
-  const { courseDataID,studentName,studentGoogleName,studentID } = options;
+  const { courseDataID, studentName, studentGoogleName, studentID } = options;
   try {
     console.log(options);
     const { data } = await axios.post(SERVER_URL + "/course/addStudent", {
@@ -284,13 +298,16 @@ export const addStudent = async (dispatch, options) => {
 
 export const addMultipleStudents = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
-  const { courseDataID,studentsDataArray } = options;
+  const { courseDataID, studentsDataArray } = options;
   try {
     console.log(options);
-    const { data } = await axios.post(SERVER_URL + "/course/addMultipleStudents", {
-      courseDataID,
-      studentsDataArray,
-    });
+    const { data } = await axios.post(
+      SERVER_URL + "/course/addMultipleStudents",
+      {
+        courseDataID,
+        studentsDataArray,
+      }
+    );
     dispatch({
       type: SET_CLASSMATES_DATA,
       payload: data.updatedClassmates,
@@ -301,6 +318,24 @@ export const addMultipleStudents = async (dispatch, options) => {
     });
   } catch (error) {
     dispatch({ type: CLASSMATES_DATA_FAIL, payload: error });
+    console.log(error);
+  }
+};
+
+export const setPersonalLeave = async (options) => {
+  const { classroomDataID, studentID, truefalse } = options;
+  try {
+    console.log(options);
+    const { data } = await axios.put(
+      SERVER_URL + "/classroom/setPersonalLeave",
+      {
+        classroomDataID,
+        studentID,
+        truefalse,
+      }
+    );
+    console.log("請假設定完成" + data);
+  } catch (error) {
     console.log(error);
   }
 };

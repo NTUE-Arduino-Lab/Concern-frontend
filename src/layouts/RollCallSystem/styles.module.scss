@@ -1,6 +1,15 @@
 @import "../../styles/color.scss";
 @import "../../styles/spacing.scss";
 
+.loading {
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 175px;
+}
+
 .container {
   width: calc(100vw - 175px);
   height: 100%;
@@ -85,13 +94,14 @@
 
 .tipTitle {
   font-size: 16px;
+  margin-bottom: $section-spacing;
 }
 
-.editBtnSection{
+.editBtnSection {
   width: 100%;
   height: 45px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: $section-spacing;
   .editBtnSection_btn {
@@ -124,6 +134,7 @@
     height: 55px;
     border-radius: 5px 5px 0 0;
     background: #dedede;
+    z-index: 5;
   }
   .th_content {
     display: grid;
@@ -146,10 +157,10 @@
     display: grid;
     justify-content: start;
     grid-auto-flow: column;
-    &:nth-child(even){
-      background: #F8F8F8;
-      .td{
-        background: #F8F8F8;
+    &:nth-child(even) {
+      background: #f8f8f8;
+      .td {
+        background: #f8f8f8;
       }
     }
   }
@@ -160,5 +171,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    &.td_red {
+      color: #cb3d3d;
+    }
+    &.td_green {
+      color: #539b26;
+    }
+    &.td_checkbox {
+      width: 100px;
+    }
+    &.td_unListState{
+      color: #858585;
+    }
   }
 }

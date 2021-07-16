@@ -33,16 +33,18 @@ import {
   STUDENT_CONCERN_INFO_FAIL,
 
   //點名系統頁-課堂人數統計
+  ROLLCALL_STATUS_REQUEST,
   SET_ROLLCALL_STATUS,
-  BEGIN_DATA_REQUEST,
-  SUCCESS_DATA_REQUEST,
-  FAIL_DATA_REQUEST,
+  ROLLCALL_STATUS_FAIL,
 
   //學生名單頁-取得已登錄的學生名單
   CLASSMATES_DATA_REQUEST,
   SET_CLASSMATES_DATA,
-  SET_CLASSMATES_FAILLIST, 
-  CLASSMATES_DATA_FAIL
+  SET_CLASSMATES_FAILLIST,
+  CLASSMATES_DATA_FAIL,
+  BEGIN_DATA_REQUEST,
+  SUCCESS_DATA_REQUEST,
+  FAIL_DATA_REQUEST,
 } from "./actionTypes";
 
 export const StoreContext = createContext();
@@ -101,6 +103,11 @@ const initialState = {
     attentCount: 0,
     personalLeaveCount: 0,
     absenceCount: 0,
+    rollcallTime: [],
+    classmatesInList: [],
+    classmatesUnlisted: [],
+    rollCallSystemDataLoading: false,
+    error: null,
   },
 
   //要資料狀態
@@ -110,12 +117,12 @@ const initialState = {
   },
 
   //學生名單
-  classmatesListData:{
+  classmatesListData: {
     classmatesList: [],
-    addFailList:[],
+    addFailList: [],
     classmatesListDataLoading: false,
     error: "",
-  }
+  },
 };
 
 function reducer(state, action) {
@@ -155,7 +162,7 @@ function reducer(state, action) {
         courseWeeksData: {
           ...state.courseWeeksData,
           courseWeeksDataLoading: true,
-        }
+        },
       };
     case SET_COURSEWEEKS_DATA:
       return {
@@ -166,15 +173,15 @@ function reducer(state, action) {
           courseWeeksDataLoading: false,
         },
       };
-    case COURSEWEEKS_DATA_FAIL: 
-    return {
-      ...state,
-      courseWeeksData: {
-        ...state.courseWeeksData,
-        error: action.payload,
-        courseWeeksDataLoading: false,
-      }
-    }
+    case COURSEWEEKS_DATA_FAIL:
+      return {
+        ...state,
+        courseWeeksData: {
+          ...state.courseWeeksData,
+          error: action.payload,
+          courseWeeksDataLoading: false,
+        },
+      };
     //專注統計頁-上課時段紀錄
     case TIME_STATUS_REQUEST:
       return {
@@ -289,6 +296,14 @@ function reducer(state, action) {
         },
       };
     //點名系統
+    case ROLLCALL_STATUS_REQUEST:
+      return {
+        ...state,
+        rollCallSystemData: {
+          ...state.rollCallSystemData,
+          rollCallSystemDataLoading: true,
+        },
+      };
     case SET_ROLLCALL_STATUS:
       return {
         ...state,
@@ -298,24 +313,18 @@ function reducer(state, action) {
           attentCount: action.payload.attentCount,
           personalLeaveCount: action.payload.personalLeaveCount,
           absenceCount: action.payload.absenceCount,
+          rollcallTime: action.payload.rollcallTime,
+          classmatesInList: action.payload.classmatesInList,
+          classmatesUnlisted: action.payload.classmatesUnlisted,
+          rollCallSystemDataLoading: false,
         },
       };
-    case BEGIN_DATA_REQUEST:
+    case ROLLCALL_STATUS_FAIL:
       return {
         ...state,
-        requestdata: { ...state.requestdata, loading: true },
-      };
-    case SUCCESS_DATA_REQUEST:
-      return {
-        ...state,
-        requestdata: { ...state.requestdata, loading: false },
-      };
-    case FAIL_DATA_REQUEST:
-      return {
-        ...state,
-        requestdata: {
-          ...state.requestdata,
-          loading: false,
+        rollCallSystemData: {
+          ...state.rollCallSystemData,
+          rollCallSystemDataLoading: false,
           error: action.payload,
         },
       };
@@ -325,7 +334,7 @@ function reducer(state, action) {
         ...state,
         classmatesListData: {
           ...state.classmatesListData,
-          addFailList:[],
+          addFailList: [],
           error: "",
           classmatesListDataLoading: true,
         },
@@ -344,7 +353,7 @@ function reducer(state, action) {
         ...state,
         classmatesListData: {
           ...state.classmatesListData,
-          addFailList:action.payload
+          addFailList: action.payload,
         },
       };
     case CLASSMATES_DATA_FAIL:
@@ -354,6 +363,26 @@ function reducer(state, action) {
           ...state.classmatesListData,
           error: action.payload,
           classmatesListDataLoading: false,
+        },
+      };
+    //一般設定
+    case BEGIN_DATA_REQUEST:
+      return {
+        ...state,
+        requestdata: { ...state.requestdata, loading: true },
+      };
+    case SUCCESS_DATA_REQUEST:
+      return {
+        ...state,
+        requestdata: { ...state.requestdata, loading: false },
+      };
+    case FAIL_DATA_REQUEST:
+      return {
+        ...state,
+        requestdata: {
+          ...state.requestdata,
+          loading: false,
+          error: action.payload,
         },
       };
     default:
