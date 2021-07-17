@@ -1,7 +1,12 @@
+//reducer資料重置
+export const SET_PAGE_RESET = 'SET_PAGE_RESET';
 //header-老師名稱、所有課程
 export const SET_TEACHER_DATA = 'SET_TEACHER_DATA';
 export const TEACHER_DATA_REQUEST = 'TEACHER_DATA_REQUEST';
 export const TEACHER_DATA_FAIL = 'TEACHER_DATA_FAIL';
+//header-是否已新增課程
+export const ADD_COURSE_DATA_FINISH = 'ADD_COURSE_DATA_FINISH';
+export const ADD_COURSE_DATA_UNDONE = 'ADD_COURSE_DATA_UNDONE';
 //課程的週次資料
 export const SET_COURSEWEEKS_DATA = 'SET_COURSEWEEKS_DATA';
 export const COURSEWEEKS_DATA_REQUEST = 'COURSEWEEKS_DATA_REQUEST';

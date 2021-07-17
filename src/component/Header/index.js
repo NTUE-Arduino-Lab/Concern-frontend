@@ -37,7 +37,11 @@ const Header = () => {
   const {
     state: {
       teacherData: { teacherName, courses },
-      courseWeeksData: { courseWeeks, courseWeeksDataLoading },
+      isFinishAddCourse,
+      courseWeeksData: {
+        courseWeeks,
+        courseWeeksDataLoading,
+      },
     },
     dispatch,
   } = useContext(StoreContext);
@@ -61,8 +65,20 @@ const Header = () => {
         setClassroomDataID(uiDispatch, courseWeeks[0].classroomDataID);
       }
     }
+    else{
+      if (courseWeeksDataLoading === false) {
+        setClassroomDataID(uiDispatch, "");
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseWeeksDataLoading]);
+
+  useEffect(() => {
+    if (isFinishAddCourse) {
+      getTeacherData(dispatch, { teacherDataID: teacherDataID });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFinishAddCourse]);
 
   //切換老師課程
   const courseSelectHandler = (course) => {
@@ -78,7 +94,7 @@ const Header = () => {
   //新增課程確定按鈕
   const addCourseSubmitHandler = () => {
     if (newCourseName !== "") {
-      addCourse({
+      addCourse(dispatch, {
         teacherDataID: teacherDataID,
         courseName: newCourseName,
       });
@@ -96,13 +112,9 @@ const Header = () => {
     isAddingCourse(false);
   };
 
-  useEffect(() => {
-    console.log(newCourseName);
-  }, [newCourseName]);
-
   return (
     <>
-    <Alert
+      <Alert
         show={Alertshow}
         onHide={() => setAlertshow(false)}
         text={Alerttext}

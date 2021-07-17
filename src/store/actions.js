@@ -1,10 +1,17 @@
 import axios from "axios";
 
 import {
+  //重置頁面
+  SET_PAGE_RESET,
+
   //header-老師名稱、所有課程
   TEACHER_DATA_REQUEST,
   SET_TEACHER_DATA,
   TEACHER_DATA_FAIL,
+
+  //header-是否已新增課程
+  ADD_COURSE_DATA_FINISH,
+  ADD_COURSE_DATA_UNDONE,
 
   //課程週次資料
   COURSEWEEKS_DATA_REQUEST,
@@ -49,6 +56,10 @@ import {
 
 const SERVER_URL = "https://concern-backend-202106.herokuapp.com/api";
 
+export const setReducerDataReset = (dispatch) => {
+  dispatch({ type: SET_PAGE_RESET });
+};
+
 export const getTeacherData = async (dispatch, options) => {
   dispatch({ type: TEACHER_DATA_REQUEST });
   const { teacherDataID } = options;
@@ -60,19 +71,24 @@ export const getTeacherData = async (dispatch, options) => {
       type: SET_TEACHER_DATA,
       payload: data,
     });
+    dispatch({
+      type: ADD_COURSE_DATA_UNDONE,
+    });
   } catch (error) {
     dispatch({ type: TEACHER_DATA_FAIL, payload: error });
   }
 };
 
-export const addCourse = async (options) => {
+export const addCourse = async (dispatch, options) => {
   const { teacherDataID, courseName } = options;
   try {
     await axios.post(SERVER_URL + "/course/addCourse", {
       teacherDataID,
       courseName,
     });
-    alert("新增課程成功");
+    dispatch({
+      type: ADD_COURSE_DATA_FINISH,
+    });
   } catch (error) {
     console.log("新增課程失敗：" + error);
   }
@@ -80,6 +96,7 @@ export const addCourse = async (options) => {
 
 export const getCourseWeeksData = async (dispatch, options) => {
   dispatch({ type: COURSEWEEKS_DATA_REQUEST });
+  dispatch({ type: SET_PAGE_RESET });
   const { courseDataID } = options;
   try {
     const { data } = await axios.post(SERVER_URL + "/course/getCourseData", {

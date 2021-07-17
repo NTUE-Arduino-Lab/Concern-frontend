@@ -33,7 +33,7 @@ const RollCallSystem = () => {
   //取得後台資料
   const {
     state: {
-      courseWeeksData: { courseWeeks },
+      courseWeeksData: { courseWeeks, courseWeeksDataLoading },
       rollCallSystemData: {
         shouldAttendCount,
         attentCount,
@@ -154,10 +154,16 @@ const RollCallSystem = () => {
 
   return (
     <Fragment>
-      {rollCallSystemDataLoading ? (
+      {courseWeeksDataLoading ? (
         <div className={styles.loading}>
           <Loading />
         </div>
+      ) : rollCallSystemDataLoading ? (
+        <div className={styles.loading}>
+          <Loading />
+        </div>
+      ) : courseWeeks.length === 0 ? (
+        <div className={styles.noData}>目前尚無資料</div>
       ) : (
         <div className={styles.container}>
           <select
@@ -178,157 +184,173 @@ const RollCallSystem = () => {
               </option>
             ))}
           </select>
-          <div className={styles.sectionTop}>
-            <div className={styles.studentNumber}>
-              <div className={styles.title}>應到人數</div>
-              <div className={styles.number}>{`${shouldAttendCount}人`}</div>
-            </div>
-            <div className={styles.studentNumber}>
-              <div className={styles.title}>實到人數</div>
-              <div className={styles.number}>{`${attentCount}人`}</div>
-            </div>
-            <div className={styles.studentCondition}>
-              <div
-                className={styles.condition}
-              >{`請假學生 ${personalLeaveCount} 人`}</div>
-              <div
-                className={styles.condition}
-              >{`缺席學生 ${absenceCount} 人`}</div>
-            </div>
-            <div className={styles.settingRollCallTime}>
-              <form onSubmit={submitHandler}>
-                <div className={styles.setTimeSectionTop}>
-                  <div id="text_title">點名限定時間</div>
-                  <input
-                    type="text"
-                    onChange={(e) => setTime(e.target.value)}
-                    className={styles.inputSection}
-                    id="text_time"
-                    value={time}
-                  ></input>
-                  秒
-                  <button
-                    className={styles.submitBtn}
-                    type="submit"
-                    id="submit"
-                  >
-                    開始點名
-                  </button>
+          {classmatesInList.length === 0 && classmatesUnlisted.length === 0 ? (
+            <div className={styles.rollCallNoData}>目前尚無資料</div>
+          ) : (
+            <>
+              <div className={styles.sectionTop}>
+                <div className={styles.studentNumber}>
+                  <div className={styles.title}>應到人數</div>
+                  <div
+                    className={styles.number}
+                  >{`${shouldAttendCount}人`}</div>
                 </div>
-                <div>系統提示：學生需在限定時間內按下點名按鈕</div>
-              </form>
-            </div>
-          </div>
-          <div className={styles.tipTitle}>
-            系統提示：僅計算已登入於學生系統的名單
-          </div>
-          <div className={styles.editBtnSection}>
-            <button
-              className={styles.editBtnSection_btn}
-              id="editMode"
-              onClick={editModeChange}
-            >
-              編輯點名狀態
-            </button>
-          </div>
-          <div className={styles.studentList}>
-            <div className={styles.thead}>
-              <div className={styles.th_content}>
-                <div className={`${styles.td} ${styles.td_checkbox}`}>請假</div>
-                <div className={styles.th}>出席狀況</div>
-                <div className={styles.th}>學生姓名</div>
-                <div className={styles.th}>學生學號</div>
-                {rollcallTime.map((time) => (
-                  <div className={styles.th}>{time}</div>
-                ))}
-              </div>
-            </div>
-            <div className={styles.tbody}>
-              {classmatesInList.length === 0 ? (
-                <></>
-              ) : (
-                <>
-                  {classmatesInList.map((studentInList) => (
-                    <div
-                      className={styles.td_content}
-                      key={studentInList.studentID}
-                    >
-                      <div className={`${styles.td} ${styles.td_checkbox}`}>
-                        <Checkbox
-                          value={studentInList.studentID}
-                          onChange={personalLeaveHandler}
-                          disabled={editMode === false}
-                          defaultChecked={studentInList.personalLeave}
-                          color="#000"
-                          inputProps={{ "aria-label": "primary checkbox" }}
-                        />
-                      </div>
-                      <div
-                        className={
-                          attendanceHandler(studentInList.attendance)
-                            .attendanceStyles
-                        }
+                <div className={styles.studentNumber}>
+                  <div className={styles.title}>實到人數</div>
+                  <div className={styles.number}>{`${attentCount}人`}</div>
+                </div>
+                <div className={styles.studentCondition}>
+                  <div
+                    className={styles.condition}
+                  >{`請假學生 ${personalLeaveCount} 人`}</div>
+                  <div
+                    className={styles.condition}
+                  >{`缺席學生 ${absenceCount} 人`}</div>
+                </div>
+                <div className={styles.settingRollCallTime}>
+                  <form onSubmit={submitHandler}>
+                    <div className={styles.setTimeSectionTop}>
+                      <div id="text_title">點名限定時間</div>
+                      <input
+                        type="text"
+                        onChange={(e) => setTime(e.target.value)}
+                        className={styles.inputSection}
+                        id="text_time"
+                        value={time}
+                      ></input>
+                      秒
+                      <button
+                        className={styles.submitBtn}
+                        type="submit"
+                        id="submit"
                       >
-                        {
-                          attendanceHandler(studentInList.attendance)
-                            .attendanceText
-                        }
-                      </div>
-                      <div className={styles.td}>
-                        {studentInList.studentName}
-                      </div>
-                      <div className={styles.td}>{studentInList.studentID}</div>
-                      {studentInList.attendance.map((attendanceState) => (
+                        開始點名
+                      </button>
+                    </div>
+                    <div>系統提示：學生需在限定時間內按下點名按鈕</div>
+                  </form>
+                </div>
+              </div>
+              <div className={styles.tipTitle}>
+                系統提示：僅計算已登入於學生系統的名單
+              </div>
+              <div className={styles.editBtnSection}>
+                <button
+                  className={styles.editBtnSection_btn}
+                  id="editMode"
+                  onClick={editModeChange}
+                >
+                  編輯點名狀態
+                </button>
+              </div>
+              <div className={styles.studentList}>
+                <div className={styles.thead}>
+                  <div className={styles.th_content}>
+                    <div className={`${styles.td} ${styles.td_checkbox}`}>
+                      請假
+                    </div>
+                    <div className={styles.th}>出席狀況</div>
+                    <div className={styles.th}>學生姓名</div>
+                    <div className={styles.th}>學生學號</div>
+                    {rollcallTime.map((time) => (
+                      <div className={styles.th}>{time}</div>
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.tbody}>
+                  {classmatesInList.length === 0 ? (
+                    <></>
+                  ) : (
+                    <>
+                      {classmatesInList.map((studentInList) => (
                         <div
-                          className={
-                            attendanceState === 0
-                              ? `${styles.td} ${styles.td_red}`
-                              : `${styles.td}`
-                          }
+                          className={styles.td_content}
+                          key={studentInList.studentID}
                         >
-                          {attendanceStateHandler(attendanceState)}
+                          <div className={`${styles.td} ${styles.td_checkbox}`}>
+                            <Checkbox
+                              value={studentInList.studentID}
+                              onChange={personalLeaveHandler}
+                              disabled={editMode === false}
+                              defaultChecked={studentInList.personalLeave}
+                              color="#000"
+                              inputProps={{ "aria-label": "primary checkbox" }}
+                            />
+                          </div>
+                          <div
+                            className={
+                              attendanceHandler(studentInList.attendance)
+                                .attendanceStyles
+                            }
+                          >
+                            {
+                              attendanceHandler(studentInList.attendance)
+                                .attendanceText
+                            }
+                          </div>
+                          <div className={styles.td}>
+                            {studentInList.studentName}
+                          </div>
+                          <div className={styles.td}>
+                            {studentInList.studentID}
+                          </div>
+                          {studentInList.attendance.map((attendanceState) => (
+                            <div
+                              className={
+                                attendanceState === 0
+                                  ? `${styles.td} ${styles.td_red}`
+                                  : `${styles.td}`
+                              }
+                            >
+                              {attendanceStateHandler(attendanceState)}
+                            </div>
+                          ))}
                         </div>
                       ))}
-                    </div>
-                  ))}
-                </>
-              )}
-              {classmatesUnlisted.length === 0 ? (
-                <></>
-              ) : (
-                <>
-                  {classmatesUnlisted.map((studentUnList) => (
-                    <div
-                      className={styles.td_content}
-                      key={studentUnList.studentID}
-                    >
-                      <div
-                        className={`${styles.td} ${styles.td_checkbox}`}
-                      ></div>
-                      <div className={`${styles.td} ${styles.td_unListState}`}>
-                        無登錄
-                      </div>
-                      <div className={styles.td}>
-                        {studentUnList.studentName}
-                      </div>
-                      <div className={styles.td}>{studentUnList.studentID}</div>
-                      {studentUnList.attendance.map((attendanceState) => (
+                    </>
+                  )}
+                  {classmatesUnlisted.length === 0 ? (
+                    <></>
+                  ) : (
+                    <>
+                      {classmatesUnlisted.map((studentUnList) => (
                         <div
-                          className={
-                            attendanceState === 0
-                              ? `${styles.td} ${styles.td_red}`
-                              : `${styles.td}`
-                          }
+                          className={styles.td_content}
+                          key={studentUnList.studentID}
                         >
-                          {attendanceStateHandler(attendanceState)}
+                          <div
+                            className={`${styles.td} ${styles.td_checkbox}`}
+                          ></div>
+                          <div
+                            className={`${styles.td} ${styles.td_unListState}`}
+                          >
+                            無登錄
+                          </div>
+                          <div className={styles.td}>
+                            {studentUnList.studentName}
+                          </div>
+                          <div className={styles.td}>
+                            {studentUnList.studentID}
+                          </div>
+                          {studentUnList.attendance.map((attendanceState) => (
+                            <div
+                              className={
+                                attendanceState === 0
+                                  ? `${styles.td} ${styles.td_red}`
+                                  : `${styles.td}`
+                              }
+                            >
+                              {attendanceStateHandler(attendanceState)}
+                            </div>
+                          ))}
                         </div>
                       ))}
-                    </div>
-                  ))}
-                </>
-              )}
-            </div>
-          </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </Fragment>

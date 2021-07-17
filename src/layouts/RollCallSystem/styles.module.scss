@@ -7,7 +7,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 220px;
+}
+
+.noData {
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-left: 175px;
+  font-size: 48px;
 }
 
 .container {
@@ -16,6 +26,14 @@
   margin-left: 175px;
   padding: $main-spacing;
   padding-top: calc(#{$header-height} + #{$main-spacing});
+  .rollCallNoData {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+  }
 }
 
 .select {
@@ -180,7 +198,7 @@
     &.td_checkbox {
       width: 100px;
     }
-    &.td_unListState{
+    &.td_unListState {
       color: #858585;
     }
   }

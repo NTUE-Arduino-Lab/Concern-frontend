@@ -2,10 +2,17 @@ import { createContext, useReducer } from "react";
 import PropTypes from "prop-types";
 
 import {
+  //重置頁面
+  SET_PAGE_RESET,
+
   //header-老師名稱、所有課程
   TEACHER_DATA_REQUEST,
   SET_TEACHER_DATA,
   TEACHER_DATA_FAIL,
+
+  //header-是否已新增課程
+  ADD_COURSE_DATA_FINISH,
+  ADD_COURSE_DATA_UNDONE,
 
   //課程週次資料
   COURSEWEEKS_DATA_REQUEST,
@@ -58,15 +65,20 @@ const initialState = {
     error: null,
   },
 
+  //header-是否已新增課程
+  isFinishAddCourse: false,
+
+  //課程週次資料
   courseWeeksData: {
     courseWeeks: [],
+    isGetCourseWeeks: false,
     courseWeeksDataLoading: false,
     error: null,
   },
 
   //專注度統計上課時段
   classroomTimeStatus: {
-    isClassing: true,
+    isClassing: false,
     isResting: false,
     startTime: "",
     endTime: "",
@@ -127,6 +139,32 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    //頁面重置
+    case SET_PAGE_RESET:
+      return {
+        ...state,
+        classroomTimeStatus: {
+          ...state.classroomTimeStatus,
+          isClassing: false,
+          isResting: false,
+          startTime: "",
+          endTime: "",
+          restTime: [],
+        },
+        rankData: {
+          ...state.rankData,
+          concernPercentageRank: [],
+          bestLastedRank: [],
+        },
+        classroomConcernInfo: {
+          ...state.classroomConcernInfo,
+          classroomConcernData: [],
+        },
+        studentConcernInfo:{
+          ...state.studentConcernInfo,
+          studentConcernData: [],
+        },
+      };
     //header-老師名稱、所有課程
     case TEACHER_DATA_REQUEST:
       return {
@@ -154,6 +192,17 @@ function reducer(state, action) {
           error: action.payload,
           teacherDataLoading: false,
         },
+      };
+    //header-是否已新增課程
+    case ADD_COURSE_DATA_FINISH:
+      return {
+        ...state,
+        isFinishAddCourse: true,
+      };
+    case ADD_COURSE_DATA_UNDONE:
+      return {
+        ...state,
+        isFinishAddCourse: false,
       };
     //課程週次資料
     case COURSEWEEKS_DATA_REQUEST:
@@ -301,6 +350,13 @@ function reducer(state, action) {
         ...state,
         rollCallSystemData: {
           ...state.rollCallSystemData,
+          shouldAttendCount: 0,
+          attentCount: 0,
+          personalLeaveCount: 0,
+          absenceCount: 0,
+          rollcallTime: [],
+          classmatesInList: [],
+          classmatesUnlisted: [],
           rollCallSystemDataLoading: true,
         },
       };

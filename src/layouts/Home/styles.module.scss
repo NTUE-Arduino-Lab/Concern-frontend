@@ -1,6 +1,25 @@
 @import "../../styles/color.scss";
 @import "../../styles/spacing.scss";
 
+.loading_allPage{
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 220px;
+}
+
+.noData{
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 175px;
+  font-size: 48px;
+}
+
 .container {
   width: calc(100vw - 175px);
   height: 100%;
