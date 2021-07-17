@@ -109,6 +109,7 @@ const Header = () => {
 
   //新增課程取消按鈕
   const addCourseCancelHandler = () => {
+    document.getElementById("addCourseInput").value = "";
     isAddingCourse(false);
   };
 
