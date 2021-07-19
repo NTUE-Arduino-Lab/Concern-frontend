@@ -113,13 +113,6 @@ const Home = () => {
     }
   };
 
-  //時間換算成分鐘
-  const timeChangeToMins = (time) => {
-    var timeArray = time.split(":");
-    var mins = timeArray[0] * 60 + timeArray[1] * 1;
-    return Math.floor(mins);
-  };
-
   //設定全班資訊目前選擇的項目
   const [activeNavItem, setActiveNavItem] = useState("info");
   useEffect(() => {}, [activeNavItem]);
@@ -195,7 +188,7 @@ const Home = () => {
         <div className={styles.loading_allPage}>
           <Loading />
         </div>
-      ) :courseWeeks.length === 0 ? (
+      ) : courseWeeks.length === 0 ? (
         <div className={styles.noData}>目前尚無資料</div>
       ) : (
         <div className={styles.container}>
@@ -320,11 +313,9 @@ const Home = () => {
                               </div>
                             </div>
                             <div className={styles.personBottom}>
-                              <div
-                                className={styles.value}
-                              >{`${timeChangeToMins(
-                                rank.bestLasted
-                              )}mins`}</div>
+                              <div className={styles.bestLastedValue}>
+                                {rank.bestLasted}
+                              </div>
                             </div>
                           </div>
                         ))}
