@@ -8,26 +8,53 @@
   padding: $main-spacing;
   padding-top: calc(#{$header-height} + #{$main-spacing});
 }
-
+.TipAndButton{
+  display: flex;
+  width: 100%;
+  margin-bottom: $section-spacing;
+}
+.tipSide{
+  font-size: 16px;
+  width: 100%;
+  align-self: center;
+  margin-left: 4px;
+  font-weight: bold;
+}
 .buttonSide {
   display: flex;
   justify-content: flex-end;
+  justify-self: flex-end;
   width: 100%;
-  margin-bottom: $section-spacing;
-
   .buttonSide_button {
     font-size: 18px;
     border: 0px;
     border-radius: $button-border-radius;
     background: $button-bg;
     padding: 5px 35px;
-
+    &:disabled:hover{
+      background-color: $button-bg;
+    }
     &:hover {
       background: $button-hover-bg;
     }
   }
 }
-
+.loading{
+  width: 100%;
+  height: calc(100vh - 160px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nothing{
+  width: 100%;
+  height: calc(100vh - 160px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 28px;
+}
 .attendanceList {
   position: relative;
   width: 100%;
@@ -79,4 +106,10 @@
     justify-content: center;
     align-items: center;
   }
+}
+.red{
+  color: #FF0000;
+}
+.leavefz{
+  font-size: 32px;
 }
