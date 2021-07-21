@@ -42,7 +42,13 @@ import {
   CLASSMATES_DATA_REQUEST,
   SET_CLASSMATES_DATA,
   SET_CLASSMATES_FAILLIST, 
-  CLASSMATES_DATA_FAIL
+  CLASSMATES_DATA_FAIL,
+  
+  //完整點名頁
+  TOTALROLLCALL_DATA_REQUEST,
+  SET_TOTALROLLCALL_WEEK_DATA,
+  SET_TOTALROLLCALL_LIST_DATA,
+  TOTALROLLCALL_DATA_FAIL
 } from "./actionTypes";
 
 export const StoreContext = createContext();
@@ -114,6 +120,14 @@ const initialState = {
     classmatesList: [],
     addFailList:[],
     classmatesListDataLoading: false,
+    error: "",
+  },
+
+  //完整點名名單
+  totalRollcallListData:{
+    totalRollcallWeek: [],
+    totalRollcallList: [],
+    totalRollcallListDataLoading: false,
     error: "",
   }
 };
@@ -354,6 +368,43 @@ function reducer(state, action) {
           ...state.classmatesListData,
           error: action.payload,
           classmatesListDataLoading: false,
+        },
+      };
+    //完整點名名單
+    case TOTALROLLCALL_DATA_REQUEST:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          error: "",
+          totalRollcallListDataLoading: true,
+        },
+      };
+    case SET_TOTALROLLCALL_WEEK_DATA:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          totalRollcallWeek: action.payload,
+          totalRollcallListDataLoading: false,
+        },
+      };
+    case SET_TOTALROLLCALL_LIST_DATA:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          totalRollcallList: action.payload,
+          totalRollcallListDataLoading: false,
+        },
+      };
+    case TOTALROLLCALL_DATA_FAIL:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          error: action.payload,
+          totalRollcallListDataLoading: false,
         },
       };
     default:
