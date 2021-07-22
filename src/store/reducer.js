@@ -49,9 +49,17 @@ import {
   SET_CLASSMATES_DATA,
   SET_CLASSMATES_FAILLIST,
   CLASSMATES_DATA_FAIL,
+  
+  //完整點名頁
+  TOTALROLLCALL_DATA_REQUEST,
+  SET_TOTALROLLCALL_WEEK_DATA,
+  SET_TOTALROLLCALL_LIST_DATA,
+  TOTALROLLCALL_DATA_FAIL,
+  
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
   FAIL_DATA_REQUEST,
+  
 } from "./actionTypes";
 
 export const StoreContext = createContext();
@@ -135,6 +143,14 @@ const initialState = {
     classmatesListDataLoading: false,
     error: "",
   },
+  
+  //完整點名名單
+  totalRollcallListData:{
+    totalRollcallWeek: [],
+    totalRollcallList: [],
+    totalRollcallListDataLoading: false,
+    error: "",
+  }
 };
 
 function reducer(state, action) {
@@ -421,6 +437,45 @@ function reducer(state, action) {
           classmatesListDataLoading: false,
         },
       };
+
+    //完整點名名單
+    case TOTALROLLCALL_DATA_REQUEST:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          error: "",
+          totalRollcallListDataLoading: true,
+        },
+      };
+    case SET_TOTALROLLCALL_WEEK_DATA:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          totalRollcallWeek: action.payload,
+          totalRollcallListDataLoading: false,
+        },
+      };
+    case SET_TOTALROLLCALL_LIST_DATA:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          totalRollcallList: action.payload,
+          totalRollcallListDataLoading: false,
+        },
+      };
+    case TOTALROLLCALL_DATA_FAIL:
+      return {
+        ...state,
+        totalRollcallListData: {
+          ...state.totalRollcallListData,
+          error: action.payload,
+          totalRollcallListDataLoading: false,
+        },
+      };
+      
     //一般設定
     case BEGIN_DATA_REQUEST:
       return {
@@ -441,6 +496,7 @@ function reducer(state, action) {
           error: action.payload,
         },
       };
+      
     default:
       return state;
   }

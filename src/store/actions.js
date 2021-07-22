@@ -48,10 +48,17 @@ import {
   SET_CLASSMATES_DATA,
   SET_CLASSMATES_FAILLIST,
   CLASSMATES_DATA_FAIL,
-
+  
+  //完整點名頁
+  TOTALROLLCALL_DATA_REQUEST,
+  SET_TOTALROLLCALL_WEEK_DATA,
+  SET_TOTALROLLCALL_LIST_DATA,
+  TOTALROLLCALL_DATA_FAIL
+  
   // BEGIN_DATA_REQUEST,
   // SUCCESS_DATA_REQUEST,
   // FAIL_DATA_REQUEST,
+  
 } from "./actionTypes";
 
 const SERVER_URL = "https://concern-backend-202106.herokuapp.com/api";
@@ -234,7 +241,8 @@ export const getClassmatesList = async (dispatch, options) => {
       payload: data,
     });
   } catch (error) {
-    dispatch({ type: CLASSMATES_DATA_FAIL, payload: error });
+    dispatch({ type: CLASSMATES_DATA_FAIL, payload: "載入學生名單時發生問題" });
+    console.log(error);
   }
 };
 
@@ -248,7 +256,6 @@ export const editOneStudent = async (dispatch, options) => {
     studentID,
   } = options;
   try {
-    console.log(options);
     const { data } = await axios.put(SERVER_URL + "/course/editOneStudent", {
       courseDataID,
       studentIndex,
@@ -263,8 +270,8 @@ export const editOneStudent = async (dispatch, options) => {
   } catch (error) {
     if (error.response.status === 403) {
       dispatch({ type: CLASSMATES_DATA_FAIL, payload: "此學號已存在" });
-      console.log("此學號已存在");
     }
+    console.log(error);
   }
 };
 
@@ -272,14 +279,10 @@ export const deleteOneStudent = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
   const { courseDataID, studentID } = options;
   try {
-    console.log(options);
-    const { data } = await axios.delete(
-      SERVER_URL + "/course/deleteOneStudent",
-      {
-        data: {
-          courseDataID: courseDataID,
-          studentID: studentID,
-        },
+    const { data } = await axios.delete(SERVER_URL + "/course/deleteOneStudent", {
+      data :{
+        courseDataID:courseDataID,
+        studentID:studentID
       }
     );
     dispatch({
@@ -287,7 +290,7 @@ export const deleteOneStudent = async (dispatch, options) => {
       payload: data,
     });
   } catch (error) {
-    dispatch({ type: CLASSMATES_DATA_FAIL, payload: error });
+    dispatch({ type: CLASSMATES_DATA_FAIL, payload: "刪除學生時發生問題！" });
     console.log(error);
   }
 };
@@ -296,7 +299,6 @@ export const addStudent = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
   const { courseDataID, studentName, studentGoogleName, studentID } = options;
   try {
-    console.log(options);
     const { data } = await axios.post(SERVER_URL + "/course/addStudent", {
       courseDataID,
       studentName,
@@ -308,8 +310,13 @@ export const addStudent = async (dispatch, options) => {
       payload: data,
     });
   } catch (error) {
-    dispatch({ type: CLASSMATES_DATA_FAIL, payload: error });
-    console.log("error");
+    if (error.response.status===403) {
+      dispatch({ type: CLASSMATES_DATA_FAIL, payload: "此學號已在名單中" });
+    }
+    else{
+      dispatch({ type: CLASSMATES_DATA_FAIL, payload: "新增學生失敗" });
+    }
+    console.log(error);
   }
 };
 
@@ -317,14 +324,10 @@ export const addMultipleStudents = async (dispatch, options) => {
   dispatch({ type: CLASSMATES_DATA_REQUEST });
   const { courseDataID, studentsDataArray } = options;
   try {
-    console.log(options);
-    const { data } = await axios.post(
-      SERVER_URL + "/course/addMultipleStudents",
-      {
-        courseDataID,
-        studentsDataArray,
-      }
-    );
+    const { data } = await axios.post(SERVER_URL + "/course/addMultipleStudents", {
+      courseDataID,
+      studentsDataArray,
+    });
     dispatch({
       type: SET_CLASSMATES_DATA,
       payload: data.updatedClassmates,
@@ -334,7 +337,28 @@ export const addMultipleStudents = async (dispatch, options) => {
       payload: data.addFailList,
     });
   } catch (error) {
-    dispatch({ type: CLASSMATES_DATA_FAIL, payload: error });
+    dispatch({ type: CLASSMATES_DATA_FAIL, payload: "匯入學生名單時發生問題" });
+    console.log(error);
+  }
+};
+
+export const getTotalRollcallStatus = async (dispatch, options) => {
+  dispatch({ type: TOTALROLLCALL_DATA_REQUEST });
+  const { courseDataID } = options;
+  try {
+    const { data } = await axios.post(SERVER_URL + "/course/getTotalRollcallStatus", {
+      courseDataID
+    });
+    dispatch({
+      type: SET_TOTALROLLCALL_WEEK_DATA,
+      payload: data.weekName
+    });
+    dispatch({
+      type: SET_TOTALROLLCALL_LIST_DATA,
+      payload: data.classmatesList
+    });
+  } catch (error) {
+    dispatch({ type: TOTALROLLCALL_DATA_FAIL, payload: "匯入完整點名名單時發生問題" });
     console.log(error);
   }
 };
