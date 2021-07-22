@@ -189,6 +189,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    &.td_symbol {
+      font-family: Arial;
+    }
     &.td_red {
       color: #cb3d3d;
     }

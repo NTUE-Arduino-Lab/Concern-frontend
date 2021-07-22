@@ -322,8 +322,8 @@ const RollCallSystem = () => {
                               <div
                                 className={
                                   attendanceState === 0
-                                    ? `${styles.td} ${styles.td_red}`
-                                    : `${styles.td}`
+                                    ? `${styles.td} ${styles.td_symbol} ${styles.td_red}`
+                                    : `${styles.td} ${styles.td_symbol}`
                                 }
                               >
                                 {attendanceStateHandler(attendanceState)}
@@ -360,8 +360,8 @@ const RollCallSystem = () => {
                               <div
                                 className={
                                   attendanceState === 0
-                                    ? `${styles.td} ${styles.td_red}`
-                                    : `${styles.td}`
+                                    ? `${styles.td} ${styles.td_symbol} ${styles.td_red}`
+                                    : `${styles.td} ${styles.td_symbol}`
                                 }
                               >
                                 {attendanceStateHandler(attendanceState)}
