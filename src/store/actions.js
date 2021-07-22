@@ -284,7 +284,7 @@ export const deleteOneStudent = async (dispatch, options) => {
         courseDataID:courseDataID,
         studentID:studentID
       }
-    );
+    });
     dispatch({
       type: SET_CLASSMATES_DATA,
       payload: data,
