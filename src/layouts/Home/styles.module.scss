@@ -1,6 +1,25 @@
 @import "../../styles/color.scss";
 @import "../../styles/spacing.scss";
 
+.loading_allPage{
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 220px;
+}
+
+.noData{
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 175px;
+  font-size: 48px;
+}
+
 .container {
   width: calc(100vw - 175px);
   height: 100%;
@@ -73,13 +92,13 @@
         margin-left: 50px;
       }
       .percentRank {
-        margin-right: 40px;
+        margin-right: 30px;
       }
       .rank_content {
         margin-top: 15px;
         display: flex;
         .content_person {
-          width: 100px;
+          width: 110px;
           height: 82px;
           margin-right: 18px;
           .personTop {
@@ -103,6 +122,9 @@
             align-items: center;
             border-radius: 0 0 10px 10px;
             background: #f9f9f9;
+            .bestLastedValue {
+              font-size: 16px;
+            }
           }
         }
       }
@@ -124,7 +146,7 @@
       .navItem {
         color: #989898;
         cursor: pointer;
-        padding: 0 10px 5px 10px;
+        padding: 20px 10px 5px 10px;
         margin-right: 80px;
         &:hover {
           color: #3d7667;

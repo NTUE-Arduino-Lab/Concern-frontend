@@ -2,10 +2,17 @@ import { createContext, useReducer } from "react";
 import PropTypes from "prop-types";
 
 import {
+  //重置頁面
+  SET_PAGE_RESET,
+
   //header-老師名稱、所有課程
   TEACHER_DATA_REQUEST,
   SET_TEACHER_DATA,
   TEACHER_DATA_FAIL,
+
+  //header-是否已新增課程
+  ADD_COURSE_DATA_FINISH,
+  ADD_COURSE_DATA_UNDONE,
 
   //課程週次資料
   COURSEWEEKS_DATA_REQUEST,
@@ -33,22 +40,26 @@ import {
   STUDENT_CONCERN_INFO_FAIL,
 
   //點名系統頁-課堂人數統計
+  ROLLCALL_STATUS_REQUEST,
   SET_ROLLCALL_STATUS,
-  BEGIN_DATA_REQUEST,
-  SUCCESS_DATA_REQUEST,
-  FAIL_DATA_REQUEST,
+  ROLLCALL_STATUS_FAIL,
 
   //學生名單頁-取得已登錄的學生名單
   CLASSMATES_DATA_REQUEST,
   SET_CLASSMATES_DATA,
-  SET_CLASSMATES_FAILLIST, 
+  SET_CLASSMATES_FAILLIST,
   CLASSMATES_DATA_FAIL,
   
   //完整點名頁
   TOTALROLLCALL_DATA_REQUEST,
   SET_TOTALROLLCALL_WEEK_DATA,
   SET_TOTALROLLCALL_LIST_DATA,
-  TOTALROLLCALL_DATA_FAIL
+  TOTALROLLCALL_DATA_FAIL,
+  
+  BEGIN_DATA_REQUEST,
+  SUCCESS_DATA_REQUEST,
+  FAIL_DATA_REQUEST,
+  
 } from "./actionTypes";
 
 export const StoreContext = createContext();
@@ -62,15 +73,20 @@ const initialState = {
     error: null,
   },
 
+  //header-是否已新增課程
+  isFinishAddCourse: false,
+
+  //課程週次資料
   courseWeeksData: {
     courseWeeks: [],
+    isGetCourseWeeks: false,
     courseWeeksDataLoading: false,
     error: null,
   },
 
   //專注度統計上課時段
   classroomTimeStatus: {
-    isClassing: true,
+    isClassing: false,
     isResting: false,
     startTime: "",
     endTime: "",
@@ -107,6 +123,11 @@ const initialState = {
     attentCount: 0,
     personalLeaveCount: 0,
     absenceCount: 0,
+    rollcallTime: [],
+    classmatesInList: [],
+    classmatesUnlisted: [],
+    rollCallSystemDataLoading: false,
+    error: null,
   },
 
   //要資料狀態
@@ -116,13 +137,13 @@ const initialState = {
   },
 
   //學生名單
-  classmatesListData:{
+  classmatesListData: {
     classmatesList: [],
-    addFailList:[],
+    addFailList: [],
     classmatesListDataLoading: false,
     error: "",
   },
-
+  
   //完整點名名單
   totalRollcallListData:{
     totalRollcallWeek: [],
@@ -134,6 +155,32 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    //頁面重置
+    case SET_PAGE_RESET:
+      return {
+        ...state,
+        classroomTimeStatus: {
+          ...state.classroomTimeStatus,
+          isClassing: false,
+          isResting: false,
+          startTime: "",
+          endTime: "",
+          restTime: [],
+        },
+        rankData: {
+          ...state.rankData,
+          concernPercentageRank: [],
+          bestLastedRank: [],
+        },
+        classroomConcernInfo: {
+          ...state.classroomConcernInfo,
+          classroomConcernData: [],
+        },
+        studentConcernInfo:{
+          ...state.studentConcernInfo,
+          studentConcernData: [],
+        },
+      };
     //header-老師名稱、所有課程
     case TEACHER_DATA_REQUEST:
       return {
@@ -162,6 +209,17 @@ function reducer(state, action) {
           teacherDataLoading: false,
         },
       };
+    //header-是否已新增課程
+    case ADD_COURSE_DATA_FINISH:
+      return {
+        ...state,
+        isFinishAddCourse: true,
+      };
+    case ADD_COURSE_DATA_UNDONE:
+      return {
+        ...state,
+        isFinishAddCourse: false,
+      };
     //課程週次資料
     case COURSEWEEKS_DATA_REQUEST:
       return {
@@ -169,7 +227,7 @@ function reducer(state, action) {
         courseWeeksData: {
           ...state.courseWeeksData,
           courseWeeksDataLoading: true,
-        }
+        },
       };
     case SET_COURSEWEEKS_DATA:
       return {
@@ -180,15 +238,15 @@ function reducer(state, action) {
           courseWeeksDataLoading: false,
         },
       };
-    case COURSEWEEKS_DATA_FAIL: 
-    return {
-      ...state,
-      courseWeeksData: {
-        ...state.courseWeeksData,
-        error: action.payload,
-        courseWeeksDataLoading: false,
-      }
-    }
+    case COURSEWEEKS_DATA_FAIL:
+      return {
+        ...state,
+        courseWeeksData: {
+          ...state.courseWeeksData,
+          error: action.payload,
+          courseWeeksDataLoading: false,
+        },
+      };
     //專注統計頁-上課時段紀錄
     case TIME_STATUS_REQUEST:
       return {
@@ -303,6 +361,21 @@ function reducer(state, action) {
         },
       };
     //點名系統
+    case ROLLCALL_STATUS_REQUEST:
+      return {
+        ...state,
+        rollCallSystemData: {
+          ...state.rollCallSystemData,
+          shouldAttendCount: 0,
+          attentCount: 0,
+          personalLeaveCount: 0,
+          absenceCount: 0,
+          rollcallTime: [],
+          classmatesInList: [],
+          classmatesUnlisted: [],
+          rollCallSystemDataLoading: true,
+        },
+      };
     case SET_ROLLCALL_STATUS:
       return {
         ...state,
@@ -312,24 +385,18 @@ function reducer(state, action) {
           attentCount: action.payload.attentCount,
           personalLeaveCount: action.payload.personalLeaveCount,
           absenceCount: action.payload.absenceCount,
+          rollcallTime: action.payload.rollcallTime,
+          classmatesInList: action.payload.classmatesInList,
+          classmatesUnlisted: action.payload.classmatesUnlisted,
+          rollCallSystemDataLoading: false,
         },
       };
-    case BEGIN_DATA_REQUEST:
+    case ROLLCALL_STATUS_FAIL:
       return {
         ...state,
-        requestdata: { ...state.requestdata, loading: true },
-      };
-    case SUCCESS_DATA_REQUEST:
-      return {
-        ...state,
-        requestdata: { ...state.requestdata, loading: false },
-      };
-    case FAIL_DATA_REQUEST:
-      return {
-        ...state,
-        requestdata: {
-          ...state.requestdata,
-          loading: false,
+        rollCallSystemData: {
+          ...state.rollCallSystemData,
+          rollCallSystemDataLoading: false,
           error: action.payload,
         },
       };
@@ -339,7 +406,7 @@ function reducer(state, action) {
         ...state,
         classmatesListData: {
           ...state.classmatesListData,
-          addFailList:[],
+          addFailList: [],
           error: "",
           classmatesListDataLoading: true,
         },
@@ -358,7 +425,7 @@ function reducer(state, action) {
         ...state,
         classmatesListData: {
           ...state.classmatesListData,
-          addFailList:action.payload
+          addFailList: action.payload,
         },
       };
     case CLASSMATES_DATA_FAIL:
@@ -370,6 +437,7 @@ function reducer(state, action) {
           classmatesListDataLoading: false,
         },
       };
+
     //完整點名名單
     case TOTALROLLCALL_DATA_REQUEST:
       return {
@@ -407,6 +475,28 @@ function reducer(state, action) {
           totalRollcallListDataLoading: false,
         },
       };
+      
+    //一般設定
+    case BEGIN_DATA_REQUEST:
+      return {
+        ...state,
+        requestdata: { ...state.requestdata, loading: true },
+      };
+    case SUCCESS_DATA_REQUEST:
+      return {
+        ...state,
+        requestdata: { ...state.requestdata, loading: false },
+      };
+    case FAIL_DATA_REQUEST:
+      return {
+        ...state,
+        requestdata: {
+          ...state.requestdata,
+          loading: false,
+          error: action.payload,
+        },
+      };
+      
     default:
       return state;
   }
