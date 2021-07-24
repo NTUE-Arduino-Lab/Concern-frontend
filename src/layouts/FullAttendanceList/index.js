@@ -134,7 +134,7 @@ const FullAttendanceList = () => {
       case 1:
         return 'V';
       default:
-        return '無資料';
+        return '無點名';
     }
   }
   //id比對目前是哪堂課，將課程名稱加到excel檔名
@@ -250,7 +250,7 @@ const FullAttendanceList = () => {
                   <div className={styles.td}>{studentinfo.studentName}</div>
                   <div className={styles.td}>{studentinfo.studentID}</div>
                   {studentinfo.rollcallStatus.map((status, index) => (
-                    <div className={`${styles.td} ${status === -2 ? `${styles.red}` : ""} ${status === 0 || status === -1 ? `${styles.leavefz}` : ""}`} key={studentinfo.studentID + "status_" + index + status}>
+                    <div className={`${styles.td} ${styles.rollcall_status} ${status === -2 ? `${styles.red}` : ""}`} key={studentinfo.studentID + "status_" + index + status}>
                       {transform_status(status)}
                     </div>
                   ))}
