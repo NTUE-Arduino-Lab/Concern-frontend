@@ -6,6 +6,7 @@ export const UIStoreContext = createContext();
 
 const initialState = {
   //取得課程資料
+  teacherDataIDState: "",
   courseDataIDState: "",
   classroomDataIDState: "",
 
@@ -17,6 +18,11 @@ const initialState = {
 
 const reducer = (uiState, action) => {
   switch (action.type) {
+    case constants.SET_TEACHERDATAID:
+      return{
+        ...uiState,
+        teacherDataIDState: action.payload,
+      }
     case constants.SET_COURSEDATAID: 
     return{
       ...uiState,

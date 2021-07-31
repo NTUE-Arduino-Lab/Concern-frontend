@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect, useContext } from "react";
+import { useLocation, useHistory } from "react-router-dom";
+import * as QueryString from "query-string";
 import "../../select.scss";
 import styles from "./styles.module.scss";
 import logo from "../../assets/image/logo.png";
@@ -7,7 +9,11 @@ import Alert from "../../component/Alert";
 
 //uiStore
 import { UIStoreContext } from "../../uiStore/reducer";
-import { setCourseDataID, setClassroomDataID } from "../../uiStore/actions";
+import {
+  setTeacherDataID,
+  setCourseDataID,
+  setClassroomDataID,
+} from "../../uiStore/actions";
 
 //Store
 import { StoreContext } from "../../store/reducer";
@@ -18,13 +24,15 @@ import {
 } from "../../store/actions";
 
 const Header = () => {
-  const teacherDataID = "60e2740e29b4000015939450";
-  const courseDataID = "60e45e364f20c20015730a53";
-  const classroomDataID = "60e45b1b4f20c20015730a52";
-  // 測試用的
-  // const teacherDataID = "60d4914b4a910b00158018ca";
-  // const courseDataID = "60de73cfe4480444509e1b2e";
-  // const classroomDataID="60dd2a3d9b567c224c85482c";
+  const history = useHistory();
+  const location = useLocation();
+  const { teacherDataID, courseDataID, classroomDataID } = QueryString.parse(
+    location.search
+  );
+
+  // const teacherDataID = "60e2740e29b4000015939450";
+  // const courseDataID = "60e45e364f20c20015730a53";
+  // const classroomDataID = "60e45b1b4f20c20015730a52";
 
   //Alert的開關及內容
   const [Alertshow, setAlertshow] = useState(false);
@@ -34,14 +42,14 @@ const Header = () => {
   const [addingCourse, isAddingCourse] = useState(false);
   const [newCourseName, setNewCourseName] = useState("");
 
+  //是否切換課程
+  const [changeCourse, isChangeCourse] = useState(false);
+
   const {
     state: {
       teacherData: { teacherName, courses },
       isFinishAddCourse,
-      courseWeeksData: {
-        courseWeeks,
-        courseWeeksDataLoading,
-      },
+      courseWeeksData: { courseWeeks, courseWeeksDataLoading },
     },
     dispatch,
   } = useContext(StoreContext);
@@ -52,22 +60,48 @@ const Header = () => {
   } = useContext(UIStoreContext);
 
   useEffect(() => {
-    setCourseDataID(uiDispatch, courseDataID);
-    setClassroomDataID(uiDispatch, classroomDataID);
-    getTeacherData(dispatch, { teacherDataID: teacherDataID });
-    getCourseWeeksData(dispatch, { courseDataID: courseDataID });
+    if (teacherDataID !== undefined) {
+      setTeacherDataID(uiDispatch, teacherDataID);
+      getTeacherData(dispatch, { teacherDataID: teacherDataID });
+    } else {
+      setTeacherDataID(uiDispatch, localStorage.getItem("teacherDataID"));
+      getTeacherData(dispatch, {
+        teacherDataID: localStorage.getItem("teacherDataID"),
+      });
+    }
+    if (courseDataID !== undefined) {
+      setCourseDataID(uiDispatch, courseDataID);
+      getCourseWeeksData(dispatch, { courseDataID: courseDataID });
+    } else {
+      setCourseDataID(uiDispatch, localStorage.getItem("courseDataID"));
+      getCourseWeeksData(dispatch, {
+        courseDataID: localStorage.getItem("courseDataID"),
+      });
+    }
+    if (classroomDataID !== undefined) {
+      setClassroomDataID(uiDispatch, classroomDataID);
+    } else {
+      setClassroomDataID(uiDispatch, localStorage.getItem("classroomDataID"));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (courseWeeks[0] !== undefined) {
-      if (courseWeeksDataLoading === false) {
-        setClassroomDataID(uiDispatch, courseWeeks[0].classroomDataID);
-      }
-    }
-    else{
-      if (courseWeeksDataLoading === false) {
-        setClassroomDataID(uiDispatch, "");
+    //如果切換課程，classroom就會是最近的週次
+    if (changeCourse) {
+      if (courseWeeks[0] !== undefined) {
+        if (courseWeeksDataLoading === false) {
+          setClassroomDataID(uiDispatch, courseWeeks[0].classroomDataID);
+          isChangeCourse(false);
+          history.push(location.pathname);
+        }
+      } else {
+        if (courseWeeksDataLoading === false) {
+          //如果課程都沒有資料的話，將classroomDataID設為空的
+          setClassroomDataID(uiDispatch, "");
+          isChangeCourse(false);
+          history.push(location.pathname);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,6 +116,7 @@ const Header = () => {
 
   //切換老師課程
   const courseSelectHandler = (course) => {
+    isChangeCourse(true);
     setCourseDataID(uiDispatch, course);
     getCourseWeeksData(dispatch, { courseDataID: course });
   };

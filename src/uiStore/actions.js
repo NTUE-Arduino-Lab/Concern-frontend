@@ -1,10 +1,19 @@
 import constants from './actionTypes';
 
+export const setTeacherDataID = (uiDispatch, teacherDataID) => {
+  uiDispatch({
+    type: constants.SET_TEACHERDATAID,
+    payload: teacherDataID,
+  });
+  localStorage.setItem('teacherDataID', teacherDataID);
+};
+
 export const setCourseDataID = (uiDispatch, courseDataID) => {
   uiDispatch({
     type: constants.SET_COURSEDATAID,
     payload: courseDataID,
   });
+  localStorage.setItem('courseDataID', courseDataID);
 };
 
 export const setClassroomDataID = (uiDispatch, classroomDataID) => {
@@ -12,6 +21,7 @@ export const setClassroomDataID = (uiDispatch, classroomDataID) => {
     type: constants.SET_CLASSROOMDATAID,
     payload: classroomDataID,
   });
+  localStorage.setItem('classroomDataID', classroomDataID);
 };
 
 export const setAsideActiveItem = (uiDispatch, activeItem) => {
