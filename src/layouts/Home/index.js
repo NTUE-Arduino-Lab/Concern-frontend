@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { Fragment, useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import "../../select.scss";
 import styles from "./styles.module.scss";
@@ -17,6 +18,8 @@ import { setClassroomDataID, setAsideActiveItem } from "../../uiStore/actions";
 import { StoreContext } from "../../store/reducer";
 import {
   setReducerDataReset,
+  getTeacherData,
+  getCourseWeeksData,
   getClassroomTimeStatus,
   getRankData,
   getClassroomConcernInfo,
@@ -24,8 +27,10 @@ import {
 } from "../../store/actions";
 
 const Home = () => {
+  const history = useHistory();
+
   const {
-    uiState: { classroomDataIDState },
+    uiState: { teacherDataIDState, courseDataIDState, classroomDataIDState },
     uiDispatch,
   } = useContext(UIStoreContext);
 
@@ -59,6 +64,13 @@ const Home = () => {
   const [classTimeSpacing, setClassTimeSpacing] = useState(1);
   const [studentTimeSpacing, setStudentTimeSpacing] = useState(1);
 
+  //一進到頁面，就更新老師課堂、週次資料
+  useEffect(()=>{
+    getTeacherData(dispatch, { teacherDataID: teacherDataIDState });
+    getCourseWeeksData(dispatch, { courseDataID: courseDataIDState });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
   useEffect(() => {
     getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataIDState });
     getRankData(dispatch, {
@@ -80,6 +92,7 @@ const Home = () => {
   const classroomSelectHandler = (classroomID) => {
     setReducerDataReset(dispatch);
     setClassroomDataID(uiDispatch, classroomID);
+    history.push(path.home);
   };
 
   //全班統計圖表改變呼叫api

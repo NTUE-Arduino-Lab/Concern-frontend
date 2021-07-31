@@ -13,6 +13,8 @@ import { setClassroomDataID, setAsideActiveItem } from "../../uiStore/actions";
 //Store
 import { StoreContext } from "../../store/reducer";
 import {
+  getTeacherData,
+  getCourseWeeksData,
   getRollCallStatus,
   startRollCall,
   setPersonalLeave,
@@ -28,7 +30,7 @@ const RollCallSystem = () => {
 
   //左邊側邊欄設定目前頁面
   const {
-    uiState: { classroomDataIDState },
+    uiState: { teacherDataIDState, courseDataIDState, classroomDataIDState },
     uiDispatch,
   } = useContext(UIStoreContext);
 
@@ -54,6 +56,14 @@ const RollCallSystem = () => {
     },
     dispatch,
   } = useContext(StoreContext);
+
+  //一進到頁面，就更新老師課堂、週次、點名資料
+  useEffect(() => {
+    getTeacherData(dispatch, { teacherDataID: teacherDataIDState });
+    getCourseWeeksData(dispatch, { courseDataID: courseDataIDState });
+    getRollCallStatus(dispatch, { classroomDataID: classroomDataIDState });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getRollCallStatus(dispatch, { classroomDataID: classroomDataIDState });
