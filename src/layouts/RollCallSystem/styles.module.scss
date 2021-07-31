@@ -1,0 +1,208 @@
+@import "../../styles/color.scss";
+@import "../../styles/spacing.scss";
+
+.loading {
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 220px;
+}
+
+.noData {
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 175px;
+  font-size: 48px;
+}
+
+.container {
+  width: calc(100vw - 175px);
+  height: 100%;
+  margin-left: 175px;
+  padding: $main-spacing;
+  padding-top: calc(#{$header-height} + #{$main-spacing});
+  .rollCallNoData {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+  }
+}
+
+.select {
+  font-size: 16px;
+  border-radius: $button-border-radius;
+  border: 0px;
+  padding: 6px 48px 6px 16px;
+  margin-bottom: $section-spacing;
+  cursor: pointer;
+}
+
+.sectionTop {
+  display: flex;
+  margin-bottom: 10px;
+  .studentNumber {
+    width: 220px;
+    height: 105px;
+    font-size: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: $section-bg;
+    border-radius: $content-border-radius;
+    margin-right: 18px;
+  }
+  .studentCondition {
+    width: 220px;
+    height: 105px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .condition {
+      width: 220px;
+      padding: 6px;
+      font-size: 24px;
+      text-align: center;
+      background: $section-bg;
+      border-radius: $content-border-radius;
+    }
+  }
+  .settingRollCallTime {
+    margin-left: 30px;
+  }
+  .setTimeSectionTop {
+    display: flex;
+    font-size: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+    .inputSection {
+      width: 52px;
+      height: 38px;
+      font-size: 24px;
+      color: #82a098;
+      text-align: center;
+      border-radius: $content-border-radius;
+      margin: 0 10px;
+    }
+    .submitBtn {
+      width: 140px;
+      height: 38px;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 0px;
+      background: $button-bg;
+      border-radius: $content-border-radius;
+      margin-left: 10px;
+      &:hover {
+        background: $button-hover-bg;
+      }
+    }
+  }
+}
+
+.tipTitle {
+  font-size: 16px;
+  margin-bottom: $section-spacing;
+}
+
+.editBtnSection {
+  width: 100%;
+  height: 45px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: $section-spacing;
+  .editBtnSection_btn {
+    width: 166px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    border: 0px;
+    border-radius: $button-border-radius;
+    background: $button-bg;
+    &:hover {
+      background: $button-hover-bg;
+    }
+  }
+}
+
+.studentList {
+  position: relative;
+  width: 100%;
+  height: 532px;
+  background: $section-bg;
+  border-radius: $content-border-radius;
+  overflow: scroll;
+  .thead {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 55px;
+    border-radius: 5px 5px 0 0;
+    background: #dedede;
+    z-index: 5;
+  }
+  .th_content {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: start;
+  }
+  .th {
+    grid-auto-flow: row;
+    width: 135px;
+    height: 55px;
+    background: #dedede;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  // .tbody {
+  //   height: 150px;
+  // }
+  .td_content {
+    display: grid;
+    justify-content: start;
+    grid-auto-flow: column;
+    &:nth-child(even) {
+      background: #f8f8f8;
+      .td {
+        background: #f8f8f8;
+      }
+    }
+  }
+  .td {
+    grid-auto-flow: row;
+    width: 135px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.td_symbol {
+      font-family: Arial;
+    }
+    &.td_red {
+      color: #cb3d3d;
+    }
+    &.td_green {
+      color: #539b26;
+    }
+    &.td_checkbox {
+      width: 100px;
+    }
+    &.td_unListState {
+      color: #858585;
+    }
+  }
+}

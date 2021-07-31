@@ -1,0 +1,102 @@
+@import "../../styles/color.scss";
+@import "../../styles/spacing.scss";
+
+.header {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: $header-height;
+  background: $header-bg;
+  padding: 0 52px 0 16px;
+  z-index: 2;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+
+  .leftSide_logo {
+    height: 36px;
+  }
+
+  .leftSide_title {
+    display: flex;
+    align-items: flex-end;
+    height: 36px;
+    font-size: 14px;
+    color: #fff;
+    margin-left: 10px;
+  }
+
+  .leftSide_select {
+    font-size: 16px;
+    border-radius: $button-border-radius;
+    border: 0px;
+    padding: 6px 56px 6px 16px;
+    margin-left: 44px;
+    cursor: pointer;
+  }
+
+  .leftSide_button {
+    font-size: 14px;
+    color: $header-bg;
+    background-color: #fff;
+    border: 0px;
+    border-radius: $button-border-radius;
+    padding: 4px 8px;
+    margin-left: 16px;
+    cursor: pointer;
+    &.leftSide_button__none {
+      display: none;
+    }
+  }
+  .leftSide_form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 16px;
+    &.leftSide_form__none{
+      display: none;
+    }
+    .leftSide_textInput{
+      width: 142px;
+      height: 34px;
+      font-size: 14px;
+      border-radius: 40px;
+      padding: 0px 10px;
+      margin-right: 10px;
+      &::placeholder{
+        color: $header-bg;
+      }
+    }
+    .leftSide_formBtn{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 25px;
+      font-size: 16px;
+      border-radius: $button-border-radius;
+      cursor: pointer;
+      &.leftSide_submitBtn{
+        background: $button-bg;
+        margin-right: 6px;
+        &:hover{
+          background: $button-hover-bg;
+        }
+      }
+      &.leftSide_cancelBtn{
+        background: $cancel-button-bg;
+        &:hover{
+          background: $cancel-button-hover-bg;
+        }
+      }
+    }
+  }
+}
+
+.rightSide_title {
+  color: #fff;
+}

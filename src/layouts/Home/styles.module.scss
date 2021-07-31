@@ -1,1 +1,360 @@
-@import '../../styles/color.scss';
+@import "../../styles/color.scss";
+@import "../../styles/spacing.scss";
+
+.loading_allPage{
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 220px;
+}
+
+.noData{
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 175px;
+  font-size: 48px;
+}
+
+.container {
+  width: calc(100vw - 175px);
+  height: 100%;
+  margin-left: 175px;
+  padding: $main-spacing;
+  padding-top: calc(#{$header-height} + #{$main-spacing});
+}
+
+.select {
+  font-size: 16px;
+  border-radius: $button-border-radius;
+  border: 0px;
+  padding: 6px 48px 6px 16px;
+  margin-bottom: $section-spacing;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.loading{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sectionTop {
+  display: flex;
+  margin-bottom: $section-spacing;
+  .timeRecord {
+    width: 350px;
+    margin-right: $section-spacing;
+    .timeRecord_section {
+      width: 350px;
+      height: 155px;
+      border-radius: $content-border-radius;
+      background: $section-bg;
+      padding: 15px 20px;
+      overflow-y: scroll;
+      .loading{
+        height: 220px;
+        margin-left: 50px;
+      }
+      .timeSection {
+        display: flex;
+      }
+      .time {
+        line-height: 1.5em;
+        &.redTime {
+          color: $range-red;
+        }
+      }
+    }
+  }
+  .rank {
+    width: 785px;
+    .rank_section {
+      width: 785px;
+      height: 155px;
+      display: flex;
+      border-radius: $content-border-radius;
+      background: $section-bg;
+      padding: 15px 20px;
+      overflow-y: scroll;
+      .loading{
+        height: 220px;
+        margin-left: 50px;
+      }
+      .percentRank {
+        margin-right: 30px;
+      }
+      .rank_content {
+        margin-top: 15px;
+        display: flex;
+        .content_person {
+          width: 110px;
+          height: 82px;
+          margin-right: 18px;
+          .personTop {
+            text-align: center;
+            background: $rank-first;
+            border-radius: 10px 10px 0 0;
+            &.personTop_second {
+              background: $rank-second;
+            }
+            &.personTop_third {
+              background: $rank-third;
+            }
+            .number {
+              font-size: 14px;
+            }
+          }
+          .personBottom {
+            height: 48%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0 0 10px 10px;
+            background: #f9f9f9;
+            .bestLastedValue {
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.classInfo {
+  margin-bottom: $section-spacing;
+  .classInfo_content {
+    width: 100%;
+    height: 410px;
+    border-radius: $content-border-radius;
+    background: $section-bg;
+    overflow: hidden;
+    .nav {
+      display: flex;
+      list-style-type: none;
+      .navItem {
+        color: #989898;
+        cursor: pointer;
+        padding: 20px 10px 5px 10px;
+        margin-right: 80px;
+        &:hover {
+          color: #3d7667;
+          border-bottom: 1px solid #3d7667;
+        }
+        &.navItem_active {
+          color: #3d7667;
+          border-bottom: 1px solid #3d7667;
+        }
+      }
+    }
+    .navContent {
+      display: block;
+      margin: $section-padding-spacing;
+      margin-top: 0px;
+
+      &.navContent_none {
+        display: none;
+      }
+      .loading{
+        margin-top: 60px;
+      }
+      .infoContent {
+        width: 100%;
+        .table {
+          position: relative;
+          width: 100%;
+          height: calc(400px - 82px);
+          background: white;
+          border-radius: 6px;
+          overflow: scroll;
+          box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
+          .thead {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 55px;
+            border-radius: 5px 5px 0 0;
+            background: #dedede;
+          }
+          .th_content {
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: space-around;
+          }
+          .th {
+            grid-auto-flow: row;
+            width: 150px;
+            height: 55px;
+            background: #dedede;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .td_content {
+            display: grid;
+            justify-content: space-around;
+            grid-auto-flow: column;
+            &:nth-child(even) {
+              background: #f8f8f8;
+              .td {
+                background: #f8f8f8;
+              }
+            }
+          }
+          .td {
+            grid-auto-flow: row;
+            width: 150px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &.td_red {
+              color: $range-red;
+            }
+          }
+        }
+      }
+      .classSliderSection {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 100px;
+        margin-top: -30px;
+        margin-bottom: 20px;
+        .classSlider {
+          width: 280px;
+          height: 50px;
+          .classSliderTitle {
+            text-align: center;
+          }
+        }
+      }
+      .loading{
+        height: 300px;
+      }
+      // .statisticsContent {
+      //   // width: 100%;
+      //   // height: calc(400px - 82px);
+      //   // display: flex;
+      //   // justify-content: center;
+      //   // align-items: center;
+      //   // font-size: 28px;
+      // }
+    }
+  }
+}
+
+.personInfo_content {
+  width: 100%;
+  height: 450px;
+  display: flex;
+  border-radius: $content-border-radius;
+  background: $section-bg;
+  padding: $section-padding-spacing;
+  overflow-y: scroll;
+  .studentList {
+    width: 180px;
+    height: 100%;
+    background: $home-studentList-bg;
+    border-radius: $content-border-radius;
+    .title {
+      height: 42px;
+      font-size: $font-size;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: $header-bg;
+      border-radius: $content-border-radius $content-border-radius 0 0;
+      margin-bottom: 0px;
+    }
+    .students {
+      height: calc(100% - 42px);
+      border-radius: 0 0 $content-border-radius $content-border-radius;
+      overflow-y: scroll;
+      .student {
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          background: $button-bg;
+        }
+        &.student_active {
+          background: $button-bg;
+        }
+        .number {
+          font-size: 14px;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+  .concernDetail {
+    margin: 42px 16px;
+    .concernSection {
+      width: 165px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: $home-studentList-bg;
+      border-radius: $button-border-radius;
+      padding: 10px;
+      margin-bottom: 10px;
+      .concernLevel {
+        width: 100%;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &.concernLevel_green {
+          background: #00cc66;
+          color: #fefffe;
+        }
+        &.concernLevel_yellow {
+          background: #ffff00;
+          color: #666;
+        }
+        &.concernLevel_red {
+          background: #fe5f55;
+          color: #fefffe;
+        }
+      }
+    }
+  }
+  .studentChart {
+    width: calc(100% - 407px);
+    height: calc(100% - 70px);
+    margin-top: 40px;
+    .classSliderSection {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 100px;
+      .classSlider {
+        width: 280px;
+        height: 50px;
+        .classSliderTitle {
+          text-align: center;
+        }
+      }
+    }
+    .loading{
+      height: 400px;
+    }
+  }
+}
