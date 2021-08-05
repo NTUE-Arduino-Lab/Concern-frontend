@@ -31,6 +31,7 @@ const StudentsList = () => {
   //Store
   const {
     state: {
+      teacherData: { courses },
       classmatesListData: {
         classmatesList,
         addFailList,
@@ -43,7 +44,7 @@ const StudentsList = () => {
 
   //載入學生名單
   useEffect(() => {
-    if (courseDataIDState !== "") {
+    if (courseDataIDState !== "" && courses.length !== 0) {
       getClassmatesList(dispatch, { courseDataID: courseDataIDState });
     }
     reset();
@@ -107,7 +108,8 @@ const StudentsList = () => {
     setAlertshow(false);
     setAlerttext("");
     seteditMode(false);
-    document.getElementById("editMode").textContent = "編輯學生名單";
+    if (courses.length !== 0)
+      document.getElementById("editMode").textContent = "編輯學生名單";
     seteditOpen(false);
     seteditOpenID("");
     seteditstudentIndex("");
@@ -248,201 +250,207 @@ const StudentsList = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className={styles.container}>
-        <div className={styles.studentsList}>
-          <div className={styles.editBtnSection}>
-            <button disabled={classmatesListDataLoading ? true : false} className={styles.editBtnSection_btn} id="editMode" onClick={() => editModeChange()} >編輯學生名單</button>
-          </div>
-          {classmatesListDataLoading ? (
-            <div className={styles.loading}>
-              <Loading />
-            </div>
-          ) : classmatesList.length === 0 ? (
-            <div className={styles.nothing}>
-              尚無學生資料
-            </div>
-          ) : (
-            <div className={styles.table}>
-              <div className={styles.thead}>
-                <div className={styles.th_content}>
-                  <div className={styles.th}>學生姓名</div>
-                  <div className={styles.th}>Google Meet名稱</div>
-                  <div className={styles.th}>學生學號</div>
-                  {editMode ? (<div className={styles.th}></div>) : ""}
-                </div>
-              </div>
-              <div className={styles.tbody}>
-                {classmatesList.map((student, index) => (
-                  <Fragment key={"classmates" + student.studentID}>
-                    <div
-                      className={`${styles.td_content} ${editMode && !editOpen ? `${styles.editmode}` : ""
-                        }${editMode && editOpen && editOpenID === student.studentID ? `${styles.editOpen}` : ""
-                        }
-                  `}
-                    >
-                      <div className={styles.td}>
-                        {student.studentName}
-                        {editMode && editOpen && editOpenID === student.studentID ? (
-                          <input
-                            type="text"
-                            onChange={(e) => seteditStudentName(e.target.value)}
-                            className={styles.editmode_input}
-                            value={editstudentName}
-                          ></input>
-                        ) : ""}
-                      </div>
-                      <div className={styles.td}>
-                        {student.studentGoogleName === "" ? (
-                          <div className={styles.empty_title}>空</div>) :
-                          (`${student.studentGoogleName}`)
-                        }
-                        {editMode && editOpen && editOpenID === student.studentID ? (
-                          <input
-                            type="text"
-                            onChange={(e) => seteditStudentGoogleName(e.target.value)}
-                            className={styles.editmode_input}
-                            value={editstudentGoogleName}
-                          ></input>
-                        ) : ""}
-                      </div>
-                      <div className={styles.td}>
-                        {student.studentID}
-                        {editMode && editOpen && editOpenID === student.studentID ? (
-                          <input
-                            type="text"
-                            onChange={(e) => seteditStudentID(e.target.value)}
-                            className={styles.editmode_input}
-                            value={editstudentID}
-                          ></input>
-                        ) : ""}
-                      </div>
-                      {editMode ? (<div className={styles.td}>
-                        {editOpen && editOpenID === student.studentID ? (
-                          <button className={styles.editoption_back_btn} onClick={() => editBack()}>X</button>
-                        )
-                          :
-                          (
-                            <div className={styles.editoption}>
-                              <button className={styles.editoption_edit_btn} onClick={() => editStart(index, student.studentName, student.studentGoogleName, student.studentID)}>編輯</button>
-                              <button className={styles.editoption_delete_btn} onClick={() => editDelete_Modal(student.studentName, student.studentID)}>刪除</button>
-                            </div>
-                          )
-                        }
-                        {editOpen && editOpenID === student.studentID ? (
-                          <button className={styles.editoption_finish_btn} onClick={() => editFinish()}>完成</button>
-                        ) : ""}
-                      </div>) : ""}
-                    </div>
-                    <hr></hr>
-                  </Fragment>
-                ))}
-              </div>
-            </div>
-          )}
+      {courses.length === 0 ? (
+        <div className={styles.noData}>
+          目前尚無資料
         </div>
-        {!editMode ? (
-          <div className={styles.description}>
-            功能：
-            <div className={styles.description_box}>
-              <div className={styles.description_number}>1.</div>
-              已登錄於名單中的學生<br></br>
-              自動允許加入GoogleMeet教室
+      ) : (
+        <div className={styles.container}>
+          <div className={styles.studentsList}>
+            <div className={styles.editBtnSection}>
+              <button disabled={classmatesListDataLoading ? true : false} className={styles.editBtnSection_btn} id="editMode" onClick={() => editModeChange()} >編輯學生名單</button>
             </div>
-            <div className={styles.description_box}>
-              <div className={styles.description_number}>2.</div>
-              已登錄於名單中的學生<br></br>
-              可進行點名功能
-            </div>
-          </div>
-        ) :
-          (
-            <div className={styles.addStudent}>
-              <div className={styles.addStudentbox}>
-                <div className={styles.addStudentbox_title}>手動新增學生</div>
-                <form onSubmit={submitHandler}>
-                  <div className={styles.inputbox}>
-                    <div className={styles.input_title}>學生姓名</div>
-                    <input
-                      type="text"
-                      onChange={(e) => setaddStudentName(e.target.value)}
-                      value={addstudentName}
-                      placeholder="請輸入"
-                    ></input>
-                  </div>
-                  <div className={styles.inputbox}>
-                    <div className={styles.input_title}>Google Meet名稱</div>
-                    <input
-                      type="text"
-                      onChange={(e) => setaddStudentGoogleName(e.target.value)}
-                      value={addstudentGoogleName}
-                      placeholder="請輸入"
-                    ></input>
-                  </div>
-                  <div className={styles.inputbox}>
-                    <div className={styles.input_title}>學生學號</div>
-                    <input
-                      type="text"
-                      onChange={(e) => setaddStudentID(e.target.value)}
-                      value={addstudentID}
-                      placeholder="請輸入"
-                    ></input>
-                  </div>
-                  <button type="submit" id="submit">
-                    新增
-                  </button>
-                </form>
+            {classmatesListDataLoading ? (
+              <div className={styles.loading}>
+                <Loading />
               </div>
-              <div className={styles.addStudentbox}>
-                <div className={styles.addStudentbox_title}>匯入學生名單</div>
-                <div className={styles.studentexcel_box}>
-                  <div className={styles.studentexcel_word}>
-                    <div className={styles.studentexcel_number}>1.</div>
-                    下載名單格式範例
-                  </div>
-                  <a href="https://docs.google.com/spreadsheets/d/1K44DMz2uJKlh49ASiG62Xc0C3ocgegZeSIfkGBOeBoA/export?format=xlsx">
-                    下載格式範例
-                  </a>
-                </div>
-                <div className={styles.studentexcel_box}>
-                  <div className={styles.studentexcel_word}>
-                    <div className={styles.studentexcel_number}>2.</div>
-                    建立符合格式之名單檔
+            ) : classmatesList.length === 0 ? (
+              <div className={styles.nothing}>
+                尚無學生資料
+              </div>
+            ) : (
+              <div className={styles.table}>
+                <div className={styles.thead}>
+                  <div className={styles.th_content}>
+                    <div className={styles.th}>學生姓名</div>
+                    <div className={styles.th}>Google Meet名稱</div>
+                    <div className={styles.th}>學生學號</div>
+                    {editMode ? (<div className={styles.th}></div>) : ""}
                   </div>
                 </div>
-                <div className={styles.studentexcel_box}>
-                  <div className={styles.studentexcel_word}>
-                    <div className={styles.studentexcel_number}>3.</div>
-                    匯入檔案(.xlsx)
-                  </div>
-                  <label className={styles.upload_label}>
-                    <input className={styles.upload_input} onChange={HandleImportFile} type="file" />
-                    上傳檔案
-                  </label>
-                </div>
-                {
-                  addFailList.length !== 0 ? (
-                    <div className={styles.faillist_box}>
-                      <div className={styles.studentexcel_word}>
-                        <div className={styles.studentexcel_number}>4.</div>
-                        重複上傳學生名單（學號相同）
-                      </div>
-                      {addFailList.map((student, index) =>
-                        <div className={styles.studentexcel_word} key={"fail" + student.studentID}>
-                          <div>
-                            {student.studentName}
-                          </div>
-                          <div>
-                            {student.studentID}
-                          </div>
+                <div className={styles.tbody}>
+                  {classmatesList.map((student, index) => (
+                    <Fragment key={"classmates" + student.studentID}>
+                      <div
+                        className={`${styles.td_content} ${editMode && !editOpen ? `${styles.editmode}` : ""
+                          }${editMode && editOpen && editOpenID === student.studentID ? `${styles.editOpen}` : ""
+                          }
+                  `}
+                      >
+                        <div className={styles.td}>
+                          {student.studentName}
+                          {editMode && editOpen && editOpenID === student.studentID ? (
+                            <input
+                              type="text"
+                              onChange={(e) => seteditStudentName(e.target.value)}
+                              className={styles.editmode_input}
+                              value={editstudentName}
+                            ></input>
+                          ) : ""}
                         </div>
-                      )}
-                    </div>
-                  ) : ""
-                }
+                        <div className={styles.td}>
+                          {student.studentGoogleName === "" ? (
+                            <div className={styles.empty_title}>空</div>) :
+                            (`${student.studentGoogleName}`)
+                          }
+                          {editMode && editOpen && editOpenID === student.studentID ? (
+                            <input
+                              type="text"
+                              onChange={(e) => seteditStudentGoogleName(e.target.value)}
+                              className={styles.editmode_input}
+                              value={editstudentGoogleName}
+                            ></input>
+                          ) : ""}
+                        </div>
+                        <div className={styles.td}>
+                          {student.studentID}
+                          {editMode && editOpen && editOpenID === student.studentID ? (
+                            <input
+                              type="text"
+                              onChange={(e) => seteditStudentID(e.target.value)}
+                              className={styles.editmode_input}
+                              value={editstudentID}
+                            ></input>
+                          ) : ""}
+                        </div>
+                        {editMode ? (<div className={styles.td}>
+                          {editOpen && editOpenID === student.studentID ? (
+                            <button className={styles.editoption_back_btn} onClick={() => editBack()}>X</button>
+                          )
+                            :
+                            (
+                              <div className={styles.editoption}>
+                                <button className={styles.editoption_edit_btn} onClick={() => editStart(index, student.studentName, student.studentGoogleName, student.studentID)}>編輯</button>
+                                <button className={styles.editoption_delete_btn} onClick={() => editDelete_Modal(student.studentName, student.studentID)}>刪除</button>
+                              </div>
+                            )
+                          }
+                          {editOpen && editOpenID === student.studentID ? (
+                            <button className={styles.editoption_finish_btn} onClick={() => editFinish()}>完成</button>
+                          ) : ""}
+                        </div>) : ""}
+                      </div>
+                      <hr></hr>
+                    </Fragment>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          {!editMode ? (
+            <div className={styles.description}>
+              功能：
+              <div className={styles.description_box}>
+                <div className={styles.description_number}>1.</div>
+                已登錄於名單中的學生<br></br>
+                自動允許加入GoogleMeet教室
+              </div>
+              <div className={styles.description_box}>
+                <div className={styles.description_number}>2.</div>
+                已登錄於名單中的學生<br></br>
+                可進行點名功能
               </div>
             </div>
-          )}
-      </div>
+          ) :
+            (
+              <div className={styles.addStudent}>
+                <div className={styles.addStudentbox}>
+                  <div className={styles.addStudentbox_title}>手動新增學生</div>
+                  <form onSubmit={submitHandler}>
+                    <div className={styles.inputbox}>
+                      <div className={styles.input_title}>學生姓名</div>
+                      <input
+                        type="text"
+                        onChange={(e) => setaddStudentName(e.target.value)}
+                        value={addstudentName}
+                        placeholder="請輸入"
+                      ></input>
+                    </div>
+                    <div className={styles.inputbox}>
+                      <div className={styles.input_title}>Google Meet名稱</div>
+                      <input
+                        type="text"
+                        onChange={(e) => setaddStudentGoogleName(e.target.value)}
+                        value={addstudentGoogleName}
+                        placeholder="請輸入"
+                      ></input>
+                    </div>
+                    <div className={styles.inputbox}>
+                      <div className={styles.input_title}>學生學號</div>
+                      <input
+                        type="text"
+                        onChange={(e) => setaddStudentID(e.target.value)}
+                        value={addstudentID}
+                        placeholder="請輸入"
+                      ></input>
+                    </div>
+                    <button type="submit" id="submit">
+                      新增
+                    </button>
+                  </form>
+                </div>
+                <div className={styles.addStudentbox}>
+                  <div className={styles.addStudentbox_title}>匯入學生名單</div>
+                  <div className={styles.studentexcel_box}>
+                    <div className={styles.studentexcel_word}>
+                      <div className={styles.studentexcel_number}>1.</div>
+                      下載名單格式範例
+                    </div>
+                    <a href="https://docs.google.com/spreadsheets/d/1K44DMz2uJKlh49ASiG62Xc0C3ocgegZeSIfkGBOeBoA/export?format=xlsx">
+                      下載格式範例
+                    </a>
+                  </div>
+                  <div className={styles.studentexcel_box}>
+                    <div className={styles.studentexcel_word}>
+                      <div className={styles.studentexcel_number}>2.</div>
+                      建立符合格式之名單檔
+                    </div>
+                  </div>
+                  <div className={styles.studentexcel_box}>
+                    <div className={styles.studentexcel_word}>
+                      <div className={styles.studentexcel_number}>3.</div>
+                      匯入檔案(.xlsx)
+                    </div>
+                    <label className={styles.upload_label}>
+                      <input className={styles.upload_input} onChange={HandleImportFile} type="file" />
+                      上傳檔案
+                    </label>
+                  </div>
+                  {
+                    addFailList.length !== 0 ? (
+                      <div className={styles.faillist_box}>
+                        <div className={styles.studentexcel_word}>
+                          <div className={styles.studentexcel_number}>4.</div>
+                          重複上傳學生名單（學號相同）
+                        </div>
+                        {addFailList.map((student, index) =>
+                          <div className={styles.studentexcel_word} key={"fail" + student.studentID}>
+                            <div>
+                              {student.studentName}
+                            </div>
+                            <div>
+                              {student.studentID}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : ""
+                  }
+                </div>
+              </div>
+            )}
+        </div>
+      )}
     </Fragment>
   );
 };
