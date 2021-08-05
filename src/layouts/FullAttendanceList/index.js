@@ -72,9 +72,12 @@ const FullAttendanceList = () => {
 
   //載入完整點名名單
   useEffect(() => {
-    if (courseDataIDState !== "") {
+    if (courseDataIDState !== "" && courses.length !== 0) {
       getTotalRollcallStatus(dispatch, { courseDataID: courseDataIDState });
     }
+    //重置error畫面
+    setAlertshow(false);
+    setAlerttext("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseDataIDState]);
 
@@ -220,12 +223,16 @@ const FullAttendanceList = () => {
             X 曠課； ◎ 點名未全到； △ 請假； V 出席
           </div>
           <div className={styles.buttonSide}>
-            <button disabled={totalRollcallListDataLoading || totalRollcallWeek.length === 0 ? true : false} className={styles.buttonSide_button} onClick={() => exportExcel(header, excelList, findcourseName(courseDataIDState))}>下載</button>
+            <button disabled={totalRollcallListDataLoading || totalRollcallWeek.length === 0 || courses.length === 0 ? true : false} className={styles.buttonSide_button} onClick={() => exportExcel(header, excelList, findcourseName(courseDataIDState))}>下載</button>
           </div>
         </div>
         {totalRollcallListDataLoading ? (
           <div className={styles.loading}>
             <Loading />
+          </div>
+        ) : courses.length === 0 ? (
+          <div className={styles.nothing}>
+            目前尚無資料
           </div>
         ) : totalRollcallWeek.length === 0 ? (
           <div className={styles.nothing}>
