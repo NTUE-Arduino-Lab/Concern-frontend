@@ -3,5 +3,6 @@ export default {
   home: '/',
   studentsList: '/studentsList',
   rollCallSystem: '/rollCallSystem',
-  fullAttendanceList: '/fullAttendanceList'
+  fullAttendanceList: '/fullAttendanceList',
+  login: '/login',
 };

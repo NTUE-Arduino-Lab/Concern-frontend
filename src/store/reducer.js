@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import {
   //重置頁面
   SET_PAGE_RESET,
+  SET_COURSE_RESET,
 
   //header-老師名稱、所有課程
   TEACHER_DATA_REQUEST,
@@ -49,17 +50,15 @@ import {
   SET_CLASSMATES_DATA,
   SET_CLASSMATES_FAILLIST,
   CLASSMATES_DATA_FAIL,
-  
+
   //完整點名頁
   TOTALROLLCALL_DATA_REQUEST,
   SET_TOTALROLLCALL_WEEK_DATA,
   SET_TOTALROLLCALL_LIST_DATA,
   TOTALROLLCALL_DATA_FAIL,
-  
   BEGIN_DATA_REQUEST,
   SUCCESS_DATA_REQUEST,
   FAIL_DATA_REQUEST,
-  
 } from "./actionTypes";
 
 export const StoreContext = createContext();
@@ -79,7 +78,6 @@ const initialState = {
   //課程週次資料
   courseWeeksData: {
     courseWeeks: [],
-    isGetCourseWeeks: false,
     courseWeeksDataLoading: false,
     error: null,
   },
@@ -143,14 +141,14 @@ const initialState = {
     classmatesListDataLoading: false,
     error: "",
   },
-  
+
   //完整點名名單
-  totalRollcallListData:{
+  totalRollcallListData: {
     totalRollcallWeek: [],
     totalRollcallList: [],
     totalRollcallListDataLoading: false,
     error: "",
-  }
+  },
 };
 
 function reducer(state, action) {
@@ -176,9 +174,21 @@ function reducer(state, action) {
           ...state.classroomConcernInfo,
           classroomConcernData: [],
         },
-        studentConcernInfo:{
+        studentConcernInfo: {
           ...state.studentConcernInfo,
           studentConcernData: [],
+        },
+        requestdata: {
+          ...state.requestdata,
+          error: "",
+        },
+      };
+    case SET_COURSE_RESET:
+      return {
+        ...state,
+        courseWeeksData: {
+          ...state.courseWeeksData,
+          courseWeeks: [],
         },
       };
     //header-老師名稱、所有課程
@@ -475,8 +485,8 @@ function reducer(state, action) {
           totalRollcallListDataLoading: false,
         },
       };
-      
-    //一般設定
+
+    //登入頁面要資料
     case BEGIN_DATA_REQUEST:
       return {
         ...state,
@@ -496,7 +506,7 @@ function reducer(state, action) {
           error: action.payload,
         },
       };
-      
+
     default:
       return state;
   }
