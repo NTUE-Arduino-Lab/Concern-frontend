@@ -28,6 +28,15 @@
   text-align: center;
   font-size: 28px;
 }
+.noData{
+  width: calc(100vw - 175px);
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 175px;
+  font-size: 48px;
+}
 //左邊學生清單區
 .studentsList{
   width: 60%;

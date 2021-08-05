@@ -54,9 +54,11 @@ const Header = () => {
   //是否切換課程
   const [changeCourse, isChangeCourse] = useState(false);
 
+  const [getTeacherCourse, isGetTeacherCourse] = useState(false);
+
   const {
     state: {
-      teacherData: { teacherName, courses },
+      teacherData: { teacherName, courses, teacherDataLoading },
       isFinishAddCourse,
       courseWeeksData: { courseWeeks, courseWeeksDataLoading },
     },
@@ -118,10 +120,22 @@ const Header = () => {
 
   useEffect(() => {
     if (isFinishAddCourse) {
+      isGetTeacherCourse(true);
       getTeacherData(dispatch, { teacherDataID: teacherDataIDState });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinishAddCourse]);
+
+  //如果原先老師都沒有課程，一旦新增課程，就設定CourseID為新增的課程
+  useEffect(() => {
+    if (getTeacherCourse && !teacherDataLoading) {
+      if (courses.length === 1) {
+        setCourseDataID(uiDispatch, courses[0].courseDataID);
+        isGetTeacherCourse(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teacherDataLoading]);
 
   //切換老師課程
   const courseSelectHandler = (course) => {
