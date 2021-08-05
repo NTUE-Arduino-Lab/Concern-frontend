@@ -7,7 +7,8 @@ import HomePage from "../layouts/Home";
 import StudentsListPage from "../layouts/StudentsList";
 import RollCallSystemPage from "../layouts/RollCallSystem";
 import FullAttendanceListPage from "../layouts/FullAttendanceList";
-import Header from '../component/Header';
+import Login from "../layouts/Login";
+import Header from "../component/Header";
 import Aside from "../component/Aside";
 
 const Routes = () => {
@@ -38,6 +39,8 @@ const Routes = () => {
               path={path.fullAttendanceList}
               component={FullAttendanceListPage}
             />
+            {/* 登入頁面 */}
+            <Route exact path={path.login} component={Login} />
           </Switch>
         </Router>
       </StoreProvider>
