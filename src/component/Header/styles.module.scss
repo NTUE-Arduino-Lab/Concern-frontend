@@ -52,26 +52,26 @@
       display: none;
     }
   }
-  .leftSide_form{
+  .leftSide_form {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-left: 16px;
-    &.leftSide_form__none{
+    &.leftSide_form__none {
       display: none;
     }
-    .leftSide_textInput{
+    .leftSide_textInput {
       width: 142px;
       height: 34px;
       font-size: 14px;
       border-radius: 40px;
       padding: 0px 10px;
       margin-right: 10px;
-      &::placeholder{
+      &::placeholder {
         color: $header-bg;
       }
     }
-    .leftSide_formBtn{
+    .leftSide_formBtn {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -80,23 +80,35 @@
       font-size: 16px;
       border-radius: $button-border-radius;
       cursor: pointer;
-      &.leftSide_submitBtn{
+      &.leftSide_submitBtn {
         background: $button-bg;
         margin-right: 6px;
-        &:hover{
+        &:hover {
           background: $button-hover-bg;
         }
       }
-      &.leftSide_cancelBtn{
+      &.leftSide_cancelBtn {
         background: $cancel-button-bg;
-        &:hover{
+        &:hover {
           background: $cancel-button-hover-bg;
         }
       }
     }
   }
 }
-
+.rightSide {
+  display: flex;
+  .logOutBtn {
+    color: #fff;
+    margin-left: 15px;
+    font-weight: bold;
+    background: none;
+    border: 0px;
+    &:hover {
+      color: $aside-bg;
+    }
+  }
+}
 .rightSide_title {
   color: #fff;
 }

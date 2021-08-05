@@ -4,8 +4,14 @@ import { useLocation, useHistory } from "react-router-dom";
 import * as QueryString from "query-string";
 import "../../select.scss";
 import styles from "./styles.module.scss";
+
 import logo from "../../assets/image/logo.png";
+import path from "../../utils/path";
 import Alert from "../../component/Alert";
+
+// react-bootstrap
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 //uiStore
 import { UIStoreContext } from "../../uiStore/reducer";
@@ -38,6 +44,9 @@ const Header = () => {
   const [Alertshow, setAlertshow] = useState(false);
   const [Alerttext, setAlerttext] = useState("");
 
+  //確認刪除畫面的開關
+  const [show, setShow] = useState(false);
+
   //新增課程相關
   const [addingCourse, isAddingCourse] = useState(false);
   const [newCourseName, setNewCourseName] = useState("");
@@ -55,7 +64,7 @@ const Header = () => {
   } = useContext(StoreContext);
 
   const {
-    uiState: { courseDataIDState },
+    uiState: { teacherDataIDState, courseDataIDState },
     uiDispatch,
   } = useContext(UIStoreContext);
 
@@ -109,7 +118,7 @@ const Header = () => {
 
   useEffect(() => {
     if (isFinishAddCourse) {
-      getTeacherData(dispatch, { teacherDataID: teacherDataID });
+      getTeacherData(dispatch, { teacherDataID: teacherDataIDState });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinishAddCourse]);
@@ -130,7 +139,7 @@ const Header = () => {
   const addCourseSubmitHandler = () => {
     if (newCourseName !== "") {
       addCourse(dispatch, {
-        teacherDataID: teacherDataID,
+        teacherDataID: teacherDataIDState,
         courseName: newCourseName,
       });
       document.getElementById("addCourseInput").value = "";
@@ -148,79 +157,118 @@ const Header = () => {
     isAddingCourse(false);
   };
 
+  //按下登出，再次確認
+  const logOutHandler = () => {
+    setShow(true);
+  };
+
+  //確定登出
+  const logOutComfirm = () => {
+    setShow(false);
+    history.push(path.login);
+  };
+
   return (
     <>
-      <Alert
-        show={Alertshow}
-        onHide={() => setAlertshow(false)}
-        text={Alerttext}
-      />
-      <header className={styles.header}>
-        <div className={styles.leftSide}>
-          <div className={styles.leftSide_logo}>
-            <img src={logo} />
-          </div>
-          <div className={styles.leftSide_title}>課堂監控後台</div>
-          <select
-            className={styles.leftSide_select}
-            onChange={(e) => courseSelectHandler(e.target.value)}
-          >
-            {courses.map((course) => (
-              <option
-                value={course.courseDataID}
-                key={course.courseDataID}
-                selected={
-                  course.courseDataID === courseDataIDState ? "selected" : ""
+      {location.pathname === path.login ? (
+        <></>
+      ) : (
+        <>
+          <Alert
+            show={Alertshow}
+            onHide={() => setAlertshow(false)}
+            text={Alerttext}
+          />
+          <Modal show={show} onHide={() => setShow(false)} centered>
+            <Modal.Body>
+              <h4>是否確定要登出？</h4>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setShow(false)}
+              >
+                取消
+              </Button>
+              <Button variant="danger" size="sm" onClick={logOutComfirm}>
+                登出
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <header className={styles.header}>
+            <div className={styles.leftSide}>
+              <div className={styles.leftSide_logo}>
+                <img src={logo} />
+              </div>
+              <div className={styles.leftSide_title}>課堂監控後台</div>
+              <select
+                className={styles.leftSide_select}
+                onChange={(e) => courseSelectHandler(e.target.value)}
+              >
+                {courses.map((course) => (
+                  <option
+                    value={course.courseDataID}
+                    key={course.courseDataID}
+                    selected={
+                      course.courseDataID === courseDataIDState
+                        ? "selected"
+                        : ""
+                    }
+                  >
+                    {course.courseName}
+                  </option>
+                ))}
+              </select>
+              <button
+                className={
+                  addingCourse
+                    ? `${styles.leftSide_button} ${styles.leftSide_button__none}`
+                    : `${styles.leftSide_button}`
+                }
+                onClick={addCourseHandler}
+              >
+                新增課程
+              </button>
+              <form
+                className={
+                  addingCourse
+                    ? `${styles.leftSide_form}`
+                    : `${styles.leftSide_form} ${styles.leftSide_form__none}`
                 }
               >
-                {course.courseName}
-              </option>
-            ))}
-          </select>
-          <button
-            className={
-              addingCourse
-                ? `${styles.leftSide_button} ${styles.leftSide_button__none}`
-                : `${styles.leftSide_button}`
-            }
-            onClick={addCourseHandler}
-          >
-            新增課程
-          </button>
-          <form
-            className={
-              addingCourse
-                ? `${styles.leftSide_form}`
-                : `${styles.leftSide_form} ${styles.leftSide_form__none}`
-            }
-          >
-            <input
-              id="addCourseInput"
-              type="text"
-              placeholder="請輸入課程名稱"
-              onChange={(e) => setNewCourseName(e.target.value)}
-              className={styles.leftSide_textInput}
-            ></input>
-            <div
-              onClick={addCourseSubmitHandler}
-              className={`${styles.leftSide_formBtn} ${styles.leftSide_submitBtn}`}
-            >
-              確定
+                <input
+                  id="addCourseInput"
+                  type="text"
+                  placeholder="請輸入課程名稱"
+                  onChange={(e) => setNewCourseName(e.target.value)}
+                  className={styles.leftSide_textInput}
+                ></input>
+                <div
+                  onClick={addCourseSubmitHandler}
+                  className={`${styles.leftSide_formBtn} ${styles.leftSide_submitBtn}`}
+                >
+                  確定
+                </div>
+                <div
+                  onClick={addCourseCancelHandler}
+                  className={`${styles.leftSide_formBtn} ${styles.leftSide_cancelBtn}`}
+                >
+                  取消
+                </div>
+              </form>
             </div>
-            <div
-              onClick={addCourseCancelHandler}
-              className={`${styles.leftSide_formBtn} ${styles.leftSide_cancelBtn}`}
-            >
-              取消
+            <div className={styles.rightSide}>
+              <div
+                className={styles.rightSide_title}
+              >{`你好，${teacherName} 老師`}</div>
+              <button onClick={logOutHandler} className={styles.logOutBtn}>
+                登出
+              </button>
             </div>
-          </form>
-        </div>
-        <div className={styles.rightSide}>
-          <div
-            className={styles.rightSide_title}
-          >{`你好，${teacherName} 老師`}</div>
-        </div>
-      </header>
+          </header>
+        </>
+      )}
     </>
   );
 };
