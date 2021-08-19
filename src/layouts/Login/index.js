@@ -88,7 +88,7 @@ const Login = () => {
     } else if (logining === true && loading === false && error !== "") {
       isLogining(false);
       setAlertshow(true);
-      setAlerttext("老師名稱或ID不存在");
+      setAlerttext("登入發生錯誤");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, teacherDataIDState]);
