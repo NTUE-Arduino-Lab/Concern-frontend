@@ -15,6 +15,7 @@ import { StoreContext } from "../../store/reducer";
 import {
   getTeacherData,
   getCourseWeeksData,
+  getClassroomTimeStatus,
   getRollCallStatus,
   startRollCall,
   setPersonalLeave,
@@ -62,11 +63,13 @@ const RollCallSystem = () => {
     getTeacherData(dispatch, { teacherDataID: teacherDataIDState });
     getCourseWeeksData(dispatch, { courseDataID: courseDataIDState });
     getRollCallStatus(dispatch, { classroomDataID: classroomDataIDState });
+    getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataIDState });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     getRollCallStatus(dispatch, { classroomDataID: classroomDataIDState });
+    getClassroomTimeStatus(dispatch, { classroomDataID: classroomDataIDState });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classroomDataIDState]);
 
