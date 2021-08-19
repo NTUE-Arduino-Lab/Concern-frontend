@@ -44,6 +44,8 @@ import {
   ROLLCALL_STATUS_REQUEST,
   SET_ROLLCALL_STATUS,
   ROLLCALL_STATUS_FAIL,
+  ROLLCALL_START,
+  ROLLCALL_FINISH,
 
   //學生名單頁-取得已登錄的學生名單
   CLASSMATES_DATA_REQUEST,
@@ -236,6 +238,7 @@ export const getStudentConcernInfo = async (dispatch, options) => {
 
 export const getRollCallStatus = async (dispatch, options) => {
   dispatch({ type: ROLLCALL_STATUS_REQUEST });
+  dispatch({ type: ROLLCALL_FINISH });
   const { classroomDataID } = options;
   try {
     const { data } = await axios.post(
@@ -253,12 +256,15 @@ export const getRollCallStatus = async (dispatch, options) => {
   }
 };
 
-export const startRollCall = async (options) => {
+export const startRollCall = async (dispatch, options) => {
   const { classroomDataID, duration } = options;
   try {
     const { data } = await axios.post(SERVER_URL + "/classroom/startRollcall", {
       classroomDataID,
       duration,
+    });
+    dispatch({
+      type: ROLLCALL_START,
     });
     console.log("點名成功" + data);
   } catch (error) {

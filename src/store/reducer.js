@@ -44,6 +44,8 @@ import {
   ROLLCALL_STATUS_REQUEST,
   SET_ROLLCALL_STATUS,
   ROLLCALL_STATUS_FAIL,
+  ROLLCALL_START,
+  ROLLCALL_FINISH,
 
   //學生名單頁-取得已登錄的學生名單
   CLASSMATES_DATA_REQUEST,
@@ -116,6 +118,7 @@ const initialState = {
   },
 
   //點名系統
+  isRollCall: false,
   rollCallSystemData: {
     shouldAttendCount: 0,
     attentCount: 0,
@@ -409,6 +412,17 @@ function reducer(state, action) {
           rollCallSystemDataLoading: false,
           error: action.payload,
         },
+      };
+    //是否正在點名
+    case ROLLCALL_START:
+      return {
+        ...state,
+        isRollCall: true,
+      };
+    case ROLLCALL_FINISH:
+      return {
+        ...state,
+        isRollCall: false,
       };
     //學生名單
     case CLASSMATES_DATA_REQUEST:

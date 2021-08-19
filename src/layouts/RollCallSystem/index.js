@@ -74,7 +74,7 @@ const RollCallSystem = () => {
   }, [classroomDataIDState]);
 
   const callStartRollCallApi = (duration) => {
-    startRollCall({
+    startRollCall(dispatch, {
       classroomDataID: classroomDataIDState,
       duration: duration,
     });

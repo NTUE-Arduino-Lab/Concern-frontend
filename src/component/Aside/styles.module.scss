@@ -22,6 +22,7 @@
        background: $section-bg;
        border-radius: $button-border-radius;
        margin-bottom: $main-spacing;
+       cursor: pointer;
 
        &:hover{
            background: $button-hover-bg;
