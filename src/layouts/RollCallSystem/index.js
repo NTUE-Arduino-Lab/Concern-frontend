@@ -23,7 +23,7 @@ import {
 
 const RollCallSystem = () => {
   //設定倒數時間
-  const [time, setTime] = useState(60);
+  const [time, setTime] = useState(30);
 
   //Alert的開關及內容
   const [Alertshow, setAlertshow] = useState(false);
