@@ -40,6 +40,9 @@
 .title {
   font-size: 24px;
   margin-bottom: 10px;
+  &.studentTitle {
+    color: $dark-bg-text-color;
+  }
 }
 
 .loading{
@@ -53,10 +56,10 @@
   display: flex;
   margin-bottom: $section-spacing;
   .timeRecord {
-    width: 350px;
+    width: 260px;
     margin-right: $section-spacing;
     .timeRecord_section {
-      width: 350px;
+      width: 260px;
       height: 155px;
       border-radius: $content-border-radius;
       background: $section-bg;
@@ -78,9 +81,9 @@
     }
   }
   .rank {
-    width: 820px;
+    width: 810px;
     .rank_section {
-      width: 820px;
+      width: 810px;
       height: 155px;
       display: flex;
       border-radius: $content-border-radius;
@@ -92,7 +95,7 @@
         margin-left: 50px;
       }
       .percentRank {
-        margin-right: 30px;
+        margin-right: 20px;
       }
       .rank_content {
         margin-top: 15px;

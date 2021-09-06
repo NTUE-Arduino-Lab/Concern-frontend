@@ -23,7 +23,7 @@ import {
 
 const RollCallSystem = () => {
   //設定倒數時間
-  const [time, setTime] = useState(60);
+  const [time, setTime] = useState(30);
 
   //Alert的開關及內容
   const [Alertshow, setAlertshow] = useState(false);
@@ -260,7 +260,7 @@ const RollCallSystem = () => {
                           開始點名
                         </button>
                       </div>
-                      <div>系統提示：學生需在限定時間內按下點名按鈕</div>
+                      <div>可設定點名限時時間，點名完成會自動更新出席紀錄</div>
                     </form>
                   </div>
                 </div>
