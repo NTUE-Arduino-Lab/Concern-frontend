@@ -472,7 +472,7 @@ const Home = () => {
               ) : (
                 <>
                   <div className={styles.studentList}>
-                    <div className={styles.title}>學生選單</div>
+                    <div className={`${styles.title} ${styles.studentTitle}`}>學生選單</div>
                     <div className={styles.students}>
                       {studentConcernData.map((student) => (
                         <div

@@ -30,6 +30,7 @@
 
        &.aside_item__active {
            background: $aside-button-active;
+           color: $dark-bg-text-color;
        }
     }
 }
