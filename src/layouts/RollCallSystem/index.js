@@ -245,7 +245,7 @@ const RollCallSystem = () => {
                       <div className={styles.setTimeSectionTop}>
                         <div id="text_title">點名限定時間</div>
                         <input
-                          type="text"
+                          type="number"
                           onChange={(e) => setTime(e.target.value)}
                           className={styles.inputSection}
                           id="text_time"
